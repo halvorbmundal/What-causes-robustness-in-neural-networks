@@ -21,8 +21,8 @@ def get_name(dataset="mnist", nn_architecture="only_cnn", pooling="None", depth=
              stride=1, bias=True, initializer="glorot_uniform", regulizer="None", batch_normalization=False,
              temperature=1,
              batch_size=128):
-    return "models/dataset:{}nn_architecture:{}_pooling:{}_detph:{}_width:{}_filter:{}_kernel:{}_epochs:{}_activationFunction:{}_" \
-           "stride:{}_bias:{}_initializer:{}_regualizer:{}_batchNormalization:{}_temperature:{}_batchSize:{}" \
+    return "models/dataset={}_nn_architecture={}_pooling={}_detph={}_width={}_filter={}_kernel={}_epochs={}_activationFunction={}_" \
+           "stride={}_bias={}_initializer={}_regualizer={}_batchNormalization={}_temperature={}_batchSize={}" \
         .format(dataset, nn_architecture, pooling, depth, width, filters, kernels, epochs, activation_function, stride, bias,
                 initializer, regulizer, batch_normalization, temperature, batch_size)
 
@@ -94,9 +94,9 @@ def file_exists(file):
 def main():
     make_result_file()
     dataset = "mnist"
-    nn_architecture = NnArchitecture.ONLY_CNN
+    nn_architecture = NnArchitecture.ONLY_CNN.value
     pooling = "None"
-    epochs = 2
+    epochs = 10
     activation_function = "ada"
     stride = 1
     bias = True
@@ -108,7 +108,7 @@ def main():
     num_image = 1
     l_norm = "i"
     result_file = 'results/results.csv'
-    for depth in range(1, 2):
+    for depth in range(1, 5):
         for width in range(8, 30, 10):
             for kernel_size in range(1, 5):
                 for filter_size in range(1, 5):

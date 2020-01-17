@@ -1,0 +1,271 @@
+import time
+
+from train_cnn import train as train_cnn
+from pymain import run_cnn
+from setup_mnist import MNIST
+import csv
+import os.path
+from Attacks.cw_attack import cw_attack
+import time as timer
+from tensorflow.contrib.keras.api.keras.models import load_model
+import tensorflow as tf
+from setup_mnist import MNIST
+from enum import Enum
+import logging
+import multiprocessing
+
+
+class NnArchitecture(Enum):
+    ONLY_CNN = "only_cnn"
+
+
+def get_name(parameter_class):
+    return "models/dataset={}_nn_architecture={}_pooling={}_detph={}_width={}_filter={}_kernel={}_epochs={}_activationFunction={}_" \
+           "stride={}_bias={}_initializer={}_regualizer={}_batchNormalization={}_temperature={}_batchSize={}" \
+        .format(parameter_class.dataset, parameter_class.nn_architecture, parameter_class.pooling,
+                parameter_class.depth,
+                parameter_class.width, parameter_class.filters, parameter_class.kernels, parameter_class.epochs,
+                parameter_class.activation_function, parameter_class.stride, parameter_class.bias,
+                parameter_class.initializer, parameter_class.regulizer, parameter_class.batch_normalization,
+                parameter_class.temperature, parameter_class.batch_size)
+
+
+def make_result_file(name):
+    if not os.path.exists(name):
+        print("made new resultfile")
+        with open(name, 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(["dataset", "nn_architecture", "pooling", "depth", "width", "filter", "kernel", "epochs",
+                             "activation_function", "stride", "has_bias",
+                             "initializer", "regulizer", "has_batch_normalization", "temperature", "bach_size",
+                             "lower_bound", "upper_bound", "l_norm", "time_elapsed", "accuracy", "file_name"])
+
+
+def fn(correct, predicted):
+    return tf.nn.softmax_cross_entropy_with_logits(labels=correct, logits=predicted)
+
+
+def get_accuracy_of(file, batch_size):
+    keras_model = load_model(file, custom_objects={'fn': fn, 'tf': tf})
+    data = MNIST()
+    loss, acc = keras_model.evaluate(data.validation_data, data.validation_labels, batch_size=batch_size)
+    print("the accuracy is ", acc)
+    return acc
+
+
+def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization):
+    sess = tf.keras.backend.get_session()
+    tf.keras.backend.set_session(sess)
+    history = train_cnn(MNIST(),
+                        file_name=file_name,
+                        filters=filters,
+                        kernels=kernels,
+                        num_epochs=epochs,
+                        activation=tf_activation,
+                        bn=batch_normalization)
+    accuracy = history.history["val_acc"][-1]
+    tf.keras.backend.clear_session()
+    return accuracy
+
+
+def get_lower_bound(file_name, num_image, l_norm, only_cnn, activation_function):
+    print(file_name)
+    sess = tf.keras.backend.get_session()
+    tf.keras.backend.set_session(sess)
+    avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, only_cnn, activation_function)
+    tf.keras.backend.clear_session()
+    return avg_lower_bound
+
+
+def get_upper_bound(file_name, l_norm, num_image):
+    sess = tf.keras.backend.get_session()
+    tf.keras.backend.set_session(sess)
+    upper_bound, time_taken = cw_attack(file_name, l_norm, sess, num_image=num_image)
+    tf.keras.backend.clear_session()
+    return upper_bound
+
+
+def csv_contains_file(csv_file, file_name):
+    with open(csv_file, "rt") as f:
+        csvreader = csv.reader(f, delimiter=',', quotechar='|')
+
+        first_row = next(csvreader)
+        column_number = 0
+        for i in range(len(first_row)):
+            if first_row[i] == "file_name":
+                column_number = i
+                break
+
+        for row in csvreader:
+            if row[column_number] == file_name:
+                return True
+    return False
+
+
+def file_exists(file):
+    return os.path.exists(file)
+
+
+class CnnTestParameters:
+    dataset = "mnist"
+    nn_architecture = NnArchitecture.ONLY_CNN.value
+    pooling = "None"
+    epochs = 10
+    activation_function = "ada"
+    stride = 1
+    bias = True
+    initializer = "glorot_uniform"
+    regulizer = "None"
+    batch_normalization = False
+    temperature = 1
+    batch_size = 128
+    num_image = 10
+    l_norm = "i"
+    width="null"
+    result_file = 'results/results.csv'
+
+
+def get_tf_activation_function_from_string(activation_function_string):
+    if activation_function_string == "sigmoid":
+        return tf.math.sigmoid
+    if activation_function_string == "ada":
+        return tf.nn.relu
+    if activation_function_string == "tanh":
+        return tf.math.tanh
+    if activation_function_string == "arctan":
+        return tf.math.atan
+
+
+def train_and_get_accuracy_of_nn(file_name, filters, kernels, tf_activation):
+    if file_exists(file_name):
+        if csv_contains_file(CnnTestParameters.result_file, file_name):
+            print("================================================")
+            print("skiped", file_name, "as the bounds was aready calculated")
+            print()
+            print("================================================")
+            return True, None
+        else:
+            return False, get_accuracy_of(file_name, CnnTestParameters.batch_size)
+    else:
+        try:
+            return False, train_and_save_network(file_name,
+                                                 filters,
+                                                 kernels,
+                                                 CnnTestParameters.epochs,
+                                                 tf_activation)
+        except Exception as e:
+            logging.exception("This file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
+            return True, None
+
+
+def calculate_lower_bound(accuracy, file_name, num_image, l_norm, nn_architecture, activation_function):
+    if accuracy < 0.95:
+        print("================================================")
+        print("skiped", file_name, "as the accuracy was too low")
+        print()
+        print("================================================")
+        return True, None
+    else:
+        return False, get_lower_bound(file_name,
+                                      num_image,
+                                      l_norm,
+                                      nn_architecture == NnArchitecture.ONLY_CNN,
+                                      activation_function)
+
+
+"""try:
+    upper_bound = None  # get_upper_bound(file_name, l_norm, num_image)
+except:
+    upper_bound = None"""
+
+
+def write_to_file(parameters, lock):
+    lock.acquire()
+    try:
+        with open(CnnTestParameters.result_file, 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(
+                [parameters.dataset, parameters.nn_architecture, parameters.pooling, parameters.depth, parameters.width,
+                 parameters.filter_size, parameters.kernel_size, parameters.epochs,
+                 parameters.activation_function, parameters.stride, parameters.bias, parameters.initializer,
+                 parameters.regulizer, parameters.batch_normalization,
+                 parameters.temperature, parameters.batch_size, parameters.lower_bound, parameters.upper_bound,
+                 parameters.l_norm, parameters.time_elapsed, parameters.accuracy
+                    , parameters.file_name])
+    finally:
+        lock.release()
+
+def multithreadded_calculations(parameters, lock):
+    print("kom seg inn")
+    start_time = timer.time()
+
+    skip_architecture, parameters.accuracy = train_and_get_accuracy_of_nn(parameters.file_name,
+                                                                          parameters.filters,
+                                                                          parameters.kernels,
+                                                                          parameters.tf_activation)
+    if not skip_architecture:
+        skip_architecture, lower_bound = calculate_lower_bound(parameters.accuracy,
+                                                               parameters.file_name,
+                                                               parameters.num_image,
+                                                               parameters.l_norm,
+                                                               parameters.nn_architecture,
+                                                               parameters.activation_function)
+    if not skip_architecture:
+        time_elapsed = timer.time() - start_time
+        print("time elapsed", time_elapsed)
+
+        write_to_file(parameters, lock)
+
+def foo_pool(x):
+    time.sleep(2)
+    print(x*x)
+
+def main():
+    print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
+    pool = multiprocessing.Pool(10)
+    lock = multiprocessing.Lock()
+
+
+    make_result_file(CnnTestParameters.result_file)
+    logging.basicConfig(filename='log.log', level="ERROR")
+    for filter_size in range(1,2): #(2, 128, 8):
+        for depth in range(1, 10, 2):
+            for kernel_size in range(3, 15, 2):
+                for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
+
+                    parameters = CnnTestParameters()
+                    parameters.tf_activation = get_tf_activation_function_from_string(activation_function_string)
+                    parameters.activation_function_string = activation_function_string
+                    parameters.depth = depth
+                    parameters.kernel_size = kernel_size
+                    parameters.filter_size = filter_size
+                    parameters.filters = [filter_size for i in range(depth)]
+                    parameters.kernels = [kernel_size for i in range(depth)]
+                    parameters.file_name = get_name(parameters)
+
+                    pool.apply_async(multithreadded_calculations, args=(depth,))
+    pool.close()
+    pool.join()
+
+
+
+# hvilke paremetere kan jeg tweake på??
+# cnn, ikke cnn, blanding
+# pooling
+# dybde nn
+# bredde nn
+# activation function
+# stride
+# filters
+# kernels
+# epochs
+# dilation
+# bias
+# Initializers
+# Regulizers
+# Batch_normalization
+# Temperature
+# Batch size
+if __name__ == "__main__":
+    main()

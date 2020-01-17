@@ -1,1 +1,0 @@
-dataset,is_only_cnn,pooling,depth,width,filter,kernel,epochs,activation_function,stride,has_bias,initializer,regulizer,has_batch_normalization,temperature,bach_size,lower_bound,upper_bound,l_norm,time_elapsed,accuracy
