@@ -20,7 +20,10 @@ class NnArchitecture(Enum):
 
 
 def get_name(parameter_class):
-    return "models2/dataset={}_nn_architecture={}_pooling={}_detph={}_width={}_filter={}_kernel={}_epochs={}_activationFunction={}_" \
+    directory = "models2"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    return directory + "/dataset={}_nn_architecture={}_pooling={}_detph={}_width={}_filter={}_kernel={}_epochs={}_activationFunction={}_" \
            "stride={}_bias={}_initializer={}_regualizer={}_batchNormalization={}_temperature={}_batchSize={}" \
         .format(parameter_class.dataset, parameter_class.nn_architecture, parameter_class.pooling,
                 parameter_class.depth,
@@ -30,10 +33,12 @@ def get_name(parameter_class):
                 parameter_class.temperature, parameter_class.batch_size)
 
 
-def make_result_file(name):
-    if not os.path.exists(name):
+def make_result_file(directory, file):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    if not os.path.exists(directory + file):
         print("made new resultfile")
-        with open(name, 'a', newline='') as csvfile:
+        with open(directory + file, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(["dataset", "nn_architecture", "pooling", "depth", "width", "filter", "kernel", "epochs",
@@ -172,7 +177,7 @@ except:
 def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
     write_lock.acquire() #from global variable
     try:
-        with open(CnnTestParameters.result_file, 'a', newline='') as csvfile:
+        with open(parameters.result_folder + parameters.result_file, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(
                 [parameters.dataset, parameters.nn_architecture, parameters.pooling, parameters.depth, parameters.width,
@@ -216,7 +221,7 @@ def main():
     pool = multiprocessing.Pool()
 
 
-    make_result_file(CnnTestParameters.result_file)
+    make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
     for filter_size in range(2, 128, 8):
         for has_batch_normalization in [False]:
@@ -264,7 +269,7 @@ class CnnTestParameters:
     dataset = "mnist"
     nn_architecture = NnArchitecture.ONLY_CNN.value
     pooling = "None"
-    epochs = 10
+    epochs = 100
     activation_function = "ada"
     stride = 1
     bias = True
@@ -276,7 +281,8 @@ class CnnTestParameters:
     l_norm = "i"
     width="null"
     upper_bound=None
-    result_file = 'results2/results.csv'
+    result_folder = 'results2/'
+    result_file = 'results.csv'
 
 if __name__ == "__main__":
     main()
