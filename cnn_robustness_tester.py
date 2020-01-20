@@ -20,11 +20,11 @@ class NnArchitecture(Enum):
 
 
 def get_name(parameter_class):
-    return "models/dataset={}_nn_architecture={}_pooling={}_detph={}_width={}_filter={}_kernel={}_epochs={}_activationFunction={}_" \
+    return "models2/dataset={}_nn_architecture={}_pooling={}_detph={}_width={}_filter={}_kernel={}_epochs={}_activationFunction={}_" \
            "stride={}_bias={}_initializer={}_regualizer={}_batchNormalization={}_temperature={}_batchSize={}" \
         .format(parameter_class.dataset, parameter_class.nn_architecture, parameter_class.pooling,
                 parameter_class.depth,
-                parameter_class.width, parameter_class.filters, parameter_class.kernels, parameter_class.epochs,
+                parameter_class.width, parameter_class.filter_size, parameter_class.kernel_size, parameter_class.epochs,
                 parameter_class.activation_function, parameter_class.stride, parameter_class.bias,
                 parameter_class.initializer, parameter_class.regulizer, parameter_class.has_batch_normalization,
                 parameter_class.temperature, parameter_class.batch_size)
@@ -127,7 +127,11 @@ def train_and_get_accuracy_of_nn(file_name, filters, kernels, tf_activation, has
             print("================================================")
             return True, None
         else:
-            return False, get_accuracy_of(file_name, CnnTestParameters.batch_size)
+            keras_lock.acquire()
+            try:
+                return False, get_accuracy_of(file_name, CnnTestParameters.batch_size)
+            finally:
+                keras_lock.release()
     else:
         keras_lock.acquire()
         try:
@@ -209,12 +213,12 @@ write_lock = multiprocessing.Lock() #cannot be passed to apply_async, must be gl
 keras_lock = multiprocessing.Lock()
 def main():
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
-    pool = multiprocessing.Pool(multiprocessing.cpu_count())
+    pool = multiprocessing.Pool()
 
 
     make_result_file(CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
-    for filter_size in (2, 128, 8):
+    for filter_size in range(2, 128, 8):
         for has_batch_normalization in [False]:
             for depth in range(1, 10, 2):
                 for kernel_size in range(3, 15, 2):
@@ -231,7 +235,7 @@ def main():
                         parameters.has_batch_normalization = has_batch_normalization
 
                         parameters.file_name = get_name(parameters)
-                        multithreadded_calculations(parameters)
+                        pool.apply_async(multithreadded_calculations, (parameters,))
     pool.close()
     pool.join()
 
