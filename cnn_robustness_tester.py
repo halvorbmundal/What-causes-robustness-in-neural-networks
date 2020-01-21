@@ -52,7 +52,8 @@ def fn(correct, predicted):
 
 
 def get_accuracy_of(file, batch_size):
-    keras_model = load_model(file, custom_objects={'fn': fn, 'tf': tf})
+    keras_model = load_model(file, custom_objects={'fn': fn, 'tf': tf, 'atan': tf.math.atan})
+    #TODO
     data = MNIST()
     loss, acc = keras_model.evaluate(data.validation_data, data.validation_labels, batch_size=batch_size)
     print("the accuracy is ", acc)
@@ -125,7 +126,7 @@ def get_tf_activation_function_from_string(activation_function_string):
 
 def train_and_get_accuracy_of_nn(file_name, filters, kernels, tf_activation, has_batch_normalization):
     if file_exists(file_name):
-        if csv_contains_file(CnnTestParameters.result_file, file_name):
+        if csv_contains_file(CnnTestParameters.result_folder + CnnTestParameters.result_file, file_name):
             print("================================================")
             print("skiped", file_name, "as the bounds was aready calculated")
             print()
@@ -134,19 +135,22 @@ def train_and_get_accuracy_of_nn(file_name, filters, kernels, tf_activation, has
         else:
             keras_lock.acquire()
             try:
+                print(tf_activation)
                 return False, get_accuracy_of(file_name, CnnTestParameters.batch_size)
             finally:
                 keras_lock.release()
     else:
-        keras_lock.acquire(block=True)
+        keras_lock.acquire()
         print("k-lock aquired")
         try:
-            return False, train_and_save_network(file_name,
+            accuracy = train_and_save_network(file_name,
                                                  filters,
                                                  kernels,
                                                  CnnTestParameters.epochs,
                                                  tf_activation,
                                                  has_batch_normalization)
+            print("accuracy: " + accuracy)
+            return False, accuracy
         except Exception as e:
             logging.exception("This file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
             return True, None
@@ -155,7 +159,7 @@ def train_and_get_accuracy_of_nn(file_name, filters, kernels, tf_activation, has
             keras_lock.release()
 
 
-def calculate_lower_bound(accuracy, file_name, num_image, l_norm, nn_architecture, activation_function):
+def calculate_lower_bound(accuracy, file_name, num_image, l_norm, nn_architecture, activation_function_string):
     if accuracy < 0.95:
         print("================================================")
         print("skiped", file_name, "as the accuracy was too low")
@@ -166,8 +170,8 @@ def calculate_lower_bound(accuracy, file_name, num_image, l_norm, nn_architectur
         return False, get_lower_bound(file_name,
                                       num_image,
                                       l_norm,
-                                      nn_architecture == NnArchitecture.ONLY_CNN,
-                                      activation_function)
+                                      nn_architecture == NnArchitecture.ONLY_CNN.value,
+                                      activation_function_string)
 
 
 """try:
@@ -184,7 +188,7 @@ def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
             writer.writerow(
                 [parameters.dataset, parameters.nn_architecture, parameters.pooling, parameters.depth, parameters.width,
                  parameters.filter_size, parameters.kernel_size, parameters.epochs,
-                 parameters.activation_function, parameters.stride, parameters.bias, parameters.initializer,
+                 parameters.activation_function_string, parameters.stride, parameters.bias, parameters.initializer,
                  parameters.regulizer, parameters.has_batch_normalization,
                  parameters.temperature, parameters.batch_size, lower_bound, parameters.upper_bound,
                  parameters.l_norm, time_elapsed, accuracy
@@ -208,7 +212,7 @@ def multithreadded_calculations(parameters):
                                                                parameters.num_image,
                                                                parameters.l_norm,
                                                                parameters.nn_architecture,
-                                                               parameters.activation_function)
+                                                               parameters.activation_function_string)
     if not skip_architecture:
         time_elapsed = timer.time() - start_time
         print("time elapsed", time_elapsed)
@@ -248,7 +252,11 @@ def main():
                         parameters.has_batch_normalization = has_batch_normalization
 
                         parameters.file_name = get_name(parameters)
-                        pool.apply_async(multithreadded_calculations, (parameters,))
+
+                        pool_init(l1, l2)
+                        multithreadded_calculations(parameters)
+
+                        #pool.apply_async(multithreadded_calculations, (parameters,))
     pool.close()
     pool.join()
 
