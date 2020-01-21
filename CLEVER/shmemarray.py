@@ -23,7 +23,7 @@ import numpy as np
 import sys
 import mmap
 import ctypes
-import posix_ipc
+#import posix_ipc
 # from _multiprocessing import address_of_buffer  # (not in python 3)
 from string import ascii_letters, digits
 
@@ -42,7 +42,7 @@ typecode_to_type = {
 def address_of_buffer(buf):  # (python 3)
     return ctypes.addressof(ctypes.c_char.from_buffer(buf))
 
-
+"""
 class ShmemBufferWrapper(object):
 
     def __init__(self, tag, size, create=True):
@@ -101,4 +101,4 @@ def NpShmemArray(dtype, shape, tag, create=True):
     size = int(np.prod(shape))
     nbytes = size * np.dtype(dtype).itemsize
     shmem = ShmemRawArray(ctypes.c_char, nbytes, tag, create)
-    return np.frombuffer(shmem, dtype=dtype, count=size).reshape(shape)
+    return np.frombuffer(shmem, dtype=dtype, count=size).reshape(shape)"""
