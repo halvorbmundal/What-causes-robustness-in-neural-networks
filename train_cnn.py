@@ -9,6 +9,8 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
                     Sijia Liu <Sijia.Liu@ibm.com>
                     Luca Daniel <dluca@mit.edu>
 """
+import csv
+
 import numpy as np
 from tensorflow.contrib.keras.api.keras.models import Sequential
 from tensorflow.contrib.keras.api.keras.layers import Dense, Activation, Flatten, Lambda, Conv2D, BatchNormalization
@@ -61,13 +63,26 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     
     model.summary()
     print("Traing a {} layer model, saving to {}".format(len(filters) + 1, file_name))
+
+    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True, verbose=1)
+
     # run training with given dataset, and print progress
     history = model.fit(data.train_data, data.train_labels,
               batch_size=batch_size,
               validation_data=(data.validation_data, data.validation_labels),
               epochs=num_epochs,
-              shuffle=True)
-    
+              shuffle=True,
+              callbacks=[early_stopping])
+
+    metafile="models_meta.csv"
+    if not os.path.exists(metafile):
+        with open(metafile, 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(["num_epochs", "file_name"])
+    with open(metafile, 'a', newline='') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        writer.writerow([len(history.history['loss']) ,file_name])
+
 
     # save model to a file
     if file_name != None:
