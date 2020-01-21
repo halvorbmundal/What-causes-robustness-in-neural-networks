@@ -137,6 +137,10 @@ def train_and_get_accuracy_of_nn(file_name, filters, kernels, tf_activation, has
             try:
                 print(tf_activation)
                 return False, get_accuracy_of(file_name, CnnTestParameters.batch_size)
+            except Exception as e:
+                print("An exeption occured")
+                logging.exception("This file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
+                return True, None
             finally:
                 keras_lock.release()
     else:
@@ -149,9 +153,10 @@ def train_and_get_accuracy_of_nn(file_name, filters, kernels, tf_activation, has
                                                  CnnTestParameters.epochs,
                                                  tf_activation,
                                                  has_batch_normalization)
-            print("accuracy: " + accuracy)
+            print("accuracy: ", accuracy)
             return False, accuracy
         except Exception as e:
+            print("An exeption occured")
             logging.exception("This file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
             return True, None
         finally:
@@ -254,9 +259,9 @@ def main():
                         parameters.file_name = get_name(parameters)
 
                         pool_init(l1, l2)
-                        multithreadded_calculations(parameters)
+                        #multithreadded_calculations(parameters)
 
-                        #pool.apply_async(multithreadded_calculations, (parameters,))
+                        pool.apply_async(multithreadded_calculations, (parameters,))
     pool.close()
     pool.join()
 
