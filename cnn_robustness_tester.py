@@ -24,11 +24,11 @@ def get_name(parameter_class):
     if not os.path.exists(directory):
         os.makedirs(directory)
     return directory + "/dataset={}_nn_architecture={}_pooling={}_detph={}_width={}_filter={}_kernel={}_epochs={}_activationFunction={}_" \
-           "stride={}_bias={}_initializer={}_regualizer={}_batchNormalization={}_temperature={}_batchSize={}" \
+                       "stride={}_bias={}_initializer={}_regualizer={}_batchNormalization={}_temperature={}_batchSize={}" \
         .format(parameter_class.dataset, parameter_class.nn_architecture, parameter_class.pooling,
                 parameter_class.depth,
                 parameter_class.width, parameter_class.filter_size, parameter_class.kernel_size, parameter_class.epochs,
-                parameter_class.activation_function, parameter_class.stride, parameter_class.bias,
+                parameter_class.activation_function_string, parameter_class.stride, parameter_class.bias,
                 parameter_class.initializer, parameter_class.regulizer, parameter_class.has_batch_normalization,
                 parameter_class.temperature, parameter_class.batch_size)
 
@@ -138,7 +138,8 @@ def train_and_get_accuracy_of_nn(file_name, filters, kernels, tf_activation, has
             finally:
                 keras_lock.release()
     else:
-        keras_lock.acquire()
+        keras_lock.acquire(block=True)
+        print("k-lock aquired")
         try:
             return False, train_and_save_network(file_name,
                                                  filters,
@@ -150,6 +151,7 @@ def train_and_get_accuracy_of_nn(file_name, filters, kernels, tf_activation, has
             logging.exception("This file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
             return True, None
         finally:
+            print("k-lock released")
             keras_lock.release()
 
 
@@ -175,7 +177,7 @@ except:
 
 
 def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
-    write_lock.acquire() #from global variable
+    write_lock.acquire()  # from global variable
     try:
         with open(parameters.result_folder + parameters.result_file, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -190,14 +192,15 @@ def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
     finally:
         write_lock.release()
 
+
 def multithreadded_calculations(parameters):
     start_time = timer.time()
 
     skip_architecture, accuracy = train_and_get_accuracy_of_nn(parameters.file_name,
-                                                                          parameters.filters,
-                                                                          parameters.kernels,
-                                                                          parameters.tf_activation,
-                                                                          parameters.has_batch_normalization)
+                                                               parameters.filters,
+                                                               parameters.kernels,
+                                                               parameters.tf_activation,
+                                                               parameters.has_batch_normalization)
 
     if not skip_architecture:
         skip_architecture, lower_bound = calculate_lower_bound(accuracy,
@@ -213,13 +216,19 @@ def multithreadded_calculations(parameters):
         write_to_file(parameters, lower_bound, accuracy, time_elapsed)
 
 
+def pool_init(l1, l2):
+    global write_lock
+    global keras_lock
+    write_lock = l1
+    keras_lock = l2
 
-write_lock = multiprocessing.Lock() #cannot be passed to apply_async, must be global :(
-keras_lock = multiprocessing.Lock()
+
 def main():
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
-    pool = multiprocessing.Pool()
 
+    l1 = multiprocessing.Lock()
+    l2 = multiprocessing.Lock()
+    pool = multiprocessing.Pool(initializer=pool_init, initargs=(l1, l2))
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
@@ -228,7 +237,6 @@ def main():
             for depth in range(1, 10, 2):
                 for kernel_size in range(3, 15, 2):
                     for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
-
                         parameters = CnnTestParameters()
                         parameters.tf_activation = get_tf_activation_function_from_string(activation_function_string)
                         parameters.activation_function_string = activation_function_string
@@ -243,7 +251,6 @@ def main():
                         pool.apply_async(multithreadded_calculations, (parameters,))
     pool.close()
     pool.join()
-
 
 
 # hvilke paremetere kan jeg tweake på??
@@ -270,7 +277,6 @@ class CnnTestParameters:
     nn_architecture = NnArchitecture.ONLY_CNN.value
     pooling = "None"
     epochs = 100
-    activation_function = "ada"
     stride = 1
     bias = True
     initializer = "glorot_uniform"
@@ -279,10 +285,11 @@ class CnnTestParameters:
     batch_size = 128
     num_image = 10
     l_norm = "i"
-    width="null"
-    upper_bound=None
+    width = "null"
+    upper_bound = None
     result_folder = 'results2/'
     result_file = 'results.csv'
+
 
 if __name__ == "__main__":
     main()
