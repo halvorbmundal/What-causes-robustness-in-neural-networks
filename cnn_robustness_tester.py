@@ -237,6 +237,7 @@ def reset_keras():
 def multithreadded_calculations(parameters):
     start_time = timer.time()
 
+
     #setDynamicGPUAllocation()
     skip_architecture, accuracy = train_and_get_accuracy_of_nn(parameters.file_name,
                                                                parameters.filters,
@@ -293,8 +294,16 @@ def main():
 
                         parameters.file_name = get_name(parameters)
 
+                        print("========================================================================================")
+                        print()
+                        print(parameters.filter_size, parameters.depth, parameters.kernel_size, parameters.activation_function_string)
+                        print()
+                        print("========================================================================================")
+
                         pool_init(l1, l2)
                         multithreadded_calculations(parameters)
+
+                        break
 
                         #pool.apply_async(multithreadded_calculations, (parameters,))
     pool.close()
