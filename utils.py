@@ -61,7 +61,7 @@ def generate_data(data, samples, targeted=True, random_and_least_likely = False,
     information = []
     target_candidate_pool = np.eye(data.test_labels.shape[1])
     target_candidate_pool_remove_background_class = np.eye(data.test_labels.shape[1] - 1)
-    print('generating labels...')
+    #print('generating labels...')
     if ids is None:
         ids = range(samples)
     else:
@@ -125,7 +125,7 @@ def generate_data(data, samples, targeted=True, random_and_least_likely = False,
                 else:
                     seq = range(data.test_labels.shape[1])
                     information.extend(data.test_labels.shape[1] * ['seq'])
-            print("[DATAGEN][L1] no = {}, true_id = {}, true_label = {}, predicted = {}, correct = {}, seq = {}, info = {}".format(total, start + i, 
+            #print("[DATAGEN][L1] no = {}, true_id = {}, true_label = {}, predicted = {}, correct = {}, seq = {}, info = {}".format(total, start + i,
                 np.argmax(data.test_labels[start+i]), predicted_label, np.argmax(data.test_labels[start+i]) == predicted_label, seq, [] if len(seq) == 0 else information[-len(seq):]))
             for j in seq:
                 # skip the original image label
@@ -166,8 +166,8 @@ def generate_data(data, samples, targeted=True, random_and_least_likely = False,
     targets = np.array(targets)
     true_labels = np.array(true_labels)
     true_ids = np.array(true_ids)
-    print('labels generated')
-    print('{} images generated in total.'.format(len(inputs)))
+    #print('labels generated')
+    #print('{} images generated in total.'.format(len(inputs)))
     if save_inputs:
         if not os.path.exists(save_inputs_dir):
             os.makedirs(save_inputs_dir)
