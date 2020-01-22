@@ -226,14 +226,14 @@ def reset_keras():
 def multithreadded_calculations(parameters):
     start_time = timer.time()
 
-    print(1)
+    print(1, flush=True)
     setDynamicGPUAllocation()
     skip_architecture, accuracy = train_and_get_accuracy_of_nn(parameters.file_name,
                                                                parameters.filters,
                                                                parameters.kernels,
                                                                parameters.tf_activation,
                                                                parameters.has_batch_normalization)
-    print(2)
+    print(2, flush=True)
 
     if not skip_architecture:
         skip_architecture, lower_bound = calculate_lower_bound(accuracy,
@@ -242,7 +242,7 @@ def multithreadded_calculations(parameters):
                                                                parameters.l_norm,
                                                                parameters.nn_architecture,
                                                                parameters.activation_function_string)
-    print(3)
+    print(3, flush=True)
     reset_keras()
     if not skip_architecture:
         time_elapsed = timer.time() - start_time
