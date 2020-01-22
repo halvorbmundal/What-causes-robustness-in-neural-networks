@@ -261,8 +261,6 @@ def pool_init(l1, l2):
 def main():
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
 
-    sys.exit()
-
     l1 = multiprocessing.Lock()
     l2 = multiprocessing.Lock()
     pool = multiprocessing.Pool(initializer=pool_init, initargs=(l1, l2))
@@ -297,6 +295,7 @@ def main():
                         print()
 
                         pool_init(l1, l2)
+                        sys.exit()
                         multithreadded_calculations(parameters)
 
 
