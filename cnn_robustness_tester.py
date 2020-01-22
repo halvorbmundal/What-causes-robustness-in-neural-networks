@@ -252,8 +252,7 @@ def multithreadded_calculations(parameters):
                                                                parameters.nn_architecture,
                                                                parameters.activation_function_string)
 
-    gc.collect()
-
+    reset_keras()
     if not skip_architecture:
         time_elapsed = timer.time() - start_time
         print("time elapsed", time_elapsed)
