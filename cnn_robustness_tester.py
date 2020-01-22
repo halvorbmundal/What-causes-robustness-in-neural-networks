@@ -213,7 +213,6 @@ def reset_keras():
     sess = tf.compat.v1.keras.backend.get_session()
     tf.compat.v1.keras.backend.clear_session()
     sess.close()
-    sess = tf.compat.v1.keras.backend.get_session()
 
     """
     try:
@@ -227,13 +226,14 @@ def reset_keras():
 def multithreadded_calculations(parameters):
     start_time = timer.time()
 
-
-    #setDynamicGPUAllocation()
+    print(1)
+    setDynamicGPUAllocation()
     skip_architecture, accuracy = train_and_get_accuracy_of_nn(parameters.file_name,
                                                                parameters.filters,
                                                                parameters.kernels,
                                                                parameters.tf_activation,
                                                                parameters.has_batch_normalization)
+    print(2)
 
     if not skip_architecture:
         skip_architecture, lower_bound = calculate_lower_bound(accuracy,
@@ -242,7 +242,7 @@ def multithreadded_calculations(parameters):
                                                                parameters.l_norm,
                                                                parameters.nn_architecture,
                                                                parameters.activation_function_string)
-
+    print(3)
     reset_keras()
     if not skip_architecture:
         time_elapsed = timer.time() - start_time
