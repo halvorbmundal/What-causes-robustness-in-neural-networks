@@ -143,7 +143,6 @@ def train_and_get_accuracy_of_nn(file_name, filters, kernels, tf_activation, has
         else:
             keras_lock.acquire()
             try:
-                print(tf_activation)
                 return False, get_accuracy_of(file_name, CnnTestParameters.batch_size)
             except Exception as e:
                 print("An exeption occured")
@@ -206,6 +205,9 @@ def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
                  parameters.temperature, parameters.batch_size, lower_bound, parameters.upper_bound,
                  parameters.l_norm, time_elapsed, accuracy
                     , parameters.file_name])
+    except Exception as e:
+        print("An exeption occured while writing to file")
+        logging.exception(str(e) + "\n\n")
     finally:
         write_lock.release()
 
