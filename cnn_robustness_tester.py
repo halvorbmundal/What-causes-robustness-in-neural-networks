@@ -13,6 +13,7 @@ from setup_mnist import MNIST
 from enum import Enum
 import logging
 import multiprocessing
+import gc
 
 
 class NnArchitecture(Enum):
@@ -212,6 +213,27 @@ def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
         write_lock.release()
 
 
+def reset_keras():
+    sess = tf.compat.v1.keras.backend.get_session()
+    tf.compat.v1.keras.backend.clear_session()
+    sess.close()
+    sess = tf.compat.v1.keras.backend.get_session()
+
+    """
+    try:
+        del classifier # this is from global space - change this as you need
+    except:
+        pass"""
+
+    print("clear gc", gc.collect()) # if it's done something you should see a number being outputted
+
+    # use the same config as you used to create the session
+    config = tf.ConfigProto()
+    config.gpu_options.per_process_gpu_memory_fraction = 1
+    config.gpu_options.visible_device_list = "0"
+    tf.compat.v1.keras.backend.set_session(tf.Session(config=config))
+
+
 def multithreadded_calculations(parameters):
     start_time = timer.time()
 
@@ -229,6 +251,9 @@ def multithreadded_calculations(parameters):
                                                                parameters.l_norm,
                                                                parameters.nn_architecture,
                                                                parameters.activation_function_string)
+
+    gc.collect()
+
     if not skip_architecture:
         time_elapsed = timer.time() - start_time
         print("time elapsed", time_elapsed)
