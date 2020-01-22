@@ -237,7 +237,7 @@ def main():
 
     l1 = multiprocessing.Lock()
     l2 = multiprocessing.Lock()
-    pool = multiprocessing.Pool(initializer=pool_init, initargs=(l1, l2))
+    pool = multiprocessing.Pool(processes=12, initializer=pool_init, initargs=(l1, l2))
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
