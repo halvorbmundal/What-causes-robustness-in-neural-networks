@@ -137,10 +137,7 @@ def get_tf_activation_function_from_string(activation_function_string):
 def train_and_get_accuracy_of_nn(file_name, filters, kernels, tf_activation, has_batch_normalization):
     if file_exists(file_name):
         if csv_contains_file(CnnTestParameters.result_folder + CnnTestParameters.result_file, file_name):
-            print("================================================")
             print("skiped", file_name, "as the bounds was aready calculated")
-            print()
-            print("================================================")
             return True, None
         else:
             keras_lock.acquire()
@@ -175,10 +172,8 @@ def train_and_get_accuracy_of_nn(file_name, filters, kernels, tf_activation, has
 
 def calculate_lower_bound(accuracy, file_name, num_image, l_norm, nn_architecture, activation_function_string):
     if accuracy < 0.95:
-        print("================================================")
         print("skiped", file_name, "as the accuracy was too low")
-        print()
-        print("================================================")
+
         return True, None
     else:
         return False, get_lower_bound(file_name,
@@ -266,6 +261,8 @@ def pool_init(l1, l2):
 def main():
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
 
+    sys.exit()
+
     l1 = multiprocessing.Lock()
     l2 = multiprocessing.Lock()
     pool = multiprocessing.Pool(initializer=pool_init, initargs=(l1, l2))
@@ -289,16 +286,20 @@ def main():
 
                         parameters.file_name = get_name(parameters)
 
-                        print("========================================================================================")
-                        print()
-                        print(parameters.filter_size, parameters.depth, parameters.kernel_size, parameters.activation_function_string)
                         print()
                         print("========================================================================================")
+                        print("filter_size={} depth={} kernel_size={} ac={}"
+                              .format(parameters.filter_size,
+                                      parameters.depth,
+                                      parameters.kernel_size,
+                                      parameters.activation_function_string)
+                              )
+                        print()
 
                         pool_init(l1, l2)
                         multithreadded_calculations(parameters)
 
-                        sys.exit()
+
 
 
 
