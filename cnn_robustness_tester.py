@@ -1,3 +1,4 @@
+import sys
 import time
 
 from train_cnn import train as train_cnn
@@ -227,12 +228,6 @@ def reset_keras():
 
     print("clear gc", gc.collect()) # if it's done something you should see a number being outputted
 
-    # use the same config as you used to create the session
-    config = tf.ConfigProto()
-    config.gpu_options.per_process_gpu_memory_fraction = 1
-    config.gpu_options.visible_device_list = "0"
-    tf.compat.v1.keras.backend.set_session(tf.Session(config=config))
-
 
 def multithreadded_calculations(parameters):
     start_time = timer.time()
@@ -303,7 +298,9 @@ def main():
                         pool_init(l1, l2)
                         multithreadded_calculations(parameters)
 
-                        break
+                        sys.exit()
+
+
 
                         #pool.apply_async(multithreadded_calculations, (parameters,))
     pool.close()
