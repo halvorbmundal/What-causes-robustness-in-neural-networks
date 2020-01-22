@@ -295,8 +295,9 @@ def main():
                         print()
 
                         pool_init(l1, l2)
-                        sys.exit()
+
                         multithreadded_calculations(parameters)
+                        sys.exit()
 
 
 
