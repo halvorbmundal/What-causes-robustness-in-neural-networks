@@ -451,7 +451,7 @@ def find_output_bounds(weights, biases, shapes, pads, strides, x0, eps, p_n):
         UBs.append(UB)
         LBs.append(LB)
     total_time = (time.time() - start_time)
-    print("used {} seconds to find bounds".format(total_time))
+    #print("used {} seconds to find bounds".format(total_time))
     return LBs[-1], UBs[-1]
 
 #Warms up numba functions
