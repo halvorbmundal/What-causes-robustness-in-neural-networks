@@ -16,6 +16,8 @@ import logging
 import multiprocessing
 import gc
 
+tf.get_logger().setLevel('WARNING')
+
 
 class NnArchitecture(Enum):
     ONLY_CNN = "only_cnn"
@@ -56,7 +58,7 @@ def fn(correct, predicted):
 def setDynamicGPUAllocation():
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
-    #config.log_device_placement = True  # to log device placement (on which device the operation ran)
+    config.log_device_placement = False  # to log device placement (on which device the operation ran)
 
     sess = tf.Session(config=config)
     tf.compat.v1.keras.backend.set_session(sess)  # set this TensorFlow session as the default session for Keras
@@ -269,6 +271,9 @@ def main():
             for depth in range(1, 10, 2):
                 for kernel_size in range(3, 15, 2):
                     for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
+                        if kernel_size > filter_size:
+                            continue
+
                         parameters = CnnTestParameters()
                         parameters.tf_activation = get_tf_activation_function_from_string(activation_function_string)
                         parameters.activation_function_string = activation_function_string

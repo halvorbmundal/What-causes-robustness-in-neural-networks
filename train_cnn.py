@@ -72,7 +72,8 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
               validation_data=(data.validation_data, data.validation_labels),
               epochs=num_epochs,
               shuffle=True,
-              callbacks=[early_stopping])
+              callbacks=[early_stopping],
+              verbose=0)
 
     metafile="models_meta.csv"
     if not os.path.exists(metafile):
@@ -90,8 +91,6 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     
     return history
 
-if not os.path.isdir('models'):
-    os.makedirs('models')
 
 
 if __name__ == '__main__':
