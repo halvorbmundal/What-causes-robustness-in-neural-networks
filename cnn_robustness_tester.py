@@ -215,7 +215,7 @@ def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
 def multithreadded_calculations(parameters):
     start_time = timer.time()
 
-    #setDynamicGPUAllocation()
+    setDynamicGPUAllocation()
     skip_architecture, accuracy = train_and_get_accuracy_of_nn(parameters.file_name,
                                                                parameters.filters,
                                                                parameters.kernels,
@@ -248,7 +248,7 @@ def main():
 
     l1 = multiprocessing.Lock()
     l2 = multiprocessing.Lock()
-    pool = multiprocessing.Pool(processes=12, initializer=pool_init, initargs=(l1, l2))
+    pool = multiprocessing.Pool(initializer=pool_init, initargs=(l1, l2))
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
@@ -270,9 +270,9 @@ def main():
                         parameters.file_name = get_name(parameters)
 
                         pool_init(l1, l2)
-                        multithreadded_calculations(parameters)
+                        #multithreadded_calculations(parameters)
 
-                        #pool.apply_async(multithreadded_calculations, (parameters,))
+                        pool.apply_async(multithreadded_calculations, (parameters,))
     pool.close()
     pool.join()
 
