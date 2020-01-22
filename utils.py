@@ -125,8 +125,9 @@ def generate_data(data, samples, targeted=True, random_and_least_likely = False,
                 else:
                     seq = range(data.test_labels.shape[1])
                     information.extend(data.test_labels.shape[1] * ['seq'])
-            #print("[DATAGEN][L1] no = {}, true_id = {}, true_label = {}, predicted = {}, correct = {}, seq = {}, info = {}".format(total, start + i,
+            """print("[DATAGEN][L1] no = {}, true_id = {}, true_label = {}, predicted = {}, correct = {}, seq = {}, info = {}".format(total, start + i, 
                 np.argmax(data.test_labels[start+i]), predicted_label, np.argmax(data.test_labels[start+i]) == predicted_label, seq, [] if len(seq) == 0 else information[-len(seq):]))
+            """
             for j in seq:
                 # skip the original image label
                 if (j == np.argmax(data.test_labels[start+i])):
