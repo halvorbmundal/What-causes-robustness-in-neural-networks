@@ -633,7 +633,7 @@ def run(file_name, n_samples, p_n, q_n, activation = 'relu', cifar=False, tinyim
         
     start_time = time.time()
     for i in range(len(inputs)):
-        print('--- CNN-Cert: Computing eps for input image ' + str(i)+ '---')
+        #print('--- CNN-Cert: Computing eps for input image ' + str(i)+ '---')
         predict_label = np.argmax(true_labels[i])
         target_label = np.argmax(targets[i])
         weights = model.weights[:-1]
@@ -653,7 +653,7 @@ def run(file_name, n_samples, p_n, q_n, activation = 'relu', cifar=False, tinyim
             #print('Step ' + str(j))
             LB, UB = find_output_bounds(weights, biases, shapes, model.pads, model.strides, model.sizes, model.types, inputs[i].astype(np.float32), np.exp(log_eps), p_n)
             
-            print("Step {}, eps = {:.5f}, {:.6s} <= f_c - f_t <= {:.6s}".format(j,np.exp(log_eps),str(np.squeeze(LB)),str(np.squeeze(UB))))
+            #print("Step {}, eps = {:.5f}, {:.6s} <= f_c - f_t <= {:.6s}".format(j,np.exp(log_eps),str(np.squeeze(LB)),str(np.squeeze(UB))))
             if LB > 0: #Increase eps
                 log_eps_min = log_eps
                 log_eps = np.minimum(log_eps+1, (log_eps_max+log_eps_min)/2)
@@ -666,7 +666,7 @@ def run(file_name, n_samples, p_n, q_n, activation = 'relu', cifar=False, tinyim
         else:
             str_p_n = str(p_n)
 
-        print("[L1] method = CNN-Cert-{}, model = {}, image no = {}, true_id = {}, target_label = {}, true_label = {}, norm = {}, robustness = {:.5f}".format(activation,file_name, i, true_ids[i],target_label,predict_label,str_p_n,np.exp(log_eps_min)))
+        #print("[L1] method = CNN-Cert-{}, model = {}, image no = {}, true_id = {}, target_label = {}, true_label = {}, norm = {}, robustness = {:.5f}".format(activation,file_name, i, true_ids[i],target_label,predict_label,str_p_n,np.exp(log_eps_min)))
         summation += np.exp(log_eps_min)
     K.clear_session()
     
