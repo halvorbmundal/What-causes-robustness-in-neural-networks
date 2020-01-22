@@ -297,7 +297,6 @@ def main():
 
                         pool.apply_async(multithreadded_calculations, (parameters,))
 
-                        sys.exit()
     pool.close()
     pool.join()
 
