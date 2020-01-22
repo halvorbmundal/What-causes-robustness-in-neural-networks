@@ -51,6 +51,14 @@ def fn(correct, predicted):
     return tf.nn.softmax_cross_entropy_with_logits(labels=correct, logits=predicted)
 
 
+def setDynamicGPUAllocation():
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
+    #config.log_device_placement = True  # to log device placement (on which device the operation ran)
+
+    sess = tf.Session(config=config)
+    tf.compat.v1.keras.backend.set_session(sess)  # set this TensorFlow session as the default session for Keras
+
 def get_accuracy_of(file, batch_size):
     keras_model = load_model(file, custom_objects={'fn': fn, 'tf': tf, 'atan': tf.math.atan})
     #TODO
@@ -205,6 +213,7 @@ def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
 def multithreadded_calculations(parameters):
     start_time = timer.time()
 
+    setDynamicGPUAllocation()
     skip_architecture, accuracy = train_and_get_accuracy_of_nn(parameters.file_name,
                                                                parameters.filters,
                                                                parameters.kernels,
