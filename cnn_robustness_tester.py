@@ -1,14 +1,18 @@
 import sys
 import time
 
-from train_cnn import train as train_cnn
+try:
+    from train_cnn import train as train_cnn
+except:
+    print()
+    print("Could not import train_cnn")
+    print()
 from pymain import run_cnn
 from setup_mnist import MNIST
 import csv
 import os.path
 from Attacks.cw_attack import cw_attack
 import time as timer
-from tensorflow.contrib.keras.api.keras.models import load_model
 import tensorflow as tf
 from setup_mnist import MNIST
 from enum import Enum
