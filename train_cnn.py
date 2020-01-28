@@ -75,14 +75,14 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
               callbacks=[early_stopping],
               verbose=0)
 
-    metafile="models_meta.csv"
+    metafile="output/models_meta.csv"
     if not os.path.exists(metafile):
         with open(metafile, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(["num_epochs", "file_name"])
+            writer.writerow(["num_epochs", "accuracy", "file_name"])
     with open(metafile, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow([len(history.history['loss']) ,file_name])
+        writer.writerow([len(history.history['loss']), history.history["val_acc"][-1], file_name])
 
 
     # save model to a file

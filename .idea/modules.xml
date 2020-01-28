@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/CNN-Cert.iml" filepath="$PROJECT_DIR$/.idea/CNN-Cert.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../idun/.idea/idun.iml" filepath="$PROJECT_DIR$/../idun/.idea/idun.iml" />
     </modules>
   </component>
 </project>
