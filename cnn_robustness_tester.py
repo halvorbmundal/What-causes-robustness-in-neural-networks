@@ -271,7 +271,7 @@ def main():
     if cpu:
         l1 = multiprocessing.Lock()
         l2 = multiprocessing.Lock()
-        pool = multiprocessing.Pool(10, initializer=pool_init, initargs=(l1, l2))
+        pool = multiprocessing.Pool(20, initializer=pool_init, initargs=(l1, l2))
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
