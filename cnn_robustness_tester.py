@@ -272,10 +272,11 @@ def main():
     gpu=arg1=="gpu" or arg2=="gpu"
 
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
+
     if cpu:
         l1 = multiprocessing.Lock()
         l2 = multiprocessing.Lock()
-        pool = multiprocessing.Pool(20, initializer=pool_init, initargs=(l1, l2))
+        pool = multiprocessing.Pool(2, initializer=pool_init, initargs=(l1, l2))
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
