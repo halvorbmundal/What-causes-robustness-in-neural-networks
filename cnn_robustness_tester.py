@@ -280,8 +280,6 @@ def main():
             for depth in range(1, 10, 2):
                 for kernel_size in range(3, 15, 2):
                     for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
-                        if kernel_size > filter_size:
-                            continue
 
                         parameters = CnnTestParameters()
                         parameters.tf_activation = get_tf_activation_function_from_string(activation_function_string)
