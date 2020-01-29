@@ -1,12 +1,7 @@
 import sys
 import time
 
-try:
-    from train_cnn import train as train_cnn
-except:
-    print()
-    print("Could not import train_cnn")
-    print()
+from train_cnn import train as train_cnn
 from pymain import run_cnn
 from setup_mnist import MNIST
 import csv

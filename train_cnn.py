@@ -35,7 +35,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
         model.add(BatchNormalization())
     #model.add(Lambda(activation))
     for f, k in zip(filters[1:], kernels[1:]):
-        model.add(Conv2D(f,k,activation=activation))
+        model.add(Conv2D(f,k,activation=activation, padding="same"))
         if bn:
             model.add(BatchNormalization())
         # ReLU activation
