@@ -64,15 +64,6 @@ def setDynamicGPUAllocation():
     tf.compat.v1.keras.backend.set_session(sess)  # set this TensorFlow session as the default session for Keras
 
 
-def get_accuracy_of(file, batch_size):
-    keras_model = load_model(file, custom_objects={'fn': fn, 'tf': tf, 'atan': tf.math.atan})
-    # TODO add other datasets
-    data = MNIST()
-    loss, acc = keras_model.evaluate(data.validation_data, data.validation_labels, batch_size=batch_size)
-    print("the accuracy is ", acc)
-    return acc
-
-
 def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization):
     sess = tf.keras.backend.get_session()
     tf.keras.backend.set_session(sess)
@@ -271,7 +262,7 @@ def main():
     if cpu:
         l1 = multiprocessing.Lock()
         l2 = multiprocessing.Lock()
-        pool = multiprocessing.Pool(2, initializer=pool_init, initargs=(l1, l2))
+        pool = multiprocessing.Pool(20, initializer=pool_init, initargs=(l1, l2))
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
