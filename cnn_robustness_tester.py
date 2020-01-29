@@ -211,32 +211,42 @@ def get_accuracy_of_nn_from_csv(csv_file, file_name):
 
 def multithreadded_cpu_calculations(parameters):
     semaphore.acquire()
-    if not file_exists(parameters.file_name):
-        print("File does not exist {}".format(parameters.file_name))
-        return
+    try:
 
-    start_time = timer.time()
+        if not file_exists(parameters.file_name):
+            print_parameters(parameters)
+            print("File does not exist {}".format(parameters.file_name), flush=True)
+            return
 
-    if csv_contains_file(CnnTestParameters.result_folder + CnnTestParameters.result_file, parameters.file_name):
-        print("Bounds already calculated for {}".format(parameters.file_name))
-        return
+        start_time = timer.time()
 
-    accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
+        if csv_contains_file(CnnTestParameters.result_folder + CnnTestParameters.result_file, parameters.file_name):
+            print_parameters(parameters)
+            print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
+            return
 
-    if float(accuracy) < 0.95:
-        print("skiped", parameters.file_name, "as the accuracy was too low")
-        return
+        accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
 
-    lower_bound = calculate_lower_bound(parameters.file_name,
-                                        parameters.num_image,
-                                        parameters.l_norm,
-                                        parameters.nn_architecture,
-                                        parameters.activation_function_string)
+        if float(accuracy) < 0.95:
+            print_parameters(parameters)
+            print("skiped", parameters.file_name, "as the accuracy was too low", flush=True)
+            return
 
-    time_elapsed = timer.time() - start_time
+        lower_bound = calculate_lower_bound(parameters.file_name,
+                                            parameters.num_image,
+                                            parameters.l_norm,
+                                            parameters.nn_architecture,
+                                            parameters.activation_function_string)
 
-    write_to_file(parameters, lower_bound, accuracy, time_elapsed)
-    semaphore.release()
+        time_elapsed = timer.time() - start_time
+
+        write_to_file(parameters, lower_bound, accuracy, time_elapsed)
+
+        print_parameters(parameters)
+        print("wrote to file", flush=True)
+
+    finally:
+        semaphore.release()
 
 
 def pool_init(l1, l2, sema):
@@ -247,6 +257,17 @@ def pool_init(l1, l2, sema):
     write_lock = l1
     keras_lock = l2
 
+def print_parameters(parameters):
+    print()
+    print(
+        "========================================================================================")
+    print("filter_size={} depth={} kernel_size={} ac={}"
+          .format(parameters.filter_size,
+                  parameters.depth,
+                  parameters.kernel_size,
+                  parameters.activation_function_string)
+          , flush=True)
+    print()
 
 def main():
     _, arg1, arg2 = sys.argv
@@ -261,7 +282,7 @@ def main():
         l1 = multiprocessing.Lock()
         l2 = multiprocessing.Lock()
         sema = multiprocessing.Semaphore(processes)
-        pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2))
+        pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema))
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
@@ -283,22 +304,11 @@ def main():
 
                         parameters.file_name = get_name(parameters)
 
-                        print()
-                        print(
-                            "========================================================================================")
-                        print("filter_size={} depth={} kernel_size={} ac={}"
-                              .format(parameters.filter_size,
-                                      parameters.depth,
-                                      parameters.kernel_size,
-                                      parameters.activation_function_string)
-                              , flush=True)
-                        print()
-
                         if gpu:
                             gpu_calculations(parameters)
 
                         if cpu:
-                            pool_init(l1, l2, sema)
+                            # pool_init(l1, l2, sema)
                             # multithreadded_cpu_calculations(parameters)
                             pool.apply_async(multithreadded_cpu_calculations, (parameters,))
 
