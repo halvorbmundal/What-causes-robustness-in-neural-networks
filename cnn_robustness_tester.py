@@ -208,17 +208,11 @@ def get_accuracy_of_nn_from_csv(csv_file, file_name):
                 return row[accuracy_column]
     return None
 
-def wait_for_file(parameters):
-    tries = 0
-    while not file_exists(parameters.file_name):
-        if tries > 5:
-            print("Abandoned waiting for {}".format(parameters.file_name))
-            return
-        time.sleep(60)
-        tries += 1
 
 def multithreadded_cpu_calculations(parameters):
-    wait_for_file(parameters)
+    if not file_exists(parameters.file_name):
+        print("File does not exist {}".format(parameters.file_name))
+        return
 
     start_time = timer.time()
 
