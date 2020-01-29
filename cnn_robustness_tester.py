@@ -300,8 +300,8 @@ def main():
 
                         if cpu:
                             pool_init(l1, l2)
-                            multithreadded_cpu_calculations(parameters)
-                            #pool.apply_async(multithreadded_cpu_calculations, (parameters,))
+                            #multithreadded_cpu_calculations(parameters)
+                            pool.apply_async(multithreadded_cpu_calculations, (parameters,))
 
     pool.close()
     pool.join()
