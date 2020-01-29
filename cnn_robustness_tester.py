@@ -138,7 +138,7 @@ def train_nn(file_name, filters, kernels, tf_activation, has_batch_normalization
         logging.exception("This file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
 
 
-def calculate_lower_bound(accuracy, file_name, num_image, l_norm, nn_architecture, activation_function_string):
+def calculate_lower_bound(file_name, num_image, l_norm, nn_architecture, activation_function_string):
     return get_lower_bound(file_name,
                            num_image,
                            l_norm,
@@ -210,6 +210,7 @@ def get_accuracy_of_nn_from_csv(csv_file, file_name):
 
 
 def multithreadded_cpu_calculations(parameters):
+    semaphore.acquire()
     if not file_exists(parameters.file_name):
         print("File does not exist {}".format(parameters.file_name))
         return
@@ -226,37 +227,41 @@ def multithreadded_cpu_calculations(parameters):
         print("skiped", parameters.file_name, "as the accuracy was too low")
         return
 
-    lower_bound = calculate_lower_bound(accuracy,
-                          parameters.file_name,
-                          parameters.num_image,
-                          parameters.l_norm,
-                          parameters.nn_architecture,
-                          parameters.activation_function_string)
-
+    lower_bound = calculate_lower_bound(parameters.file_name,
+                                        parameters.num_image,
+                                        parameters.l_norm,
+                                        parameters.nn_architecture,
+                                        parameters.activation_function_string)
 
     time_elapsed = timer.time() - start_time
 
     write_to_file(parameters, lower_bound, accuracy, time_elapsed)
+    semaphore.release()
 
 
-def pool_init(l1, l2):
+def pool_init(l1, l2, sema):
     global write_lock
     global keras_lock
+    global semaphore
+    semaphore = sema
     write_lock = l1
     keras_lock = l2
 
 
 def main():
     _, arg1, arg2 = sys.argv
-    cpu=arg1=="cpu" or arg2=="cpu"
-    gpu=arg1=="gpu" or arg2=="gpu"
+    cpu = arg1 == "cpu" or arg2 == "cpu"
+    gpu = arg1 == "gpu" or arg2 == "gpu"
 
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
 
     if cpu:
+        processes = 20
+
         l1 = multiprocessing.Lock()
         l2 = multiprocessing.Lock()
-        pool = multiprocessing.Pool(20, initializer=pool_init, initargs=(l1, l2))
+        sema = multiprocessing.Semaphore(processes)
+        pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2))
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
@@ -293,8 +298,8 @@ def main():
                             gpu_calculations(parameters)
 
                         if cpu:
-                            pool_init(l1, l2)
-                            #multithreadded_cpu_calculations(parameters)
+                            pool_init(l1, l2, sema)
+                            # multithreadded_cpu_calculations(parameters)
                             pool.apply_async(multithreadded_cpu_calculations, (parameters,))
 
     pool.close()
