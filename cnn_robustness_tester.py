@@ -245,8 +245,11 @@ def multithreadded_cpu_calculations(parameters):
         print_parameters(parameters)
         print("wrote to file", flush=True)
 
+        return
+
     finally:
         semaphore.release()
+        gc.collect()
 
 
 def pool_init(l1, l2, sema):
