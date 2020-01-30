@@ -277,7 +277,7 @@ def main():
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
 
     if cpu:
-        processes = 35
+        processes = 36
 
         l1 = multiprocessing.Lock()
         l2 = multiprocessing.Lock()
