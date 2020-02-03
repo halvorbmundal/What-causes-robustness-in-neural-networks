@@ -182,6 +182,7 @@ def reset_keras():
 
 def gpu_calculations(parameters):
     if not file_exists(parameters.file_name):
+        print(f"\ntraining with {parameter_string(parameters)}\n")
         train_nn(parameters.file_name,
                  parameters.filters,
                  parameters.kernels,
@@ -211,6 +212,7 @@ def get_accuracy_of_nn_from_csv(csv_file, file_name):
 
 def multithreadded_cpu_calculations(parameters):
     semaphore.acquire()
+    print(f"\nCalculating robustness of {parameter_string(parameters)}\n")
     try:
         setDynamicGPUAllocation()
 
@@ -262,22 +264,28 @@ def pool_init(l1, l2, sema):
     write_lock = l1
     keras_lock = l2
 
+
+def parameter_string(parameters):
+    return "filter_size={} depth={} kernel_size={} ac={}" \
+        .format(parameters.filter_size,
+                parameters.depth,
+                parameters.kernel_size,
+                parameters.activation_function_string)
+
+
 def print_parameters(parameters):
     print()
     print(
         "========================================================================================")
-    print("filter_size={} depth={} kernel_size={} ac={}"
-          .format(parameters.filter_size,
-                  parameters.depth,
-                  parameters.kernel_size,
-                  parameters.activation_function_string)
-          , flush=True)
+    print(parameter_string(parameters))
     print()
 
+
 def main():
-    _, arg1, arg2 = sys.argv
+    _, arg1, arg2, arg3 = sys.argv
     cpu = arg1 == "cpu" or arg2 == "cpu"
     gpu = arg1 == "gpu" or arg2 == "gpu"
+    debugging = arg3 == "debugging"
 
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
     setDynamicGPUAllocation()
@@ -314,9 +322,11 @@ def main():
                             gpu_calculations(parameters)
 
                         if cpu:
-                            # pool_init(l1, l2, sema)
-                            # multithreadded_cpu_calculations(parameters)
-                            pool.apply_async(multithreadded_cpu_calculations, (parameters,))
+                            if debugging:
+                                pool_init(l1, l2, sema)
+                                multithreadded_cpu_calculations(parameters)
+                            else:
+                                pool.apply_async(multithreadded_cpu_calculations, (parameters,))
 
     pool.close()
     pool.join()
