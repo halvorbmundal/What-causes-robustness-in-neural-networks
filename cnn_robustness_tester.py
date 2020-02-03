@@ -212,6 +212,7 @@ def get_accuracy_of_nn_from_csv(csv_file, file_name):
 def multithreadded_cpu_calculations(parameters):
     semaphore.acquire()
     try:
+        setDynamicGPUAllocation()
 
         if not file_exists(parameters.file_name):
             print_parameters(parameters)
@@ -245,6 +246,7 @@ def multithreadded_cpu_calculations(parameters):
         print_parameters(parameters)
         print("wrote to file", flush=True)
 
+        reset_keras()
         return
 
     finally:
@@ -278,6 +280,7 @@ def main():
     gpu = arg1 == "gpu" or arg2 == "gpu"
 
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
+    setDynamicGPUAllocation()
 
     if cpu:
         processes = 36
