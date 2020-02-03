@@ -289,10 +289,10 @@ def main():
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
-    for kernel_size in range(3, 15, 2):
-        for filter_size in range(2, 128, 8):
+    for kernel_size in range(3, 8, 1):
+        for filter_size in range(2, 64, 4):
             for has_batch_normalization in [False]:
-                for depth in range(1, 10, 2):
+                for depth in range(1, 5, 1):
                     for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
 
                         parameters = CnnTestParameters()
