@@ -15,6 +15,7 @@ import logging
 import multiprocessing
 import gc
 import time
+import os
 
 tf.get_logger().setLevel('WARNING')
 
@@ -212,8 +213,8 @@ def get_accuracy_of_nn_from_csv(csv_file, file_name):
 
 def multithreadded_cpu_calculations(parameters):
     semaphore.acquire()
-    print(f"\nCalculating robustness of {parameter_string(parameters)}\n")
     try:
+        print(f"\nCalculating robustness of {parameter_string(parameters)}\n")
         setDynamicGPUAllocation()
 
         if not file_exists(parameters.file_name):
@@ -286,6 +287,11 @@ def main():
     cpu = arg1 == "cpu" or arg2 == "cpu"
     gpu = arg1 == "gpu" or arg2 == "gpu"
     debugging = arg3 == "debugging"
+
+    if not debugging:
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+        tf.get_logger().setLevel('ERROR')
+        tf.logging.set_verbosity(tf.logging.error)
 
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
     setDynamicGPUAllocation()
