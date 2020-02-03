@@ -291,7 +291,7 @@ def main():
     if not debugging:
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
         tf.get_logger().setLevel('ERROR')
-        tf.logging.set_verbosity(tf.logging.error)
+        tf.logging.set_verbosity(tf.logging.ERROR)
 
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
     setDynamicGPUAllocation()
