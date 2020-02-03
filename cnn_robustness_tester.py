@@ -279,7 +279,7 @@ def print_parameters(parameters):
     print(
         "========================================================================================")
     print(parameter_string(parameters))
-    print()
+    print("", flush=True)
 
 
 def main():
@@ -323,6 +323,8 @@ def main():
                         parameters.has_batch_normalization = has_batch_normalization
 
                         parameters.file_name = get_name(parameters)
+
+                        print_parameters(parameters)
 
                         if gpu:
                             gpu_calculations(parameters)
