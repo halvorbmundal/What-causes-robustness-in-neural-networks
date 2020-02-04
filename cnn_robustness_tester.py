@@ -183,6 +183,7 @@ def reset_keras():
 
 def gpu_calculations(parameters):
     if not file_exists(parameters.file_name):
+        setDynamicGPUAllocation()
         print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
         train_nn(parameters.file_name,
                  parameters.filters,
@@ -288,21 +289,25 @@ def main():
     gpu = arg1 == "gpu" or arg2 == "gpu"
     debugging = arg3 == "debugging"
 
+
     if not debugging:
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
         tf.get_logger().setLevel('ERROR')
         tf.logging.set_verbosity(tf.logging.ERROR)
 
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
-    setDynamicGPUAllocation()
+    if debugging:
+        print(cpu)
+        print(gpu)
 
     if cpu:
-        processes = 36
+        processes = 4
 
         l1 = multiprocessing.Lock()
         l2 = multiprocessing.Lock()
         sema = multiprocessing.Semaphore(processes)
         pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
+        keras_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
@@ -324,10 +329,12 @@ def main():
 
                         parameters.file_name = get_name(parameters)
 
-                        print_parameters(parameters)
-
                         if gpu:
-                            gpu_calculations(parameters)
+                            if debugging:
+                                pool_init(l1, l2, sema)
+                                gpu_calculations(parameters)
+                            else:
+                                keras_pool.apply_async(gpu_calculations, (parameters,))
 
                         if cpu:
                             if debugging:
