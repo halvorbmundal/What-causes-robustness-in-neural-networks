@@ -301,7 +301,7 @@ def main():
         print(gpu)
 
     if cpu:
-        processes = 4
+        processes = 36
 
         l1 = multiprocessing.Lock()
         l2 = multiprocessing.Lock()
