@@ -184,17 +184,21 @@ def reset_keras():
 
 
 def gpu_calculations(parameters):
-    if not file_exists(parameters.file_name):
-        setDynamicGPUAllocation()
-        print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
-        train_nn(parameters.file_name,
-                 parameters.filters,
-                 parameters.kernels,
-                 parameters.tf_activation,
-                 parameters.has_batch_normalization,
-                 parameters.use_old_network)
-    else:
-        print("Neural network already created - {}".format(parameters.result_file), flush=True)
+    keras_lock.acquire()
+    try:
+        if not file_exists(parameters.file_name):
+            setDynamicGPUAllocation()
+            print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
+            train_nn(parameters.file_name,
+                     parameters.filters,
+                     parameters.kernels,
+                     parameters.tf_activation,
+                     parameters.has_batch_normalization,
+                     parameters.use_old_network)
+        else:
+            print("Neural network already created - {}".format(parameters.result_file), flush=True)
+    finally:
+        keras_lock.release()
 
 
 def get_accuracy_of_nn_from_csv(csv_file, file_name):
@@ -215,54 +219,58 @@ def get_accuracy_of_nn_from_csv(csv_file, file_name):
     return None
 
 
-def multithreadded_cpu_calculations(parameters):
-    semaphore.acquire()
-    try:
-        print(f"\nCalculating robustness of {parameter_string(parameters)}\n", flush=True)
-        setDynamicGPUAllocation()
+def multithreadded_calculations(parameters):
+    if parameters.use_gpu:
+        gpu_calculations(parameters)
 
-        if not file_exists(parameters.file_name):
+    if parameters.use_cpu:
+        semaphore.acquire()
+        try:
+            print(f"\nCalculating robustness of {parameter_string(parameters)}\n", flush=True)
+            setDynamicGPUAllocation()
+
+            if not file_exists(parameters.file_name):
+                print_parameters(parameters)
+                print("File does not exist {}".format(parameters.file_name), flush=True)
+                return
+
+            start_time = timer.time()
+
+            debugprint(parameters.isDebugging, "reading results csv")
+            if csv_contains_file(CnnTestParameters.result_folder + CnnTestParameters.result_file, parameters.file_name):
+                print_parameters(parameters)
+                print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
+                return
+
+            debugprint(parameters.isDebugging, "reading models_meta.csv")
+            accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
+
+            if float(accuracy) < 0.95:
+                print_parameters(parameters)
+                print("skiped", parameters.file_name, "as the accuracy was too low", flush=True)
+                return
+
+            debugprint(parameters.isDebugging, "calculating lower bound")
+            lower_bound = calculate_lower_bound(parameters.file_name,
+                                                parameters.num_image,
+                                                parameters.l_norm,
+                                                parameters.nn_architecture,
+                                                parameters.activation_function_string)
+
+            time_elapsed = timer.time() - start_time
+
+            debugprint(parameters.isDebugging, "writing to file")
+            write_to_file(parameters, lower_bound, accuracy, time_elapsed)
+
             print_parameters(parameters)
-            print("File does not exist {}".format(parameters.file_name), flush=True)
+            print("wrote to file", flush=True)
+
+            reset_keras()
             return
 
-        start_time = timer.time()
-
-        debugprint(parameters.isDebugging, "reading results csv")
-        if csv_contains_file(CnnTestParameters.result_folder + CnnTestParameters.result_file, parameters.file_name):
-            print_parameters(parameters)
-            print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
-            return
-
-        debugprint(parameters.isDebugging, "reading models_meta.csv")
-        accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
-
-        if float(accuracy) < 0.95:
-            print_parameters(parameters)
-            print("skiped", parameters.file_name, "as the accuracy was too low", flush=True)
-            return
-
-        debugprint(parameters.isDebugging, "calculating lower bound")
-        lower_bound = calculate_lower_bound(parameters.file_name,
-                                            parameters.num_image,
-                                            parameters.l_norm,
-                                            parameters.nn_architecture,
-                                            parameters.activation_function_string)
-
-        time_elapsed = timer.time() - start_time
-
-        debugprint(parameters.isDebugging, "writing to file")
-        write_to_file(parameters, lower_bound, accuracy, time_elapsed)
-
-        print_parameters(parameters)
-        print("wrote to file", flush=True)
-
-        reset_keras()
-        return
-
-    finally:
-        semaphore.release()
-        gc.collect()
+        finally:
+            semaphore.release()
+            gc.collect()
 
 
 def pool_init(l1, l2, sema):
@@ -325,7 +333,6 @@ def main():
         l2 = multiprocessing.Lock()
         sema = multiprocessing.Semaphore(processes)
         pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
-        keras_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
@@ -346,18 +353,16 @@ def main():
                         parameters.has_batch_normalization = has_batch_normalization
                         parameters.use_old_network = use_old_network
                         parameters.isDebugging = debugging
+                        parameters.use_gpu = gpu
+                        parameters.use_cpu = cpu
 
                         parameters.file_name = get_name(parameters)
 
-                        if gpu:
-                            gpu_calculations(parameters)
-
-                        if cpu:
-                            if debugging:
-                                pool_init(l1, l2, sema)
-                                multithreadded_cpu_calculations(parameters)
-                            else:
-                                pool.apply_async(multithreadded_cpu_calculations, (parameters,))
+                        if debugging:
+                            pool_init(l1, l2, sema)
+                            multithreadded_calculations(parameters)
+                        else:
+                            pool.apply_async(multithreadded_calculations, (parameters,))
 
     pool.close()
     pool.join()
