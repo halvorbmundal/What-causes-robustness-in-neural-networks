@@ -23,11 +23,10 @@ from setup_mnist import MNIST
 from setup_cifar import CIFAR
 import os
 
-def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, train_temp=1, init=None, activation=tf.nn.relu, bn = False):
+def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, train_temp=1, init=None, activation=tf.nn.relu, bn = False, use_old_network=False):
     """
     Train a n-layer CNN for MNIST and CIFAR
     """
-
     # create a Keras sequential model
     model = Sequential()
     model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:], activation=activation, padding="same"))
@@ -35,7 +34,11 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
         model.add(BatchNormalization())
     #model.add(Lambda(activation))
     for f, k in zip(filters[1:], kernels[1:]):
-        model.add(Conv2D(f,k,activation=activation, padding="same"))
+        if use_old_network:
+            model.add(Conv2D(f,k,activation=activation, padding="same"))
+        else:
+            model.add(Conv2D(f, k, activation=activation))
+
         if bn:
             model.add(BatchNormalization())
         # ReLU activation
@@ -64,16 +67,25 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     model.summary()
     print("Traing a {} layer model, saving to {}".format(len(filters) + 1, file_name))
 
-    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True, verbose=1)
+    if use_old_network:
+        history = model.fit(data.train_data, data.train_labels,
+                            batch_size=batch_size,
+                            validation_data=(data.validation_data, data.validation_labels),
+                            epochs=num_epochs,
+                            shuffle=True,
+                            verbose=0)
+    else:
+        early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True, verbose=1)
+        history = model.fit(data.train_data, data.train_labels,
+                            batch_size=batch_size,
+                            validation_data=(data.validation_data, data.validation_labels),
+                            epochs=num_epochs,
+                            shuffle=True,
+                            callbacks=[early_stopping],
+                            verbose=0)
 
     # run training with given dataset, and print progress
-    history = model.fit(data.train_data, data.train_labels,
-              batch_size=batch_size,
-              validation_data=(data.validation_data, data.validation_labels),
-              epochs=num_epochs,
-              shuffle=True,
-              callbacks=[early_stopping],
-              verbose=0)
+
 
     metafile="output/models_meta.csv"
     if not os.path.exists(metafile):

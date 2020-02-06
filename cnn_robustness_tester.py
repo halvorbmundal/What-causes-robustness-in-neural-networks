@@ -65,7 +65,7 @@ def setDynamicGPUAllocation():
     tf.compat.v1.keras.backend.set_session(sess)  # set this TensorFlow session as the default session for Keras
 
 
-def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization):
+def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_old_network):
     sess = tf.keras.backend.get_session()
     tf.keras.backend.set_session(sess)
     train_cnn(MNIST(),
@@ -74,14 +74,15 @@ def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, b
               kernels=kernels,
               num_epochs=epochs,
               activation=tf_activation,
-              bn=batch_normalization)
+              bn=batch_normalization,
+              use_old_network=use_old_network)
     tf.keras.backend.clear_session()
 
 
 def get_lower_bound(file_name, num_image, l_norm, only_cnn, activation_function):
     sess = tf.keras.backend.get_session()
     tf.keras.backend.set_session(sess)
-    avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, only_cnn, activation_function)
+    avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, core=only_cnn, activation=activation_function)
     tf.keras.backend.clear_session()
     return avg_lower_bound
 
@@ -126,14 +127,15 @@ def get_tf_activation_function_from_string(activation_function_string):
         return tf.math.atan
 
 
-def train_nn(file_name, filters, kernels, tf_activation, has_batch_normalization):
+def train_nn(file_name, filters, kernels, tf_activation, has_batch_normalization, use_old_network):
     try:
         train_and_save_network(file_name,
                                filters,
                                kernels,
                                CnnTestParameters.epochs,
                                tf_activation,
-                               has_batch_normalization)
+                               has_batch_normalization,
+                               use_old_network)
     except Exception as e:
         print("An exeption occured")
         logging.exception("This file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
@@ -189,7 +191,8 @@ def gpu_calculations(parameters):
                  parameters.filters,
                  parameters.kernels,
                  parameters.tf_activation,
-                 parameters.has_batch_normalization)
+                 parameters.has_batch_normalization,
+                 parameters.use_old_network)
     else:
         print("Neural network already created - {}".format(parameters.result_file), flush=True)
 
@@ -225,11 +228,13 @@ def multithreadded_cpu_calculations(parameters):
 
         start_time = timer.time()
 
+        debugprint(parameters.isDebugging, "reading results csv")
         if csv_contains_file(CnnTestParameters.result_folder + CnnTestParameters.result_file, parameters.file_name):
             print_parameters(parameters)
             print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
             return
 
+        debugprint(parameters.isDebugging, "reading models_meta.csv")
         accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
 
         if float(accuracy) < 0.95:
@@ -237,6 +242,7 @@ def multithreadded_cpu_calculations(parameters):
             print("skiped", parameters.file_name, "as the accuracy was too low", flush=True)
             return
 
+        debugprint(parameters.isDebugging, "calculating lower bound")
         lower_bound = calculate_lower_bound(parameters.file_name,
                                             parameters.num_image,
                                             parameters.l_norm,
@@ -245,6 +251,7 @@ def multithreadded_cpu_calculations(parameters):
 
         time_elapsed = timer.time() - start_time
 
+        debugprint(parameters.isDebugging, "writing to file")
         write_to_file(parameters, lower_bound, accuracy, time_elapsed)
 
         print_parameters(parameters)
@@ -282,12 +289,22 @@ def print_parameters(parameters):
     print(parameter_string(parameters))
     print("", flush=True)
 
+def debugprint(isDebugging, text):
+    if isDebugging:
+        print(text)
 
 def main():
-    _, arg1, arg2, arg3 = sys.argv
+    _, arg1, arg2, arg3, arg4 = sys.argv
     cpu = arg1 == "cpu" or arg2 == "cpu"
     gpu = arg1 == "gpu" or arg2 == "gpu"
     debugging = arg3 == "debugging"
+    use_old_network = arg4 == "old"
+
+    if use_old_network:
+        old_path = "old_network"
+        if not os.path.exists(old_path):
+            os.makedirs(old_path)
+        os.chdir(old_path)
 
 
     if not debugging:
@@ -297,8 +314,9 @@ def main():
 
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
     if debugging:
-        print(cpu)
-        print(gpu)
+        print(f"cpu: {cpu}")
+        print(f"gpu: {gpu}")
+        print(f"old: {use_old_network}")
 
     if cpu:
         processes = 36
@@ -326,15 +344,13 @@ def main():
                         parameters.filters = [filter_size for i in range(depth)]
                         parameters.kernels = [kernel_size for i in range(depth)]
                         parameters.has_batch_normalization = has_batch_normalization
+                        parameters.use_old_network = use_old_network
+                        parameters.isDebugging = debugging
 
                         parameters.file_name = get_name(parameters)
 
                         if gpu:
-                            if debugging:
-                                pool_init(l1, l2, sema)
-                                gpu_calculations(parameters)
-                            else:
-                                keras_pool.apply_async(gpu_calculations, (parameters,))
+                            gpu_calculations(parameters)
 
                         if cpu:
                             if debugging:
