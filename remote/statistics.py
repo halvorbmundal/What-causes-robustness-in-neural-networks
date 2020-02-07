@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -121,24 +123,29 @@ def error_plot():
     kernel_query = (df[_kernel] == 5)
     filter_query = (df[_filter] <= 90)
     ac_query = (df[_activation_function] == "ada")
-    all_queries = depth_query & kernel_query & filter_query & ac_query
+    all_queries = ac_query #& kernel_query & filter_query & depth_query
 
     error_plot_column(df, _kernel, query=all_queries)
     error_plot_column(df, _depth, query=all_queries)
     error_plot_column(df, _filter, query=all_queries)
 
 def main():
-    columns = [_kernel, _depth, _filter, _activation_function]
-    x_df, y_df, af = get_df(columns)
-    y = y_df.to_numpy()
-    columns = x_df.keys()
-    X, input_dict = get_numppy_arrays(x_df)
-    linear_regression_model = linear_regression(X, y)
-    for i in columns:
-        if False:
-            plot_single_variable(input_dict[i], y, i)
-    for i in range(len(x_df.columns)):
-        print("{}: {}".format(x_df.columns[i], linear_regression_model.coef_[i]))
+    if True:
+        old_path = "old_network"
+        os.chdir(old_path)
+    else:
+
+        columns = [_kernel, _depth, _filter, _activation_function]
+        x_df, y_df, af = get_df(columns)
+        y = y_df.to_numpy()
+        columns = x_df.keys()
+        X, input_dict = get_numppy_arrays(x_df)
+        linear_regression_model = linear_regression(X, y)
+        for i in columns:
+            if False:
+                plot_single_variable(input_dict[i], y, i)
+        for i in range(len(x_df.columns)):
+            print("{}: {}".format(x_df.columns[i], linear_regression_model.coef_[i]))
 
     error_plot()
     #plot_3d(input_dict[_filter], input_dict[_depth], y, af)

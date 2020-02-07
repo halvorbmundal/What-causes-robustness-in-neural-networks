@@ -195,6 +195,8 @@ def gpu_calculations(parameters):
                      parameters.tf_activation,
                      parameters.has_batch_normalization,
                      parameters.use_old_network)
+            print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
+
         else:
             print("Neural network already created - {}".format(parameters.result_file), flush=True)
     finally:
@@ -326,13 +328,14 @@ def main():
         print(f"gpu: {gpu}")
         print(f"old: {use_old_network}")
 
+    processes = 36
+    l1 = multiprocessing.Lock()
+    l2 = multiprocessing.Lock()
+    sema = multiprocessing.Semaphore(processes)
     if cpu:
-        processes = 36
-
-        l1 = multiprocessing.Lock()
-        l2 = multiprocessing.Lock()
-        sema = multiprocessing.Semaphore(processes)
         pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
+    else:
+        pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
@@ -353,6 +356,9 @@ def main():
                         parameters.has_batch_normalization = has_batch_normalization
                         parameters.use_old_network = use_old_network
                         parameters.isDebugging = debugging
+                        if use_old_network:
+                            parameters.nn_architecture = NnArchitecture.ONLY_CNN
+                            parameters.epochs = 10
                         parameters.use_gpu = gpu
                         parameters.use_cpu = cpu
 
