@@ -127,12 +127,12 @@ def get_tf_activation_function_from_string(activation_function_string):
         return tf.math.atan
 
 
-def train_nn(file_name, filters, kernels, tf_activation, has_batch_normalization, use_old_network):
+def train_nn(file_name, filters, kernels, epochs, tf_activation, has_batch_normalization, use_old_network):
     try:
         train_and_save_network(file_name,
                                filters,
                                kernels,
-                               CnnTestParameters.epochs,
+                               epochs,
                                tf_activation,
                                has_batch_normalization,
                                use_old_network)
@@ -192,6 +192,7 @@ def gpu_calculations(parameters):
             train_nn(parameters.file_name,
                      parameters.filters,
                      parameters.kernels,
+                     parameters.epochs,
                      parameters.tf_activation,
                      parameters.has_batch_normalization,
                      parameters.use_old_network)
@@ -239,7 +240,7 @@ def multithreadded_calculations(parameters):
             start_time = timer.time()
 
             debugprint(parameters.isDebugging, "reading results csv")
-            if csv_contains_file(CnnTestParameters.result_folder + CnnTestParameters.result_file, parameters.file_name):
+            if csv_contains_file(parameters.result_folder + parameters.result_file, parameters.file_name):
                 print_parameters(parameters)
                 print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
                 return
