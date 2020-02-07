@@ -565,7 +565,7 @@ def find_output_bounds(weights, biases, shapes, pads, strides, sizes, types, x0,
     LBs = [x0-eps]
     UBs = [x0+eps]
     for i in range(1,len(weights)+1):
-        print('Layer ' + str(i))
+        #print('Layer ' + str(i))
         LB, UB = compute_bounds(weights, biases, shapes[i], i, x0, eps, p_n, pads, strides, sizes, types, LBs, UBs)
         UBs.append(UB)
         LBs.append(LB)
