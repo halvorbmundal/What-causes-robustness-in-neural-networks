@@ -353,11 +353,11 @@ def main():
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
-    for kernel_size in range(3, 8, 1):
+    for kernel_size in range(3, 8, 1): #range(3, 8, 1):
         for filter_size in range(2, 64, 4):
             for has_batch_normalization in [False]:
-                for depth in range(1, 5, 1):
-                    for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
+                for depth in range(3, 5, 1):#range(1, 5, 1):
+                    for activation_function_string in ["ada"]:#["ada", "sigmoid", "arctan", "tanh"]:
 
                         parameters = CnnTestParameters()
                         parameters.tf_activation = get_tf_activation_function_from_string(activation_function_string)
