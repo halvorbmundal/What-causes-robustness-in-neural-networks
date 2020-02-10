@@ -108,7 +108,7 @@ def get_upper_bound(file_name, l_norm, num_image):
     return upper_bound
 
 
-def csv_contains_file(csv_file, file_name, new_file_name):
+def csv_contains_file(csv_file, file_name):
     with open(csv_file, "rt") as f:
         csvreader = csv.reader(f, delimiter=',', quotechar='|')
 
@@ -120,13 +120,13 @@ def csv_contains_file(csv_file, file_name, new_file_name):
                 break
 
         for row in csvreader:
-            if row[column_number] == file_name or row[column_number] == new_file_name:
+            if row[column_number] == file_name:
                 return True
     return False
 
 
-def file_exists(file, new_file_name):
-    return os.path.exists(file) or os.path.exists(new_file_name)
+def file_exists(file):
+    return os.path.exists(file)
 
 
 def get_tf_activation_function_from_string(activation_function_string):
@@ -154,12 +154,8 @@ def train_nn(file_name, filters, kernels, epochs, tf_activation, has_batch_norma
         logging.exception("This file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
 
 
-def calculate_lower_bound(file_name, new_file_name, num_image, l_norm, nn_architecture, activation_function_string):
-    if os.path.exists(file_name):
-        _file_name = file_name
-    else:
-        _file_name = new_file_name
-    return get_lower_bound(_file_name,
+def calculate_lower_bound(file_name, num_image, l_norm, nn_architecture, activation_function_string):
+    return get_lower_bound(file_name,
                            num_image,
                            l_norm,
                            nn_architecture == NnArchitecture.ONLY_CNN.value,
@@ -178,7 +174,7 @@ def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
                  parameters.regulizer, parameters.has_batch_normalization,
                  parameters.temperature, parameters.batch_size, lower_bound, parameters.upper_bound,
                  parameters.l_norm, time_elapsed, accuracy
-                    , parameters.new_file_name])
+                    , parameters.file_name])
     except Exception as e:
         print("An exeption occured while writing to file")
         logging.exception(str(e) + "\n\n")
@@ -203,10 +199,10 @@ def reset_keras():
 def gpu_calculations(parameters):
     keras_lock.acquire()
     try:
-        if not file_exists(parameters.file_name, parameters.new_file_name):
+        if not file_exists(parameters.file_name):
             setDynamicGPUAllocation()
             print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
-            train_nn(parameters.new_file_name,
+            train_nn(parameters.file_name,
                      parameters.filters,
                      parameters.kernels,
                      parameters.epochs,
@@ -216,12 +212,12 @@ def gpu_calculations(parameters):
             print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
 
         else:
-            print("Neural network already created - {}".format(parameters.result_file), flush=True)
+            print("Neural network already created - {}".format(parameters.file_name), flush=True)
     finally:
         keras_lock.release()
 
 
-def get_accuracy_of_nn_from_csv(csv_file, file_name, new_file_name):
+def get_accuracy_of_nn_from_csv(csv_file, file_name):
     with open(csv_file, "rt") as f:
         csvreader = csv.reader(f, delimiter=',', quotechar='|')
 
@@ -234,7 +230,7 @@ def get_accuracy_of_nn_from_csv(csv_file, file_name, new_file_name):
                 name_column = i
 
         for row in csvreader:
-            if row[name_column] == file_name or row[name_column] == new_file_name:
+            if row[name_column] == file_name:
                 return row[accuracy_column]
     return None
 
@@ -249,7 +245,7 @@ def multithreadded_calculations(parameters):
             print(f"\nCalculating robustness of {parameter_string(parameters)}\n", flush=True)
             setDynamicGPUAllocation()
 
-            if not file_exists(parameters.file_name, parameters.new_file_name):
+            if not file_exists(parameters.file_name):
                 print_parameters(parameters)
                 print("File does not exist {}".format(parameters.file_name), flush=True)
                 return
@@ -257,26 +253,21 @@ def multithreadded_calculations(parameters):
             start_time = timer.time()
 
             debugprint(parameters.isDebugging, "reading results csv")
-            if csv_contains_file(parameters.result_folder + parameters.result_file,
-                                 parameters.file_name,
-                                 parameters.new_file_name):
+            if csv_contains_file(parameters.result_folder + parameters.result_file, parameters.file_name):
                 print_parameters(parameters)
                 print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
                 return
 
             debugprint(parameters.isDebugging, "reading models_meta.csv")
-            accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv",
-                                                   parameters.file_name,
-                                                   parameters.new_file_name)
+            accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
 
             if float(accuracy) < 0.95:
                 print_parameters(parameters)
-                print("skiped", parameters.new_file_name, "as the accuracy was too low", flush=True)
+                print("skiped", parameters.file_name, "as the accuracy was too low", flush=True)
                 return
 
             debugprint(parameters.isDebugging, "calculating lower bound")
             lower_bound = calculate_lower_bound(parameters.file_name,
-                                                parameters.new_file_name,
                                                 parameters.num_image,
                                                 parameters.l_norm,
                                                 parameters.nn_architecture,
@@ -385,8 +376,7 @@ def main():
                         parameters.use_gpu = gpu
                         parameters.use_cpu = cpu
 
-                        parameters.file_name = get_name(parameters)
-                        parameters.new_file_name = get_name_new_convention(parameters)
+                        parameters.file_name = get_name_new_convention(parameters)
 
                         if debugging:
                             pool_init(l1, l2, sema)
