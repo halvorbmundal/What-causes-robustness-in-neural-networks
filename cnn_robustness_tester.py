@@ -109,8 +109,6 @@ def setDynamicGPUAllocation():
 
 
 def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same, use_early_stopping):
-    sess = tf.keras.backend.get_session()
-    tf.keras.backend.set_session(sess)
     train_cnn(MNIST(),
               file_name=file_name,
               filters=filters,
@@ -120,7 +118,6 @@ def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, b
               bn=batch_normalization,
               use_padding_same=use_padding_same,
               use_early_stopping=use_early_stopping)
-    tf.keras.backend.clear_session()
 
 
 def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function):
@@ -182,7 +179,7 @@ def train_nn(file_name, filters, kernels, epochs, tf_activation, has_batch_norma
                                use_padding_same,
                                use_early_stopping)
     except Exception as e:
-        print("An exeption occured")
+        print("An exeption occured while training network")
         logging.exception("This file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
 
 
