@@ -212,8 +212,6 @@ def gpu_calculations(parameters):
     keras_lock.acquire()
     try:
         if not file_exists(parameters.file_name):
-            reset_keras()
-            setDynamicGPUAllocation()
             print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
             train_nn(parameters.file_name,
                      parameters.filters,
@@ -224,7 +222,6 @@ def gpu_calculations(parameters):
                      parameters.use_padding_same,
                      parameters.use_early_stopping)
             print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
-            reset_keras()
 
         else:
             print("Neural network already created - {}".format(parameters.file_name), flush=True)
@@ -253,6 +250,8 @@ def get_accuracy_of_nn_from_csv(csv_file, file_name):
 
 
 def multithreadded_calculations(parameters):
+    setDynamicGPUAllocation()
+
     if parameters.use_gpu:
         gpu_calculations(parameters)
 
@@ -260,8 +259,6 @@ def multithreadded_calculations(parameters):
         semaphore.acquire()
         try:
             print(f"\nCalculating robustness of {parameter_string(parameters)}\n", flush=True)
-            reset_keras()
-            setDynamicGPUAllocation()
 
             if not file_exists(parameters.file_name):
                 print_parameters(parameters)
@@ -299,11 +296,11 @@ def multithreadded_calculations(parameters):
             print_parameters(parameters)
             print("wrote to file", flush=True)
 
-            reset_keras()
             return
 
         finally:
             semaphore.release()
+            reset_keras()
             gc.collect()
 
 
