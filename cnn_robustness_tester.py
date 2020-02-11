@@ -37,18 +37,25 @@ def get_name(parameter_class):
                 parameter_class.initializer, parameter_class.regulizer, parameter_class.has_batch_normalization,
                 parameter_class.temperature, parameter_class.batch_size)
 
+def boolToString(b):
+    if b:
+        return "T"
+    else:
+        return "F"
+
 def get_name_new_convention(parameter_class):
     directory = "output/models"
     if not os.path.exists(directory):
         os.makedirs(directory)
-    return directory + "/data={}_nn_type={}_pooling={}_detph={}_w={}_filter={}_kernel={}_epochs={}_ac={}_" \
-                       "stride={}_bias={}_init={}_reg={}_bn={}_temp={}_batchSize={}" \
+    return directory + "/{}_type={}_pool={}_d={}_w={}_f{}_k={}_ep={}_ac={}_" \
+                       "strid={}_bias={}_init={}_reg={}_bn={}_temp={}_bS={}_es={}_pad={}" \
         .format(parameter_class.dataset, parameter_class.nn_architecture, parameter_class.pooling,
                 parameter_class.depth,
                 parameter_class.width, parameter_class.filter_size, parameter_class.kernel_size, parameter_class.epochs,
                 parameter_class.activation_function_string, parameter_class.stride, parameter_class.bias,
                 parameter_class.initializer[:7], parameter_class.regulizer, parameter_class.has_batch_normalization,
-                parameter_class.temperature, parameter_class.batch_size)
+                parameter_class.temperature, parameter_class.batch_size, boolToString(parameter_class.use_early_stopping),
+                boolToString(parameter_class.use_padding_same))
 
 
 def make_result_file(directory, file):
@@ -62,7 +69,30 @@ def make_result_file(directory, file):
             writer.writerow(["dataset", "nn_architecture", "pooling", "depth", "width", "filter", "kernel", "epochs",
                              "activation_function", "stride", "has_bias",
                              "initializer", "regulizer", "has_batch_normalization", "temperature", "bach_size",
-                             "lower_bound", "upper_bound", "l_norm", "time_elapsed", "accuracy", "file_name"])
+                             "lower_bound", "upper_bound", "l_norm", "time_elapsed", "accuracy", "early_stoppping",
+                             "padding_same", "Cnn-cert-core"
+                                , "file_name"])
+
+
+def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
+    write_lock.acquire()  # from global variable
+    try:
+        with open(parameters.result_folder + parameters.result_file, 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(
+                [parameters.dataset, parameters.nn_architecture, parameters.pooling, parameters.depth, parameters.width,
+                 parameters.filter_size, parameters.kernel_size, parameters.epochs,
+                 parameters.activation_function_string, parameters.stride, parameters.bias, parameters.initializer,
+                 parameters.regulizer, parameters.has_batch_normalization,
+                 parameters.temperature, parameters.batch_size, lower_bound, parameters.upper_bound,
+                 parameters.l_norm, time_elapsed, accuracy, parameters.use_early_stopping,
+                 parameters.use_padding_same, parameters.use_cnnc_core
+                    , parameters.file_name])
+    except Exception as e:
+        print("An exeption occured while writing to file")
+        logging.exception(str(e) + "\n\n")
+    finally:
+        write_lock.release()
 
 
 def fn(correct, predicted):
@@ -78,7 +108,7 @@ def setDynamicGPUAllocation():
     tf.compat.v1.keras.backend.set_session(sess)  # set this TensorFlow session as the default session for Keras
 
 
-def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_old_network):
+def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same, use_early_stopping):
     sess = tf.keras.backend.get_session()
     tf.keras.backend.set_session(sess)
     train_cnn(MNIST(),
@@ -88,14 +118,15 @@ def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, b
               num_epochs=epochs,
               activation=tf_activation,
               bn=batch_normalization,
-              use_old_network=use_old_network)
+              use_padding_same=use_padding_same,
+              use_early_stopping=use_early_stopping)
     tf.keras.backend.clear_session()
 
 
-def get_lower_bound(file_name, num_image, l_norm, only_cnn, activation_function):
+def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function):
     sess = tf.keras.backend.get_session()
     tf.keras.backend.set_session(sess)
-    avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, core=only_cnn, activation=activation_function)
+    avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, core=use_cnnc_core, activation=activation_function)
     tf.keras.backend.clear_session()
     return avg_lower_bound
 
@@ -140,7 +171,7 @@ def get_tf_activation_function_from_string(activation_function_string):
         return tf.math.atan
 
 
-def train_nn(file_name, filters, kernels, epochs, tf_activation, has_batch_normalization, use_old_network):
+def train_nn(file_name, filters, kernels, epochs, tf_activation, has_batch_normalization, use_padding_same, use_early_stopping):
     try:
         train_and_save_network(file_name,
                                filters,
@@ -148,38 +179,19 @@ def train_nn(file_name, filters, kernels, epochs, tf_activation, has_batch_norma
                                epochs,
                                tf_activation,
                                has_batch_normalization,
-                               use_old_network)
+                               use_padding_same,
+                               use_early_stopping)
     except Exception as e:
         print("An exeption occured")
         logging.exception("This file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
 
 
-def calculate_lower_bound(file_name, num_image, l_norm, nn_architecture, activation_function_string):
+def calculate_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function_string):
     return get_lower_bound(file_name,
                            num_image,
                            l_norm,
-                           nn_architecture == NnArchitecture.ONLY_CNN.value,
+                           use_cnnc_core,
                            activation_function_string)
-
-
-def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
-    write_lock.acquire()  # from global variable
-    try:
-        with open(parameters.result_folder + parameters.result_file, 'a', newline='') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(
-                [parameters.dataset, parameters.nn_architecture, parameters.pooling, parameters.depth, parameters.width,
-                 parameters.filter_size, parameters.kernel_size, parameters.epochs,
-                 parameters.activation_function_string, parameters.stride, parameters.bias, parameters.initializer,
-                 parameters.regulizer, parameters.has_batch_normalization,
-                 parameters.temperature, parameters.batch_size, lower_bound, parameters.upper_bound,
-                 parameters.l_norm, time_elapsed, accuracy
-                    , parameters.file_name])
-    except Exception as e:
-        print("An exeption occured while writing to file")
-        logging.exception(str(e) + "\n\n")
-    finally:
-        write_lock.release()
 
 
 def reset_keras():
@@ -208,7 +220,8 @@ def gpu_calculations(parameters):
                      parameters.epochs,
                      parameters.tf_activation,
                      parameters.has_batch_normalization,
-                     parameters.use_old_network)
+                     parameters.use_padding_same,
+                     parameters.use_early_stopping)
             print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
 
         else:
@@ -270,7 +283,7 @@ def multithreadded_calculations(parameters):
             lower_bound = calculate_lower_bound(parameters.file_name,
                                                 parameters.num_image,
                                                 parameters.l_norm,
-                                                parameters.nn_architecture,
+                                                parameters.use_cnnc_core,
                                                 parameters.activation_function_string)
 
             time_elapsed = timer.time() - start_time
@@ -322,14 +335,9 @@ def main():
     cpu = arg1 == "cpu" or arg2 == "cpu"
     gpu = arg1 == "gpu" or arg2 == "gpu"
     debugging = arg3 == "debugging"
-    use_old_network = arg4 == "old"
+    path = arg4
 
-    if use_old_network:
-        old_path = "old_network"
-        if not os.path.exists(old_path):
-            os.makedirs(old_path)
-        os.chdir(old_path)
-
+    set_path(path)
 
     if not debugging:
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -340,7 +348,7 @@ def main():
     if debugging:
         print(f"cpu: {cpu}")
         print(f"gpu: {gpu}")
-        print(f"old: {use_old_network}")
+        print(f"path: {path}/")
 
     processes = 36
     l1 = multiprocessing.Lock()
@@ -353,39 +361,48 @@ def main():
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
-    for kernel_size in range(5, 8, 1): #range(3, 8, 1):
-        for filter_size in range(2, 64, 4):
-            for has_batch_normalization in [False]:
-                for depth in range(3, 5, 1):#range(1, 5, 1):
-                    for activation_function_string in ["ada"]:#["ada", "sigmoid", "arctan", "tanh"]:
+    for kernel_size in range(3, 8, 1):
+        for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
+            for filter_size in range(2, 64, 4):
+                for has_batch_normalization in [False]:
+                    for depth in range(1, 5, 1):
+                            for use_early_stopping in [True, False]:
+                                for use_padding_same in [True]:
+                                    for use_cnnc_core in [True, False]:
 
-                        parameters = CnnTestParameters()
-                        parameters.tf_activation = get_tf_activation_function_from_string(activation_function_string)
-                        parameters.activation_function_string = activation_function_string
-                        parameters.depth = depth
-                        parameters.kernel_size = kernel_size
-                        parameters.filter_size = filter_size
-                        parameters.filters = [filter_size for i in range(depth)]
-                        parameters.kernels = [kernel_size for i in range(depth)]
-                        parameters.has_batch_normalization = has_batch_normalization
-                        parameters.use_old_network = use_old_network
-                        parameters.isDebugging = debugging
-                        if use_old_network:
-                            parameters.nn_architecture = "n_cnn"
-                            parameters.epochs = 10
-                        parameters.use_gpu = gpu
-                        parameters.use_cpu = cpu
+                                        parameters = CnnTestParameters()
+                                        parameters.tf_activation = get_tf_activation_function_from_string(activation_function_string)
+                                        parameters.activation_function_string = activation_function_string
+                                        parameters.depth = depth
+                                        parameters.kernel_size = kernel_size
+                                        parameters.filter_size = filter_size
+                                        parameters.filters = [filter_size for i in range(depth)]
+                                        parameters.kernels = [kernel_size for i in range(depth)]
+                                        parameters.has_batch_normalization = has_batch_normalization
+                                        parameters.isDebugging = debugging
+                                        parameters.use_early_stopping = use_early_stopping
+                                        parameters.use_padding_same = use_padding_same
+                                        parameters.use_cnnc_core = use_cnnc_core
 
-                        parameters.file_name = get_name_new_convention(parameters)
+                                        parameters.use_gpu = gpu
+                                        parameters.use_cpu = cpu
 
-                        if debugging:
-                            pool_init(l1, l2, sema)
-                            multithreadded_calculations(parameters)
-                        else:
-                            pool.apply_async(multithreadded_calculations, (parameters,))
+                                        parameters.file_name = get_name_new_convention(parameters)
+
+                                        if debugging:
+                                            pool_init(l1, l2, sema)
+                                            multithreadded_calculations(parameters)
+                                        else:
+                                            pool.apply_async(multithreadded_calculations, (parameters,))
 
     pool.close()
     pool.join()
+
+
+def set_path(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    os.chdir(path)
 
 
 # hvilke paremetere kan jeg tweake på??
@@ -411,7 +428,7 @@ class CnnTestParameters:
     dataset = "mnist"
     nn_architecture = NnArchitecture.ONLY_CNN.value
     pooling = "None"
-    epochs = 100
+    epochs = 10
     stride = 1
     bias = True
     initializer = "glorot_uniform"
