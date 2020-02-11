@@ -297,7 +297,6 @@ def multithreadded_calculations(parameters):
 
         finally:
             semaphore.release()
-            reset_keras()
             gc.collect()
 
 
