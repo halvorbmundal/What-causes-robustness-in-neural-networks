@@ -180,7 +180,7 @@ def train_nn(file_name, filters, kernels, epochs, tf_activation, has_batch_norma
                                use_early_stopping)
     except Exception as e:
         print("An exeption occured while training network")
-        logging.exception("This file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
+        logging.exception("\n =================\n\nThis file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
 
 
 def calculate_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function_string):
@@ -210,6 +210,8 @@ def gpu_calculations(parameters):
     try:
         if not file_exists(parameters.file_name):
             print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
+            reset_keras()
+            setDynamicGPUAllocation()
             train_nn(parameters.file_name,
                      parameters.filters,
                      parameters.kernels,
@@ -222,8 +224,8 @@ def gpu_calculations(parameters):
 
         else:
             print("Neural network already created - {}".format(parameters.file_name), flush=True)
-    except:
-        print("error training network")
+    except Exception as e:
+        print("error training network", e)
     finally:
         keras_lock.release()
 
@@ -364,7 +366,7 @@ def main():
             for filter_size in range(2, 64, 4):
                 for has_batch_normalization in [False]:
                     for depth in range(1, 5, 1):
-                        for use_early_stopping in [True, False]:
+                        for use_early_stopping in [False, True]:
                             for use_padding_same in [True]:
                                 for use_cnnc_core in [True, False]:
 
