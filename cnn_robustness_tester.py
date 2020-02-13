@@ -367,7 +367,7 @@ def main():
                 for has_batch_normalization in [False]:
                     for depth in range(1, 5, 1):
                         for use_early_stopping in [False, True]:
-                            for use_padding_same in [True]:
+                            for use_padding_same in [True, False]:
                                 for use_cnnc_core in [True, False]:
 
                                     parameters = CnnTestParameters()
