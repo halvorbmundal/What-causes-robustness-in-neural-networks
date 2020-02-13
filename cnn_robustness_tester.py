@@ -16,6 +16,7 @@ import multiprocessing
 import gc
 import time
 import os
+from numba import cuda
 
 tf.get_logger().setLevel('WARNING')
 
@@ -179,7 +180,7 @@ def train_nn(file_name, filters, kernels, epochs, tf_activation, has_batch_norma
                                use_padding_same,
                                use_early_stopping)
     except Exception as e:
-        print("An exeption occured while training network")
+        print("Error: An exeption occured while training network")
         logging.exception("\n =================\n\nThis file had an error: \n" + file_name + "\n" + str(e) + "\n\n")
 
 
@@ -210,22 +211,29 @@ def gpu_calculations(parameters):
     try:
         if not file_exists(parameters.file_name):
             print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
-            reset_keras()
-            setDynamicGPUAllocation()
-            train_nn(parameters.file_name,
-                     parameters.filters,
-                     parameters.kernels,
-                     parameters.epochs,
-                     parameters.tf_activation,
-                     parameters.has_batch_normalization,
-                     parameters.use_padding_same,
-                     parameters.use_early_stopping)
+
+            config = tf.ConfigProto()
+            config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
+            config.log_device_placement = False  # to log device placement (on which device the operation ran)
+
+            with tf.Session(config=config):
+                train_nn(parameters.file_name,
+                         parameters.filters,
+                         parameters.kernels,
+                         parameters.epochs,
+                         parameters.tf_activation,
+                         parameters.has_batch_normalization,
+                         parameters.use_padding_same,
+                         parameters.use_early_stopping)
+
             print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
+            cuda.select_device(0)
+            cuda.close()
 
         else:
             print("Neural network already created - {}".format(parameters.file_name), flush=True)
     except Exception as e:
-        print("error training network", e)
+        print("error: exception before or after training network", e)
     finally:
         keras_lock.release()
 
