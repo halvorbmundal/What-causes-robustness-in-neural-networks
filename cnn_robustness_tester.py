@@ -397,6 +397,7 @@ def main():
 
     pool.close()
     pool.join()
+    print("program finished")
 
 
 def set_path(path):
