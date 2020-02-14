@@ -4,6 +4,7 @@ import time
 from train_cnn import train as train_cnn
 from pymain import run_cnn
 from setup_mnist import MNIST
+from setup_cifar import CIFAR
 import csv
 import os.path
 from Attacks.cw_attack import cw_attack
@@ -114,8 +115,15 @@ def setDynamicGPUAllocation():
 
 
 def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
-                           use_early_stopping, batch_size):
-    train_cnn(MNIST(),
+                           use_early_stopping, batch_size, dataset="mnist"):
+    if dataset == "mnist":
+        data = MNIST()
+    elif dataset == "cifar":
+        data = CIFAR()
+    else:
+        raise NameError(dataset, "is not a valid dataset")
+
+    train_cnn(data,
               file_name=file_name,
               filters=filters,
               kernels=kernels,
@@ -127,11 +135,15 @@ def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, b
               use_early_stopping=use_early_stopping)
 
 
-def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function):
+def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function, dataset):
     sess = tf.keras.backend.get_session()
     tf.keras.backend.set_session(sess)
+    use_cifar = False
+    if dataset == "cifar":
+        use_cifar = True
+
     avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, core=use_cnnc_core,
-                                          activation=activation_function)
+                                          activation=activation_function, cifar=use_cifar)
     tf.keras.backend.clear_session()
     return avg_lower_bound
 
@@ -176,12 +188,13 @@ def get_tf_activation_function_from_string(activation_function_string):
         return tf.math.atan
 
 
-def calculate_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function_string):
+def calculate_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function_string, dataset):
     return get_lower_bound(file_name,
                            num_image,
                            l_norm,
                            use_cnnc_core,
-                           activation_function_string)
+                           activation_function_string,
+                           dataset)
 
 
 def reset_keras():
@@ -206,7 +219,7 @@ def get_dynamic_keras_config():
 
 
 def train_nn(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
-             use_early_stopping, batch_size):
+             use_early_stopping, batch_size, dataset):
     keras_lock.acquire()
     try:
         with tf.Session(config=get_dynamic_keras_config()):
@@ -218,7 +231,8 @@ def train_nn(file_name, filters, kernels, epochs, tf_activation, batch_normaliza
                                    batch_normalization,
                                    use_padding_same,
                                    use_early_stopping,
-                                   batch_size)
+                                   batch_size,
+                                   dataset=dataset)
         gc.collect()
     except Exception as e:
         print("Error: An exeption occured while training network", e)
@@ -234,7 +248,7 @@ def train_nn(file_name, filters, kernels, epochs, tf_activation, batch_normaliza
         try:
             time.sleep(30)
             train_nn(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
-             use_early_stopping, batch_size)
+                     use_early_stopping, batch_size)
         finally:
             keras_lock.acquire()
     finally:
@@ -254,7 +268,8 @@ def gpu_calculations(parameters):
                      parameters.has_batch_normalization,
                      parameters.use_padding_same,
                      parameters.use_early_stopping,
-                     parameters.batch_size)
+                     parameters.batch_size,
+                     parameters.dataset)
 
             print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
             cuda.close()
@@ -305,13 +320,16 @@ def multithreadded_calculations(parameters):
                 print_parameters(parameters)
                 return
 
+
             debugprint(parameters.isDebugging, "reading models_meta.csv")
             accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
 
+            """
             if float(accuracy) < 0.95:
                 print("skiped", parameters.file_name, "as the accuracy was too low", flush=True)
                 print_parameters(parameters)
                 return
+            """
 
             debugprint(parameters.isDebugging, "calculating lower bound")
             with tf.device('/cpu:0'):
@@ -319,7 +337,8 @@ def multithreadded_calculations(parameters):
                                                     parameters.num_image,
                                                     parameters.l_norm,
                                                     parameters.use_cnnc_core,
-                                                    parameters.activation_function_string)
+                                                    parameters.activation_function_string,
+                                                    parameters.dataset)
 
             time_elapsed = timer.time() - start_time
 
@@ -333,7 +352,10 @@ def multithreadded_calculations(parameters):
 
         finally:
             semaphore.release()
-            gc.collect()
+    try:
+        cuda.close()
+    finally:
+        gc.collect()
 
 
 def pool_init(l1, l2, sema):
@@ -348,12 +370,12 @@ def pool_init(l1, l2, sema):
 def parameter_string(parameters):
     return "depth={} filter_size={} kernel_size={} ac={} es={} pad={}" \
         .format(
-            parameters.depth,
-            parameters.filter_size,
-            parameters.kernel_size,
-            parameters.activation_function_string,
-            parameters.use_early_stopping,
-            parameters.use_padding_same)
+        parameters.depth,
+        parameters.filter_size,
+        parameters.kernel_size,
+        parameters.activation_function_string,
+        parameters.use_early_stopping,
+        parameters.use_padding_same)
 
 
 def print_parameters(parameters):
@@ -371,13 +393,18 @@ def debugprint(isDebugging, text):
 
 
 def main():
-    _, arg1, arg2, arg3, arg4 = sys.argv
+    _, arg1, arg2, arg3, arg4, arg5 = sys.argv
     cpu = arg1 == "cpu" or arg2 == "cpu"
     gpu = arg1 == "gpu" or arg2 == "gpu"
     debugging = arg3 == "debugging"
     path = arg4
+    dataset = arg5
 
     set_path(path)
+
+    if dataset != "mnist":
+        set_path(dataset)
+
 
     if not debugging:
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -410,7 +437,7 @@ def main():
             for filter_size in range(2, 64, 4):
                 for has_batch_normalization in [False]:
                     for depth in range(1, 5, 1):
-                        for use_early_stopping in [False, True]:
+                        for use_early_stopping in [True]:
                             for use_padding_same in [True, False]:
                                 for use_cnnc_core in [True, False]:
 
@@ -428,6 +455,7 @@ def main():
                                     parameters.use_early_stopping = use_early_stopping
                                     parameters.use_padding_same = use_padding_same
                                     parameters.use_cnnc_core = use_cnnc_core
+                                    parameters.dataset=dataset
 
                                     parameters.use_gpu = gpu
                                     parameters.use_cpu = cpu
