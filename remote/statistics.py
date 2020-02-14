@@ -10,6 +10,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.decomposition import FactorAnalysis
 import pydot
+import json
 
 from sklearn.datasets import load_iris
 from sklearn import tree
@@ -30,9 +31,9 @@ def get_df(columns):
     data_df: pd.DataFrame = pd.merge(left=results, right=accuracy, left_on='file_name', right_on='file_name',
                                      suffixes=("_x", ""))
     df_with_dummies = pd.get_dummies(data_df.iloc[0:, [data_df.columns.get_loc(c) for c in columns]],
-                          columns=[_activation_function])
+                                     columns=[_activation_function])
+    print(df_with_dummies.head())
     return df_with_dummies, data_df["lower_bound"], data_df[_activation_function]
-
 
 
 def get_numppy_arrays(df):
@@ -69,18 +70,20 @@ def plot_3d(x, y, z, c):
 
     plt.show()
 
+
 def pca(X, y):
     x = StandardScaler().fit_transform(X)
     pca = PCA(2)
     principalComponents = pca.fit_transform(x)
     principalDf = pd.DataFrame(data=principalComponents, columns=['principal component 1', 'principal component 2'])
-    finalDf = pd.concat([principalDf, df[['target']]], axis = 1)
+    finalDf = pd.concat([principalDf, df[['target']]], axis=1)
+
 
 def decicion_tree(X, y):
     clf = tree.DecisionTreeRegressor(random_state=0, max_depth=3)
     clf = clf.fit(X, y)
     tree.plot_tree(clf)
-    #tree.export_graphviz(clf)
+    # tree.export_graphviz(clf)
     plt.show()
 
 
@@ -90,6 +93,7 @@ def error_plot_column(df, column_name, query=None):
     avg_lower, std_lower = [], []
 
     if query is not None:
+        print(df[query].head())
         df = df[query]
     unique = df[column_name].unique()
     unique.sort()
@@ -109,7 +113,7 @@ def error_plot_column(df, column_name, query=None):
     plt.show()
 
 
-#def err_plot_query():
+# def err_plot_query():
 #    (data["depth"] == 6)
 
 def get_result_df():
@@ -117,43 +121,60 @@ def get_result_df():
     df = results[~results[_file_name].duplicated(keep="first")]
     return df
 
+
+def poly_reg(X, y, p=2):
+    model = LinearRegression()
+    poly = PolynomialFeatures(degree=p)
+    poly_X = poly.fit_transform(X, y)
+    model.fit(poly_X, y)
+    return poly, model
+
 def error_plot():
     df = get_result_df()
     depth_query = (df[_depth] == 3)
     kernel_query = (df[_kernel] == 5)
     filter_query = (df[_filter] <= 90)
-    ac_query = (df[_activation_function] == "ada")
-    all_queries = ac_query #& kernel_query & filter_query & depth_query
+    ac_query = True#(df[_activation_function] == "ada")
+    all_queries = None
+    #all_queries =  ac_query & kernel_query & depth_query  & filter_query
 
     error_plot_column(df, _kernel, query=all_queries)
     error_plot_column(df, _depth, query=all_queries)
     error_plot_column(df, _filter, query=all_queries)
+    error_plot_column(df, _activation_function, query=all_queries)
+
 
 def main():
-    if True:
+    with open("config.json") as json_file:
+        config = json.load(json_file)
+    if config["use_old"]:
         old_path = "old_network"
         os.chdir(old_path)
-    else:
+    columns = [_kernel, _depth, _filter, _activation_function]
+    x_df, y_df, af = get_df(columns)
+    y = y_df.to_numpy()
+    columns = x_df.keys()
+    X, input_dict = get_numppy_arrays(x_df)
 
-        columns = [_kernel, _depth, _filter, _activation_function]
-        x_df, y_df, af = get_df(columns)
-        y = y_df.to_numpy()
-        columns = x_df.keys()
-        X, input_dict = get_numppy_arrays(x_df)
-        linear_regression_model = linear_regression(X, y)
-        for i in columns:
-            if False:
-                plot_single_variable(input_dict[i], y, i)
+    linear_regression_model = linear_regression(X, y)
+    poly_features, plynomial_regression_model = poly_reg(X, y)
+
+    for i in columns:
+        if config["print_scatter"]:
+            plot_single_variable(input_dict[i], y, i)
+    if config["print_linear"]:
         for i in range(len(x_df.columns)):
             print("{}: {}".format(x_df.columns[i], linear_regression_model.coef_[i]))
-
-    error_plot()
-    #plot_3d(input_dict[_filter], input_dict[_depth], y, af)
-    #decicion_tree(X, y)
+    if config["print_ploy"]:
+        for i in range(len(plynomial_regression_model.coef_)):
+            print("{}: {}".format(poly_features.get_feature_names(x_df.columns)[i], plynomial_regression_model.coef_[i]))
+    if config["use_error_plot"]:
+        error_plot()
+    # plot_3d(input_dict[_filter], input_dict[_depth], y, af)
+    # decicion_tree(X, y)
 
 
 main()
-
 
 """
 model = LinearRegression()

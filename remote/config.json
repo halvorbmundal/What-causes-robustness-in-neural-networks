@@ -1,0 +1,7 @@
+{
+  "print_scatter": false,
+  "use_old": true,
+  "use_error_plot":true,
+  "print_linear":false,
+  "print_ploy":true
+}
