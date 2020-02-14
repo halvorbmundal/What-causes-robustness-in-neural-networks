@@ -219,6 +219,7 @@ def train_nn(file_name, filters, kernels, epochs, tf_activation, batch_normaliza
                                    use_padding_same,
                                    use_early_stopping,
                                    batch_size)
+        gc.collect()
     except Exception as e:
         print("Error: An exeption occured while training network", e)
         date = str(datetime.now())
@@ -232,7 +233,8 @@ def train_nn(file_name, filters, kernels, epochs, tf_activation, batch_normaliza
         keras_lock.release()
         try:
             time.sleep(30)
-            gpu_calculations(train_nn)
+            train_nn(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
+             use_early_stopping, batch_size)
         finally:
             keras_lock.acquire()
     finally:
@@ -255,7 +257,6 @@ def gpu_calculations(parameters):
                      parameters.batch_size)
 
             print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
-            cuda.select_device(0)
             cuda.close()
 
         else:
@@ -345,11 +346,14 @@ def pool_init(l1, l2, sema):
 
 
 def parameter_string(parameters):
-    return "filter_size={} depth={} kernel_size={} ac={}" \
-        .format(parameters.filter_size,
-                parameters.depth,
-                parameters.kernel_size,
-                parameters.activation_function_string)
+    return "depth={} filter_size={} kernel_size={} ac={} es={} pad={}" \
+        .format(
+            parameters.depth,
+            parameters.filter_size,
+            parameters.kernel_size,
+            parameters.activation_function_string,
+            parameters.use_early_stopping,
+            parameters.use_padding_same)
 
 
 def print_parameters(parameters):
