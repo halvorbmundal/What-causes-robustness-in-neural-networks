@@ -221,8 +221,9 @@ def train_nn(file_name, filters, kernels, epochs, tf_activation, batch_normaliza
                                    batch_size)
     except Exception as e:
         print("Error: An exeption occured while training network", e)
+        date = str(datetime.now())
         logging.exception("\n =================\n\n"
-                          + datetime.now() +
+                          + date +
                           "\nThis file had an error: \n"
                           + file_name +
                           "\n" + str(e) +
