@@ -218,10 +218,11 @@ def get_dynamic_keras_config():
     return config
 
 
-def train_nn(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
+def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
              use_early_stopping, batch_size, dataset):
     keras_lock.acquire()
     try:
+        print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
         with tf.Session(config=get_dynamic_keras_config()):
             train_and_save_network(file_name,
                                    filters,
@@ -259,8 +260,8 @@ def gpu_calculations(parameters):
     try:
         print(datetime.now())
         if not file_exists(parameters.file_name):
-            print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
-            train_nn(parameters.file_name,
+            train_nn(parameters,
+                     parameters.file_name,
                      parameters.filters,
                      parameters.kernels,
                      parameters.epochs,

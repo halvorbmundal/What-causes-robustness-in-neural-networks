@@ -1,1 +1,4 @@
-f = open("works.txt", "a")
+
+from datetime import datetime
+
+print(str(datetime.now()))
