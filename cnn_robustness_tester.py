@@ -39,11 +39,13 @@ def get_name(parameter_class):
                 parameter_class.initializer, parameter_class.regulizer, parameter_class.has_batch_normalization,
                 parameter_class.temperature, parameter_class.batch_size)
 
+
 def boolToString(b):
     if b:
         return "T"
     else:
         return "F"
+
 
 def get_name_new_convention(parameter_class):
     directory = "output/models"
@@ -56,7 +58,8 @@ def get_name_new_convention(parameter_class):
                 parameter_class.width, parameter_class.filter_size, parameter_class.kernel_size, parameter_class.epochs,
                 parameter_class.activation_function_string, parameter_class.stride, parameter_class.bias,
                 parameter_class.initializer[:7], parameter_class.regulizer, parameter_class.has_batch_normalization,
-                parameter_class.temperature, parameter_class.batch_size, boolToString(parameter_class.use_early_stopping),
+                parameter_class.temperature, parameter_class.batch_size,
+                boolToString(parameter_class.use_early_stopping),
                 boolToString(parameter_class.use_padding_same))
 
 
@@ -110,7 +113,8 @@ def setDynamicGPUAllocation():
     tf.compat.v1.keras.backend.set_session(sess)  # set this TensorFlow session as the default session for Keras
 
 
-def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same, use_early_stopping, batch_size):
+def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
+                           use_early_stopping, batch_size):
     train_cnn(MNIST(),
               file_name=file_name,
               filters=filters,
@@ -124,7 +128,11 @@ def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, b
 
 
 def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function):
-    avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, core=use_cnnc_core, activation=activation_function)
+    sess = tf.keras.backend.get_session()
+    tf.keras.backend.set_session(sess)
+    avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, core=use_cnnc_core,
+                                          activation=activation_function)
+    tf.keras.backend.clear_session()
     return avg_lower_bound
 
 
@@ -168,27 +176,6 @@ def get_tf_activation_function_from_string(activation_function_string):
         return tf.math.atan
 
 
-def train_nn(file_name, filters, kernels, epochs, tf_activation, has_batch_normalization, use_padding_same, use_early_stopping, batch_size):
-    try:
-        train_and_save_network(file_name,
-                               filters,
-                               kernels,
-                               epochs,
-                               tf_activation,
-                               has_batch_normalization,
-                               use_padding_same,
-                               use_early_stopping,
-                               batch_size)
-    except Exception as e:
-        print("Error: An exeption occured while training network")
-        logging.exception("\n =================\n\n"
-                          + datetime.now() +
-                          "\nThis file had an error: \n"
-                          + file_name +
-                          "\n" + str(e) +
-                          "\n\n")
-
-
 def calculate_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function_string):
     return get_lower_bound(file_name,
                            num_image,
@@ -210,38 +197,70 @@ def reset_keras():
 
     print("clear gc", gc.collect())  # if it's done something you should see a number being outputted
 
+
 def get_dynamic_keras_config():
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
     config.log_device_placement = False  # to log device placement (on which device the operation ran)
     return config
 
-def gpu_calculations(parameters):
+
+def train_nn(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
+             use_early_stopping, batch_size):
     keras_lock.acquire()
     try:
+        with tf.Session(config=get_dynamic_keras_config()):
+            train_and_save_network(file_name,
+                                   filters,
+                                   kernels,
+                                   epochs,
+                                   tf_activation,
+                                   batch_normalization,
+                                   use_padding_same,
+                                   use_early_stopping,
+                                   batch_size)
+    except Exception as e:
+        print("Error: An exeption occured while training network", e)
+        logging.exception("\n =================\n\n"
+                          + datetime.now() +
+                          "\nThis file had an error: \n"
+                          + file_name +
+                          "\n" + str(e) +
+                          "\n\n")
+        # Deadlock potential?
+        keras_lock.release()
+        try:
+            time.sleep(30)
+            gpu_calculations(train_nn)
+        finally:
+            keras_lock.acquire()
+    finally:
+        keras_lock.release()
+
+
+def gpu_calculations(parameters):
+    try:
+        print(datetime.now())
         if not file_exists(parameters.file_name):
             print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
-            with tf.Session(config=get_dynamic_keras_config()):
-                train_nn(parameters.file_name,
-                         parameters.filters,
-                         parameters.kernels,
-                         parameters.epochs,
-                         parameters.tf_activation,
-                         parameters.has_batch_normalization,
-                         parameters.use_padding_same,
-                         parameters.use_early_stopping,
-                         parameters.batch_size)
+            train_nn(parameters.file_name,
+                     parameters.filters,
+                     parameters.kernels,
+                     parameters.epochs,
+                     parameters.tf_activation,
+                     parameters.has_batch_normalization,
+                     parameters.use_padding_same,
+                     parameters.use_early_stopping,
+                     parameters.batch_size)
 
             print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
             cuda.select_device(0)
             cuda.close()
 
         else:
-            print("Neural network already created - {}".format(parameters.file_name), flush=True)
+            print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
     except Exception as e:
         print("error: exception before or after training network", e)
-    finally:
-        keras_lock.release()
 
 
 def get_accuracy_of_nn_from_csv(csv_file, file_name):
@@ -263,7 +282,6 @@ def get_accuracy_of_nn_from_csv(csv_file, file_name):
 
 
 def multithreadded_calculations(parameters):
-
     if parameters.use_gpu:
         gpu_calculations(parameters)
 
@@ -273,28 +291,28 @@ def multithreadded_calculations(parameters):
             print(f"\nCalculating robustness of {parameter_string(parameters)}\n", flush=True)
 
             if not file_exists(parameters.file_name):
-                print_parameters(parameters)
                 print("File does not exist {}".format(parameters.file_name), flush=True)
+                print_parameters(parameters)
                 return
 
             start_time = timer.time()
 
             debugprint(parameters.isDebugging, "reading results csv")
             if csv_contains_file(parameters.result_folder + parameters.result_file, parameters.file_name):
-                print_parameters(parameters)
                 print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
+                print_parameters(parameters)
                 return
 
             debugprint(parameters.isDebugging, "reading models_meta.csv")
             accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
 
             if float(accuracy) < 0.95:
-                print_parameters(parameters)
                 print("skiped", parameters.file_name, "as the accuracy was too low", flush=True)
+                print_parameters(parameters)
                 return
 
             debugprint(parameters.isDebugging, "calculating lower bound")
-            with tf.Session(config=get_dynamic_keras_config()):
+            with tf.device('/cpu:0'):
                 lower_bound = calculate_lower_bound(parameters.file_name,
                                                     parameters.num_image,
                                                     parameters.l_norm,
@@ -306,8 +324,8 @@ def multithreadded_calculations(parameters):
             debugprint(parameters.isDebugging, "writing to file")
             write_to_file(parameters, lower_bound, accuracy, time_elapsed)
 
-            print_parameters(parameters)
             print("wrote to file", flush=True)
+            print_parameters(parameters)
 
             return
 
@@ -335,14 +353,17 @@ def parameter_string(parameters):
 
 def print_parameters(parameters):
     print()
+    print(parameter_string(parameters))
+    print(datetime.now())
     print(
         "========================================================================================")
-    print(parameter_string(parameters))
     print("", flush=True)
+
 
 def debugprint(isDebugging, text):
     if isDebugging:
         print(text)
+
 
 def main():
     _, arg1, arg2, arg3, arg4 = sys.argv
@@ -364,7 +385,11 @@ def main():
         print(f"gpu: {gpu}")
         print(f"path: {path}/")
 
-    processes = 36
+    if multiprocessing.cpu_count() > 36:
+        processes = 36
+    else:
+        processes = multiprocessing.cpu_count()
+
     l1 = multiprocessing.Lock()
     l2 = multiprocessing.Lock()
     sema = multiprocessing.Semaphore(processes)
@@ -385,7 +410,8 @@ def main():
                                 for use_cnnc_core in [True, False]:
 
                                     parameters = CnnTestParameters()
-                                    parameters.tf_activation = get_tf_activation_function_from_string(activation_function_string)
+                                    parameters.tf_activation = get_tf_activation_function_from_string(
+                                        activation_function_string)
                                     parameters.activation_function_string = activation_function_string
                                     parameters.depth = depth
                                     parameters.kernel_size = kernel_size
