@@ -248,8 +248,9 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
         keras_lock.release()
         try:
             time.sleep(30)
-            train_nn(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
-                     use_early_stopping, batch_size)
+            train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, batch_normalization,
+                     use_padding_same,
+                     use_early_stopping, batch_size, dataset)
         finally:
             keras_lock.acquire()
     finally:
@@ -320,7 +321,6 @@ def multithreadded_calculations(parameters):
                 print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
                 print_parameters(parameters)
                 return
-
 
             debugprint(parameters.isDebugging, "reading models_meta.csv")
             accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
@@ -406,7 +406,6 @@ def main():
     if dataset != "mnist":
         set_path(dataset)
 
-
     if not debugging:
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
         tf.get_logger().setLevel('ERROR')
@@ -456,7 +455,7 @@ def main():
                                     parameters.use_early_stopping = use_early_stopping
                                     parameters.use_padding_same = use_padding_same
                                     parameters.use_cnnc_core = use_cnnc_core
-                                    parameters.dataset=dataset
+                                    parameters.dataset = dataset
 
                                     parameters.use_gpu = gpu
                                     parameters.use_cpu = cpu
