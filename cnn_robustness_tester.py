@@ -173,10 +173,13 @@ def csv_contains_file(csv_file, file_name):
     return False
 
 
-def file_exists(file):
-    if file[14:] in model_files:
-        return True
-    return False
+def file_exists(file, use_cache=True):
+    if use_cache:
+        if file[14:] in model_files:
+            return True
+        return False
+    else:
+        return os.path.exists(file)
 
 
 def get_tf_activation_function_from_string(activation_function_string):
@@ -315,7 +318,7 @@ def multithreadded_calculations(parameters):
         try:
             print(f"\nCalculating robustness of {parameter_string(parameters)}\n", flush=True)
 
-            if not file_exists(parameters.file_name):
+            if not file_exists(parameters.file_name, use_cache=False):
                 print("File does not exist {}".format(parameters.file_name), flush=True)
                 print_parameters(parameters)
                 return
