@@ -222,6 +222,7 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
              use_early_stopping, batch_size, dataset):
     keras_lock.acquire()
     try:
+        reset_cuda()
         print(datetime.now())
         print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
         with tf.Session():
@@ -238,7 +239,6 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
         reset_cuda()
         gc.collect()
     except Exception as e:
-        reset_cuda()
         keras_lock.release()
         try:
             print("Error: An exeption occured while training network", e)
@@ -268,7 +268,6 @@ def reset_cuda():
 
 def gpu_calculations(parameters):
     if not file_exists(parameters.file_name):
-        reset_cuda()
         train_nn(parameters,
                  parameters.file_name,
                  parameters.filters,
