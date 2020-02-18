@@ -235,6 +235,7 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
                                    use_early_stopping,
                                    batch_size,
                                    dataset=dataset)
+        reset_cuda()
         gc.collect()
     except Exception as e:
         reset_cuda()
@@ -279,7 +280,6 @@ def gpu_calculations(parameters):
                  parameters.use_early_stopping,
                  parameters.batch_size,
                  parameters.dataset)
-        reset_cuda()
         print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
     else:
         print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
