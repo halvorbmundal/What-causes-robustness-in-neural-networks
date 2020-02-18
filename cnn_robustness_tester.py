@@ -174,7 +174,9 @@ def csv_contains_file(csv_file, file_name):
 
 
 def file_exists(file):
-    return os.path.exists(file)
+    if file[14:] in model_files:
+        return True
+    return False
 
 
 def get_tf_activation_function_from_string(activation_function_string):
@@ -259,12 +261,14 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
     finally:
         keras_lock.release()
 
+
 def reset_cuda():
     try:
         print("closing", cuda.get_current_device())
         cuda.close()
     except Exception as e:
         print("Could not reset cuda: ", e)
+
 
 def gpu_calculations(parameters):
     if not file_exists(parameters.file_name):
@@ -335,7 +339,8 @@ def multithreadded_calculations(parameters):
             """
 
             debugprint(parameters.isDebugging, "calculating lower bound")
-            with tf.device('/cpu:0'):
+            with tf.Session(tf.ConfigProto(device_count={'GPU': 0})).as_default():
+                print("found gpu?", tf.test.gpu_device_name())
                 lower_bound = calculate_lower_bound(parameters.file_name,
                                                     parameters.num_image,
                                                     parameters.l_norm,
@@ -407,6 +412,9 @@ def main():
 
     if dataset != "mnist":
         set_path(dataset)
+
+    global model_files
+    model_files = os.listdir("output/models")
 
     if not debugging:
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
