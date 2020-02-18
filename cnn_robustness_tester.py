@@ -342,8 +342,8 @@ def multithreadded_calculations(parameters):
             """
 
             debugprint(parameters.isDebugging, "calculating lower bound")
-            with tf.Session(tf.ConfigProto(device_count={'GPU': 0})).as_default():
-                print("found gpu?", tf.test.gpu_device_name())
+            with tf.Session(config=tf.ConfigProto(device_count={'GPU': 0})).as_default():
+                print("This should not find GPUs. Available GPUSs ->", tf.test.gpu_device_name())
                 lower_bound = calculate_lower_bound(parameters.file_name,
                                                     parameters.num_image,
                                                     parameters.l_norm,
