@@ -242,7 +242,6 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
                                    use_early_stopping,
                                    batch_size,
                                    dataset=dataset)
-        sess.close()
         reset_cuda()
         gc.collect()
     except Exception as e:
@@ -355,7 +354,6 @@ def multithreadded_calculations(parameters):
                                                 parameters.use_cnnc_core,
                                                 parameters.activation_function_string,
                                                 parameters.dataset)
-        sess.close()
 
         time_elapsed = timer.time() - start_time
 
