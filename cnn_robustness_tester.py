@@ -173,7 +173,9 @@ def csv_contains_file(csv_file, file_name):
 
 def file_exists(file, use_cache=True):
     if use_cache:
+        start = time.time()
         if file[14:] in model_files:
+            print("used {} sec to find file".format(time.time() - start))
             return True
         return False
     else:
@@ -255,10 +257,11 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
                               "\n" + str(e) +
                               "\n\n")
             # Deadlock potential?
+            """
             time.sleep(30)
             train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, batch_normalization,
                      use_padding_same,
-                     use_early_stopping, batch_size, dataset)
+                     use_early_stopping, batch_size, dataset)"""
         finally:
             keras_lock.acquire()
     finally:
@@ -310,70 +313,66 @@ def get_accuracy_of_nn_from_csv(csv_file, file_name):
 
 
 def multithreadded_calculations(parameters):
-    if parameters.use_gpu:
-        gpu_calculations(parameters)
+    semaphore.acquire()
+    try:
+        print(f"\nCalculating robustness of {parameter_string(parameters)}\n", flush=True)
 
-    if parameters.use_cpu:
-        semaphore.acquire()
-        try:
-            print(f"\nCalculating robustness of {parameter_string(parameters)}\n", flush=True)
-
-            if not file_exists(parameters.file_name, use_cache=False):
-                print("File does not exist {}".format(parameters.file_name), flush=True)
-                print_parameters(parameters)
-                return
-
-            start_time = timer.time()
-
-            debugprint(parameters.isDebugging, "reading results csv")
-            if csv_contains_file(parameters.result_folder + parameters.result_file, parameters.file_name):
-                print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
-                print_parameters(parameters)
-                return
-
-            debugprint(parameters.isDebugging, "reading models_meta.csv")
-            accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
-
-            """
-            if float(accuracy) < 0.95:
-                print("skiped", parameters.file_name, "as the accuracy was too low", flush=True)
-                print_parameters(parameters)
-                return
-            """
-
-            debugprint(parameters.isDebugging, "calculating lower bound")
-            gpu_options = tf.GPUOptions(visible_device_list=_b("").decode('utf-8'))
-            session_config = tf.ConfigProto(device_count={'GPU': 0}, gpu_options=gpu_options)
-            sess = tf.Session(config=session_config)
-            with sess.as_default():
-                #may be too global:
-                #cpu_devices = tf.config.experimental.list_physical_devices(device_type='CPU')
-                #tf.config.experimental.set_visible_devices(devices=cpu_devices, device_type='CPU')
-                print("This should not find GPUs. Available GPUSs ->", tf.test.gpu_device_name())
-                lower_bound = calculate_lower_bound(parameters.file_name,
-                                                    parameters.num_image,
-                                                    parameters.l_norm,
-                                                    parameters.use_cnnc_core,
-                                                    parameters.activation_function_string,
-                                                    parameters.dataset)
-            sess.close()
-
-            time_elapsed = timer.time() - start_time
-
-            debugprint(parameters.isDebugging, "writing to file")
-            write_to_file(parameters, lower_bound, accuracy, time_elapsed)
-
-            print("wrote to file", flush=True)
+        if not file_exists(parameters.file_name, use_cache=False):
+            print("File does not exist {}".format(parameters.file_name), flush=True)
             print_parameters(parameters)
-
             return
 
-        finally:
-            semaphore.release()
-    try:
-        cuda.close()
+        start_time = timer.time()
+
+        debugprint(parameters.isDebugging, "reading results csv")
+        if csv_contains_file(parameters.result_folder + parameters.result_file, parameters.file_name):
+            print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
+            print_parameters(parameters)
+            return
+
+        debugprint(parameters.isDebugging, "reading models_meta.csv")
+        accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
+
+        """
+        if float(accuracy) < 0.95:
+            print("skiped", parameters.file_name, "as the accuracy was too low", flush=True)
+            print_parameters(parameters)
+            return
+        """
+
+        debugprint(parameters.isDebugging, "calculating lower bound")
+        gpu_options = tf.GPUOptions(visible_device_list=_b("").decode('utf-8'))
+        session_config = tf.ConfigProto(device_count={'GPU': 0}, gpu_options=gpu_options)
+        sess = tf.Session(config=session_config)
+        with sess.as_default():
+            #may be too global:
+            #cpu_devices = tf.config.experimental.list_physical_devices(device_type='CPU')
+            #tf.config.experimental.set_visible_devices(devices=cpu_devices, device_type='CPU')
+            print("This should not find GPUs. Available GPUSs ->", tf.test.gpu_device_name())
+            lower_bound = calculate_lower_bound(parameters.file_name,
+                                                parameters.num_image,
+                                                parameters.l_norm,
+                                                parameters.use_cnnc_core,
+                                                parameters.activation_function_string,
+                                                parameters.dataset)
+        sess.close()
+
+        time_elapsed = timer.time() - start_time
+
+        debugprint(parameters.isDebugging, "writing to file")
+        write_to_file(parameters, lower_bound, accuracy, time_elapsed)
+
+        print("wrote to file", flush=True)
+        print_parameters(parameters)
+
+        return
+
     finally:
-        gc.collect()
+        semaphore.release()
+        try:
+            cuda.close()
+        finally:
+            gc.collect()
 
 
 def pool_init(l1, l2, sema):
@@ -454,6 +453,8 @@ def main():
     else:
         pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
 
+    pool_init(l1, l2, sema)
+
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
     for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
@@ -487,10 +488,12 @@ def main():
                                     parameters.file_name = get_name_new_convention(parameters)
 
                                     if debugging:
-                                        pool_init(l1, l2, sema)
                                         multithreadded_calculations(parameters)
                                     else:
-                                        pool.apply_async(multithreadded_calculations, (parameters,))
+                                        if parameters.use_gpu:
+                                            gpu_calculations(parameters)
+                                        if parameters.use_cpu:
+                                            pool.apply_async(multithreadded_calculations, (parameters,))
 
     pool.close()
     pool.join()
