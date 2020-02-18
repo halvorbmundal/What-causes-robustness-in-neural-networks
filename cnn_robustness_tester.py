@@ -136,15 +136,12 @@ def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, b
 
 
 def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function, dataset):
-    sess = tf.keras.backend.get_session()
-    tf.keras.backend.set_session(sess)
     use_cifar = False
     if dataset == "cifar":
         use_cifar = True
 
     avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, core=use_cnnc_core,
                                           activation=activation_function, cifar=use_cifar)
-    tf.keras.backend.clear_session()
     return avg_lower_bound
 
 
@@ -230,7 +227,8 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
         reset_cuda()
         print(datetime.now())
         print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
-        with tf.Session().as_default():
+        sess = tf.Session()
+        with sess.as_default():
             train_and_save_network(file_name,
                                    filters,
                                    kernels,
@@ -241,6 +239,7 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
                                    use_early_stopping,
                                    batch_size,
                                    dataset=dataset)
+        sess.close()
         reset_cuda()
         gc.collect()
     except Exception as e:
@@ -342,7 +341,15 @@ def multithreadded_calculations(parameters):
             """
 
             debugprint(parameters.isDebugging, "calculating lower bound")
-            with tf.Session(config=tf.ConfigProto(device_count={'GPU': 0})).as_default():
+            session_Config = tf.ConfigProto(device_count={'GPU': 0})
+            session_Config.log_device_placement = True
+            gpu_options = tf.GPUOptions(visible_device_list=[])
+            session_Config.gpu_options = gpu_options
+            sess = tf.Session(config=session_Config)
+            with sess.as_default():
+                #may be too global:
+                #cpu_devices = tf.config.experimental.list_physical_devices(device_type='CPU')
+                #tf.config.experimental.set_visible_devices(devices=cpu_devices, device_type='CPU')
                 print("This should not find GPUs. Available GPUSs ->", tf.test.gpu_device_name())
                 lower_bound = calculate_lower_bound(parameters.file_name,
                                                     parameters.num_image,
@@ -350,6 +357,7 @@ def multithreadded_calculations(parameters):
                                                     parameters.use_cnnc_core,
                                                     parameters.activation_function_string,
                                                     parameters.dataset)
+            sess.close()
 
             time_elapsed = timer.time() - start_time
 
@@ -379,14 +387,15 @@ def pool_init(l1, l2, sema):
 
 
 def parameter_string(parameters):
-    return "depth={} filter_size={} kernel_size={} ac={} es={} pad={}" \
+    return "depth={} filter_size={} kernel_size={} ac={} es={} pad={} cnnc={}" \
         .format(
         parameters.depth,
         parameters.filter_size,
         parameters.kernel_size,
         parameters.activation_function_string,
         parameters.use_early_stopping,
-        parameters.use_padding_same)
+        parameters.use_padding_same,
+        parameters.use_cnnc_core)
 
 
 def print_parameters(parameters):
