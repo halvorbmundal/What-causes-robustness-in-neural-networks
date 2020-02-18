@@ -222,6 +222,7 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
              use_early_stopping, batch_size, dataset):
     keras_lock.acquire()
     try:
+        print(datetime.now())
         print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
         with tf.Session(config=get_dynamic_keras_config()):
             train_and_save_network(file_name,
@@ -236,17 +237,18 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
                                    dataset=dataset)
         gc.collect()
     except Exception as e:
-        print("Error: An exeption occured while training network", e)
-        date = str(datetime.now())
-        logging.exception("\n =================\n\n"
-                          + date +
-                          "\nThis file had an error: \n"
-                          + file_name +
-                          "\n" + str(e) +
-                          "\n\n")
-        # Deadlock potential?
+        reset_cuda()
         keras_lock.release()
         try:
+            print("Error: An exeption occured while training network", e)
+            date = str(datetime.now())
+            logging.exception("\n =================\n\n"
+                              + date +
+                              "\nThis file had an error: \n"
+                              + file_name +
+                              "\n" + str(e) +
+                              "\n\n")
+            # Deadlock potential?
             time.sleep(30)
             train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, batch_normalization,
                      use_padding_same,
@@ -256,30 +258,31 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
     finally:
         keras_lock.release()
 
+def reset_cuda():
+    try:
+        print("closing", cuda.get_current_device())
+        cuda.close()
+    except Exception as e:
+        print("Could not reset cuda: ", e)
 
 def gpu_calculations(parameters):
-    try:
-        print(datetime.now())
-        if not file_exists(parameters.file_name):
-            train_nn(parameters,
-                     parameters.file_name,
-                     parameters.filters,
-                     parameters.kernels,
-                     parameters.epochs,
-                     parameters.tf_activation,
-                     parameters.has_batch_normalization,
-                     parameters.use_padding_same,
-                     parameters.use_early_stopping,
-                     parameters.batch_size,
-                     parameters.dataset)
-
-            print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
-            cuda.close()
-
-        else:
-            print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
-    except Exception as e:
-        print("error: exception before or after training network", e)
+    if not file_exists(parameters.file_name):
+        reset_cuda()
+        train_nn(parameters,
+                 parameters.file_name,
+                 parameters.filters,
+                 parameters.kernels,
+                 parameters.epochs,
+                 parameters.tf_activation,
+                 parameters.has_batch_normalization,
+                 parameters.use_padding_same,
+                 parameters.use_early_stopping,
+                 parameters.batch_size,
+                 parameters.dataset)
+        reset_cuda()
+        print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
+    else:
+        print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
 
 
 def get_accuracy_of_nn_from_csv(csv_file, file_name):
