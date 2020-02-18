@@ -344,7 +344,6 @@ def multithreadded_calculations(parameters):
             debugprint(parameters.isDebugging, "calculating lower bound")
             gpu_options = tf.GPUOptions(visible_device_list=_b("").decode('utf-8'))
             session_config = tf.ConfigProto(device_count={'GPU': 0}, gpu_options=gpu_options)
-            session_config.log_device_placement = True
             sess = tf.Session(config=session_config)
             with sess.as_default():
                 #may be too global:
