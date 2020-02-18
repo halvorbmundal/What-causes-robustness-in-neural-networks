@@ -227,7 +227,7 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
              use_early_stopping, batch_size, dataset):
     keras_lock.acquire()
     try:
-        reset_cuda()
+        #reset_cuda()
         print(datetime.now())
         print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
         sess = tf.Session()
@@ -242,8 +242,9 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
                                    use_early_stopping,
                                    batch_size,
                                    dataset=dataset)
-        reset_cuda()
+        #reset_cuda()
         gc.collect()
+        sess.close()
     except Exception as e:
         keras_lock.release()
         try:
