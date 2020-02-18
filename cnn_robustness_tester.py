@@ -1,4 +1,5 @@
 import sys
+_b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
 import time
 
 from train_cnn import train as train_cnn
@@ -341,11 +342,10 @@ def multithreadded_calculations(parameters):
             """
 
             debugprint(parameters.isDebugging, "calculating lower bound")
-            session_Config = tf.ConfigProto(device_count={'GPU': 0})
-            session_Config.log_device_placement = True
-            gpu_options = tf.GPUOptions(visible_device_list=[])
-            session_Config.gpu_options = gpu_options
-            sess = tf.Session(config=session_Config)
+            gpu_options = tf.GPUOptions(visible_device_list=_b("").decode('utf-8'))
+            session_config = tf.ConfigProto(device_count={'GPU': 0}, gpu_options=gpu_options)
+            session_config.log_device_placement = True
+            sess = tf.Session(config=session_config)
             with sess.as_default():
                 #may be too global:
                 #cpu_devices = tf.config.experimental.list_physical_devices(device_type='CPU')
@@ -426,7 +426,10 @@ def main():
         set_path(dataset)
 
     global model_files
-    model_files = os.listdir("output/models")
+    try:
+        model_files = os.listdir("output/models")
+    except:
+        model_files = []
 
     if not debugging:
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
