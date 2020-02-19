@@ -1,4 +1,6 @@
 import sys
+import traceback
+
 _b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
 import time
 
@@ -97,7 +99,7 @@ def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
                     , parameters.file_name])
     except Exception as e:
         print("An exeption occured while writing to file")
-        logging.exception(str(e) + "\n\n")
+        logging.exception(str(traceback.format_exc()) + "\n\n")
     finally:
         write_lock.release()
 
@@ -261,7 +263,7 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
                               + date +
                               "\nThis file had an error: \n"
                               + file_name +
-                              "\n" + str(e) +
+                              "\n" + str(traceback.format_exc()) +
                               "\n\n")
             # Deadlock potential?
             """
@@ -280,7 +282,7 @@ def reset_cuda():
         print("closing", cuda.get_current_device())
         cuda.close()
     except Exception as e:
-        print("Could not reset cuda: ", e)
+        print("Could not reset cuda: ", traceback.format_exc())
 
 
 def gpu_calculations(parameters):
@@ -375,10 +377,8 @@ def multithreadded_calculations(parameters):
 
     finally:
         semaphore.release()
-        try:
-            cuda.close()
-        finally:
-            gc.collect()
+        #reset_cuda()
+        gc.collect()
 
 
 def pool_init(l1, l2, sema):
