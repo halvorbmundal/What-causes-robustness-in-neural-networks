@@ -157,7 +157,7 @@ def get_upper_bound(file_name, l_norm, num_image):
 
 
 def csv_contains_file(csv_file, file_name, parameters):
-    with open(csv_file, "rt") as f:
+    with open(csv_file, "r") as f:
         csvreader = csv.reader(f, delimiter=',', quotechar='|')
 
         first_row = next(csvreader)
@@ -285,6 +285,9 @@ def reset_cuda():
         print("Could not reset cuda: ", traceback.format_exc())
 
 
+def tf_reset():
+    tf.reset_default_graph()
+
 def gpu_calculations(parameters):
     if not file_exists(parameters.file_name):
         train_nn(parameters,
@@ -304,7 +307,7 @@ def gpu_calculations(parameters):
 
 
 def get_accuracy_of_nn_from_csv(csv_file, file_name):
-    with open(csv_file, "rt") as f:
+    with open(csv_file, "r") as f:
         csvreader = csv.reader(f, delimiter=',', quotechar='|')
 
         first_row = next(csvreader)
@@ -374,7 +377,15 @@ def multithreadded_calculations(parameters):
         print_parameters(parameters)
 
         return
-
+    except Exception as e:
+        print("Error: An exeption occured while calculating robustness", e)
+        date = str(datetime.now())
+        logging.exception("\n =================\n\n"
+                          + date +
+                          "\nThe error was here: \n"
+                          + parameter_string(parameters) +
+                          "\n" + str(traceback.format_exc()) +
+                          "\n\n")
     finally:
         semaphore.release()
         #reset_cuda()

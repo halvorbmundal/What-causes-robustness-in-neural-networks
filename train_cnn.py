@@ -10,6 +10,7 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
                     Luca Daniel <dluca@mit.edu>
 """
 import csv
+import time
 
 import numpy as np
 from tensorflow.contrib.keras.api.keras.models import Sequential
@@ -107,7 +108,14 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
 
     # save model to a file
     if file_name != None:
-        model.save(file_name)
+        is_saved = False
+        while not is_saved:
+            try:
+                model.save(file_name)
+                is_saved = True
+            except Exception as e:
+                print("could not save model: ", e)
+                time.sleep(5)
     
     return history
 
