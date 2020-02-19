@@ -154,19 +154,26 @@ def get_upper_bound(file_name, l_norm, num_image):
     return upper_bound
 
 
-def csv_contains_file(csv_file, file_name):
+def csv_contains_file(csv_file, file_name, parameters):
     with open(csv_file, "rt") as f:
         csvreader = csv.reader(f, delimiter=',', quotechar='|')
 
         first_row = next(csvreader)
-        column_number = 0
+
+        file_name_column = 0
         for i in range(len(first_row)):
             if first_row[i] == "file_name":
-                column_number = i
+                file_name_column = i
+                break
+
+        cnnc_column = 0
+        for i in range(len(first_row)):
+            if first_row[i] == "Cnn-cert-core":
+                cnnc_column = i
                 break
 
         for row in csvreader:
-            if row[column_number] == file_name:
+            if row[file_name_column] == file_name and row[cnnc_column] == parameters.use_cnnc_core:
                 return True
     return False
 
@@ -325,7 +332,7 @@ def multithreadded_calculations(parameters):
         start_time = timer.time()
 
         debugprint(parameters.isDebugging, "reading results csv")
-        if csv_contains_file(parameters.result_folder + parameters.result_file, parameters.file_name):
+        if csv_contains_file(parameters.result_folder + parameters.result_file, parameters.file_name, parameters):
             print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
             print_parameters(parameters)
             return
@@ -439,8 +446,8 @@ def main():
         print(f"gpu: {gpu}")
         print(f"path: {path}/")
 
-    if multiprocessing.cpu_count() > 18:
-        processes = 18
+    if multiprocessing.cpu_count() > 36:
+        processes = 36
     else:
         processes = multiprocessing.cpu_count()
 
