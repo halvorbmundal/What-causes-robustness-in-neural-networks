@@ -439,8 +439,8 @@ def main():
         print(f"gpu: {gpu}")
         print(f"path: {path}/")
 
-    if multiprocessing.cpu_count() > 36:
-        processes = 36
+    if multiprocessing.cpu_count() > 18:
+        processes = 18
     else:
         processes = multiprocessing.cpu_count()
 
