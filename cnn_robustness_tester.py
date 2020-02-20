@@ -234,7 +234,6 @@ def get_dynamic_keras_config():
 
 def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
              use_early_stopping, batch_size, dataset):
-    keras_lock.acquire()
     try:
         #reset_cuda()
         print(datetime.now())
@@ -256,25 +255,14 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
         sess.close()
     except Exception as e:
         keras_lock.release()
-        try:
-            print("Error: An exeption occured while training network", e)
-            date = str(datetime.now())
-            logging.exception("\n =================\n\n"
-                              + date +
-                              "\nThis file had an error: \n"
-                              + file_name +
-                              "\n" + str(traceback.format_exc()) +
-                              "\n\n")
-            # Deadlock potential?
-            """
-            time.sleep(30)
-            train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, batch_normalization,
-                     use_padding_same,
-                     use_early_stopping, batch_size, dataset)"""
-        finally:
-            keras_lock.acquire()
-    finally:
-        keras_lock.release()
+        print("Error: An exeption occured while training network", e)
+        date = str(datetime.now())
+        logging.exception("\n =================\n\n"
+                          + date +
+                          "\nThis file had an error: \n"
+                          + file_name +
+                          "\n" + str(traceback.format_exc()) +
+                          "\n\n")
 
 
 def reset_cuda():
@@ -289,21 +277,24 @@ def tf_reset():
     tf.reset_default_graph()
 
 def gpu_calculations(parameters):
-    if not file_exists(parameters.file_name):
-        train_nn(parameters,
-                 parameters.file_name,
-                 parameters.filters,
-                 parameters.kernels,
-                 parameters.epochs,
-                 parameters.tf_activation,
-                 parameters.has_batch_normalization,
-                 parameters.use_padding_same,
-                 parameters.use_early_stopping,
-                 parameters.batch_size,
-                 parameters.dataset)
-        print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
-    else:
-        print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
+    try:
+        if not file_exists(parameters.file_name):
+            train_nn(parameters,
+                     parameters.file_name,
+                     parameters.filters,
+                     parameters.kernels,
+                     parameters.epochs,
+                     parameters.tf_activation,
+                     parameters.has_batch_normalization,
+                     parameters.use_padding_same,
+                     parameters.use_early_stopping,
+                     parameters.batch_size,
+                     parameters.dataset)
+            print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
+        else:
+            print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
+    finally:
+        keras_lock.release()
 
 
 def get_accuracy_of_nn_from_csv(csv_file, file_name):
@@ -465,10 +456,9 @@ def main():
     l1 = multiprocessing.Lock()
     l2 = multiprocessing.Lock()
     sema = multiprocessing.Semaphore(processes)
-    if cpu:
-        pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
-    else:
-        pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
+
+    cpu_pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
+    gpu_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
 
     pool_init(l1, l2, sema)
 
@@ -505,15 +495,19 @@ def main():
                                     parameters.file_name = get_name_new_convention(parameters)
 
                                     if debugging:
+                                        keras_lock.acquire()
                                         multithreadded_calculations(parameters)
                                     else:
                                         if parameters.use_gpu:
-                                            gpu_calculations(parameters)
+                                            keras_lock.acquire()
+                                            gpu_pool.apply_async(gpu_calculations, (parameters,))
                                         if parameters.use_cpu:
-                                            pool.apply_async(multithreadded_calculations, (parameters,))
+                                            cpu_pool.apply_async(multithreadded_calculations, (parameters,))
 
-    pool.close()
-    pool.join()
+    gpu_pool.close()
+    cpu_pool.close()
+    gpu_pool.join()
+    cpu_pool.join()
     print("program finished")
 
 

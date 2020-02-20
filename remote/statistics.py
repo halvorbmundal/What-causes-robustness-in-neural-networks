@@ -10,6 +10,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.decomposition import FactorAnalysis
 import pydot
+import statsmodels.api as sm
 import json
 
 from sklearn.datasets import load_iris
@@ -30,9 +31,10 @@ def get_df(columns):
     results = results[~results[_file_name].duplicated(keep="first")]
     data_df: pd.DataFrame = pd.merge(left=results, right=accuracy, left_on='file_name', right_on='file_name',
                                      suffixes=("_x", ""))
-    df_with_dummies = pd.get_dummies(data_df.iloc[0:, [data_df.columns.get_loc(c) for c in columns]],
-                                     columns=[_activation_function])
-    print(df_with_dummies.head())
+    df_with_dummies = data_df.iloc[0:, [data_df.columns.get_loc(c) for c in columns]]
+    if _activation_function in columns:
+        df_with_dummies = pd.get_dummies(df_with_dummies,
+                                     columns=[_activation_function], prefix="", drop_first=True)
     return df_with_dummies, data_df["lower_bound"], data_df[_activation_function]
 
 
@@ -45,9 +47,15 @@ def get_numppy_arrays(df):
 
 
 def linear_regression(X, y):
+    X2 = sm.add_constant(X)
+    est = sm.OLS(y, X2)
+    est2 = est.fit()
+    return est2
+
+    """
     model = LinearRegression()
     model.fit(X, y)
-    return model
+    return model"""
 
 
 def get_y(df):
@@ -126,23 +134,28 @@ def poly_reg(X, y, p=2):
     model = LinearRegression()
     poly = PolynomialFeatures(degree=p)
     poly_X = poly.fit_transform(X, y)
+    est = sm.OLS(y, poly_X)
+    est2 = est.fit()
+    return poly, est2
+
+    """
     model.fit(poly_X, y)
-    return poly, model
+    return poly, model"""
+
 
 def error_plot():
     df = get_result_df()
     depth_query = (df[_depth] == 3)
     kernel_query = (df[_kernel] == 5)
     filter_query = (df[_filter] <= 90)
-    ac_query = True#(df[_activation_function] == "ada")
-    all_queries = None
-    #all_queries =  ac_query & kernel_query & depth_query  & filter_query
+    ac_query = (df[_activation_function] == "ada")
+    #all_queries = None
+    all_queries =  ac_query & kernel_query & depth_query  & filter_query
 
     error_plot_column(df, _kernel, query=all_queries)
     error_plot_column(df, _depth, query=all_queries)
     error_plot_column(df, _filter, query=all_queries)
     error_plot_column(df, _activation_function, query=all_queries)
-
 
 def main():
     with open("config.json") as json_file:
@@ -150,14 +163,19 @@ def main():
     if config["use_old"]:
         old_path = "old_network"
         os.chdir(old_path)
-    columns = [_kernel, _depth, _filter, _activation_function]
+    if config["use_all_columns"]:
+        columns = config["all_columns"]
+    else:
+        columns = config["small_columns"]
     x_df, y_df, af = get_df(columns)
     y = y_df.to_numpy()
     columns = x_df.keys()
     X, input_dict = get_numppy_arrays(x_df)
 
     linear_regression_model = linear_regression(X, y)
-    poly_features, plynomial_regression_model = poly_reg(X, y)
+    poly_features, plynomial_regression_model = poly_reg(X, y, config["p"])
+    print(linear_regression_model.summary(yname="robustness", xname=list(pd.Index(["bias"]).append(columns))))
+    print(plynomial_regression_model.summary(yname="robustness", xname=poly_features.get_feature_names(x_df.columns)))
 
     for i in columns:
         if config["print_scatter"]:
@@ -167,7 +185,8 @@ def main():
             print("{}: {}".format(x_df.columns[i], linear_regression_model.coef_[i]))
     if config["print_ploy"]:
         for i in range(len(plynomial_regression_model.coef_)):
-            print("{}: {}".format(poly_features.get_feature_names(x_df.columns)[i], plynomial_regression_model.coef_[i]))
+            None
+            #print("{}: {}".format(poly_features.get_feature_names(x_df.columns)[i], plynomial_regression_model.coef_[i]))
     if config["use_error_plot"]:
         error_plot()
     # plot_3d(input_dict[_filter], input_dict[_depth], y, af)
