@@ -502,6 +502,7 @@ def main():
                                             keras_lock.acquire()
                                             gpu_pool.apply_async(gpu_calculations, (parameters,))
                                         if parameters.use_cpu:
+                                            keras_lock.acquire(blocking=False)
                                             cpu_pool.apply_async(multithreadded_calculations, (parameters,))
 
     gpu_pool.close()
