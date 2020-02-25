@@ -589,7 +589,7 @@ def run(file_name, n_samples, p_n, q_n, activation = 'relu', cifar=False, tinyim
     np.random.seed(1215)
     tf.set_random_seed(1215)
     random.seed(1215)
-    keras_model = load_model(file_name, custom_objects={'fn':loss, 'ResidualStart':ResidualStart, 'ResidualStart2':ResidualStart2, 'tf':tf})
+    keras_model = load_model(file_name, custom_objects={'fn':loss, 'ResidualStart':ResidualStart, 'ResidualStart2':ResidualStart2, 'tf':tf, 'atan': tf.math.atan})
     if tinyimagenet:
         model = Model(keras_model, inp_shape = (64,64,3))
     elif cifar:

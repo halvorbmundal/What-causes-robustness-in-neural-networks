@@ -239,7 +239,7 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
         print(datetime.now())
         print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
         sess = tf.Session()
-        with sess.as_default():
+        with sess.as_default(config=get_dynamic_keras_config()):
             train_and_save_network(file_name,
                                    filters,
                                    kernels,
@@ -351,7 +351,6 @@ def multithreadded_calculations(parameters):
             #may be too global:
             #cpu_devices = tf.config.experimental.list_physical_devices(device_type='CPU')
             #tf.config.experimental.set_visible_devices(devices=cpu_devices, device_type='CPU')
-            print("This should not find GPUs. Available GPUSs ->", tf.test.gpu_device_name())
             lower_bound = calculate_lower_bound(parameters.file_name,
                                                 parameters.num_image,
                                                 parameters.l_norm,

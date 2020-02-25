@@ -105,11 +105,13 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
         writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         writer.writerow([len(history.history['loss']), history.history["val_acc"][-1], file_name])
 
-
+    print("saving")
+    print(file_name)
     # save model to a file
     if file_name != None:
         is_saved = False
         while not is_saved:
+            print("is_trying")
             try:
                 model.save(file_name)
                 is_saved = True
