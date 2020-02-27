@@ -117,7 +117,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
             except Exception as e:
                 print("could not save model: ", e)
                 time.sleep(5)
-            print("is_trying")
+
     
     return history
 
