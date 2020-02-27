@@ -238,8 +238,8 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
         #reset_cuda()
         print(datetime.now())
         print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
-        sess = tf.Session()
-        with sess.as_default(config=get_dynamic_keras_config()):
+        sess = tf.Session(config=get_dynamic_keras_config())
+        with sess.as_default():
             train_and_save_network(file_name,
                                    filters,
                                    kernels,
