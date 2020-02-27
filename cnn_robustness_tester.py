@@ -328,7 +328,6 @@ def multithreadded_calculations(parameters):
                               "\nThe error was here: \n"
                               + parameter_string(parameters) +
                               "\n" + "File does not exist {}".format(parameters.file_name) +
-                              "\n" + print_parameters(parameters) +
                               "\n\n")
             return
 
@@ -448,6 +447,7 @@ def main():
         tf.logging.set_verbosity(tf.logging.ERROR)
 
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
+
     if debugging:
         print(f"cpu: {cpu}")
         print(f"gpu: {gpu}")
