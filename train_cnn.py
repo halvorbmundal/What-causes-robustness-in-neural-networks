@@ -111,13 +111,13 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     if file_name != None:
         is_saved = False
         while not is_saved:
-            print("is_trying")
             try:
                 model.save(file_name)
                 is_saved = True
             except Exception as e:
                 print("could not save model: ", e)
                 time.sleep(5)
+            print("is_trying")
     
     return history
 
