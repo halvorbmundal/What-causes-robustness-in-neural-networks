@@ -323,6 +323,13 @@ def multithreadded_calculations(parameters):
         if not file_exists(parameters.file_name, use_cache=False):
             print("File does not exist {}".format(parameters.file_name), flush=True)
             print_parameters(parameters)
+            logging.exception("\n =================\n\n"
+                              + str(datetime.now()) +
+                              "\nThe error was here: \n"
+                              + parameter_string(parameters) +
+                              "\n" + "File does not exist {}".format(parameters.file_name) +
+                              "\n" + print_parameters(parameters) +
+                              "\n\n")
             return
 
         start_time = timer.time()
@@ -369,9 +376,8 @@ def multithreadded_calculations(parameters):
         return
     except Exception as e:
         print("Error: An exeption occured while calculating robustness", e)
-        date = str(datetime.now())
         logging.exception("\n =================\n\n"
-                          + date +
+                          + str(datetime.now()) +
                           "\nThe error was here: \n"
                           + parameter_string(parameters) +
                           "\n" + str(traceback.format_exc()) +
@@ -465,11 +471,11 @@ def main():
     logging.basicConfig(filename='log.log', level="ERROR")
     for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
         for kernel_size in range(3, 8, 1):
-            for use_cnnc_core in [True, False]:
+            for use_cnnc_core in [False, True]:
                 for filter_size in range(2, 64, 4):
                     for has_batch_normalization in [False]:
                         for depth in range(1, 5, 1):
-                            for use_early_stopping in [True]:
+                            for use_early_stopping in [True, False]:
                                 for use_padding_same in [True, False]:
 
                                     parameters = CnnTestParameters()

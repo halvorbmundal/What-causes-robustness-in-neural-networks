@@ -148,9 +148,11 @@ def error_plot():
     depth_query = (df[_depth] == 3)
     kernel_query = (df[_kernel] == 5)
     filter_query = (df[_filter] <= 90)
+    cnnc_query = (~df["Cnn-cert-core"])
+    padding_query = (~df["padding_same"])
     ac_query = (df[_activation_function] == "ada")
     #all_queries = None
-    all_queries =  ac_query & kernel_query & depth_query  & filter_query
+    all_queries = cnnc_query & ac_query & kernel_query #& depth_query & filter_query #& padding_query # #
 
     error_plot_column(df, _kernel, query=all_queries)
     error_plot_column(df, _depth, query=all_queries)
@@ -160,9 +162,7 @@ def error_plot():
 def main():
     with open("config.json") as json_file:
         config = json.load(json_file)
-    if config["use_old"]:
-        old_path = "old_network"
-        os.chdir(old_path)
+    os.chdir(config["path"])
     if config["use_all_columns"]:
         columns = config["all_columns"]
     else:

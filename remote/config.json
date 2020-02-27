@@ -1,7 +1,13 @@
 {
+  "path": "v5/",
+
   "print_scatter": false,
-  "use_old": true,
+  "use_old": false,
   "use_error_plot":true,
   "print_linear":false,
-  "print_ploy":true
+  "print_ploy":false,
+  "all_columns": ["kernel", "depth", "filter", "activation_function"],
+  "small_columns": ["depth", "filter"],
+  "use_all_columns":false,
+  "p":2
 }
