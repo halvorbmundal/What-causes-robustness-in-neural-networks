@@ -101,7 +101,6 @@ def error_plot_column(df, column_name, query=None):
     avg_lower, std_lower = [], []
 
     if query is not None:
-        print(df[query].head())
         df = df[query]
     unique = df[column_name].unique()
     unique.sort()
@@ -144,15 +143,16 @@ def poly_reg(X, y, p=2):
 
 
 def error_plot():
-    df = get_result_df()
+    df: pd.DataFrame = get_result_df()
     depth_query = (df[_depth] == 3)
     kernel_query = (df[_kernel] == 5)
     filter_query = (df[_filter] <= 90)
     cnnc_query = (~df["Cnn-cert-core"])
     padding_query = (~df["padding_same"])
+    es_query = (df["early_stoppping"])
     ac_query = (df[_activation_function] == "ada")
-    #all_queries = None
-    all_queries = cnnc_query & ac_query & kernel_query #& depth_query & filter_query #& padding_query # #
+    all_queries = cnnc_query
+    #all_queries = ac_query & depth_query & filter_query & kernel_query & cnnc_query & padding_query & es_query
 
     error_plot_column(df, _kernel, query=all_queries)
     error_plot_column(df, _depth, query=all_queries)
