@@ -175,8 +175,9 @@ def csv_contains_file(csv_file, file_name, parameters):
                 break
 
         for row in csvreader:
-            if row[file_name_column] == file_name and row[cnnc_column] == parameters.use_cnnc_core:
-                return True
+            if row[file_name_column] == file_name:# and row[cnnc_column] == parameters.use_cnnc_core:
+                if str(row[cnnc_column]) == str(parameters.use_cnnc_core):
+                    return True
     return False
 
 
@@ -504,6 +505,7 @@ def main():
 
                                     if debugging:
                                         keras_lock.acquire()
+                                        gpu_calculations(parameters)
                                         multithreadded_calculations(parameters)
                                     else:
                                         if parameters.use_gpu:
