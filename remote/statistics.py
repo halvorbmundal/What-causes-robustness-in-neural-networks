@@ -152,7 +152,7 @@ def error_plot():
     es_query = (df["early_stoppping"])
     ac_query = (df[_activation_function] == "ada")
     all_queries = cnnc_query
-    #all_queries = ac_query & depth_query & filter_query & kernel_query & cnnc_query & padding_query & es_query
+    all_queries = ac_query & depth_query & filter_query & kernel_query & cnnc_query & padding_query & es_query
 
     error_plot_column(df, _kernel, query=all_queries)
     error_plot_column(df, _depth, query=all_queries)
