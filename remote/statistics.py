@@ -159,10 +159,16 @@ def error_plot():
     error_plot_column(df, _filter, query=all_queries)
     error_plot_column(df, _activation_function, query=all_queries)
 
+def set_path(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    os.chdir(path)
+
 def main():
     with open("config.json") as json_file:
         config = json.load(json_file)
-    os.chdir(config["path"])
+    set_path(config["path"])
+
     if config["use_all_columns"]:
         columns = config["all_columns"]
     else:

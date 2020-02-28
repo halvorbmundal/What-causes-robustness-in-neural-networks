@@ -1,6 +1,10 @@
 import multiprocessing
 import time
 
+print(False is False)
+print(True is False)
+print(False is True)
+print(True is True)
 
 def foo():
     print("hei")

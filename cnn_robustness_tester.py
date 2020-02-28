@@ -174,6 +174,8 @@ def csv_contains_file(csv_file, file_name, parameters):
                 cnnc_column = i
                 break
 
+
+
         for row in csvreader:
             if row[file_name_column] == file_name:# and row[cnnc_column] == parameters.use_cnnc_core:
                 if str(row[cnnc_column]) == str(parameters.use_cnnc_core):
@@ -470,13 +472,13 @@ def main():
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
-    for activation_function_string in ["ada"]:#, "sigmoid", "arctan", "tanh"]:
-        for kernel_size in [5]:#,3,4,6,7]:
+    for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
+        for kernel_size in [5,3,4,6,7]:
             for use_cnnc_core in [False]:
                 for filter_size in range(2, 64, 4):
                     for has_batch_normalization in [False]:
                         for depth in range(1, 5, 1):
-                            for use_early_stopping in [False]:#[True, False]:
+                            for use_early_stopping in [True, False]:
                                 for use_padding_same in [False]:
 
                                     if dataset != "mnist" and not use_early_stopping:
