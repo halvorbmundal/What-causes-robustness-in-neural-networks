@@ -96,7 +96,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
 
     # run training with given dataset, and print progress
 
-    num_epocs = len(history.history['loss'])
+    num_ephocs_trained = len(history.history['loss'])
     metafile="output/models_meta.csv"
     if not os.path.exists(metafile):
         with open(metafile, 'a', newline='') as csvfile:
@@ -104,7 +104,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
             writer.writerow(["num_epochs", "best_epoch", "time_taken", "time_per_epoch", "accuracy", "file_name"])
     with open(metafile, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow([num_epocs, best_epoc, time_taken, time_taken/num_epochs, history.history["val_acc"][-1], file_name])
+        writer.writerow([num_ephocs_trained, best_epoc, time_taken, float(time_taken)/float(num_ephocs_trained), history.history["val_acc"][-1], file_name])
 
     print("saving - ", file_name)
     # save model to a file
