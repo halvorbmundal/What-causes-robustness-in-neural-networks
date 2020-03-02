@@ -34,8 +34,6 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
         model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:], activation=activation, padding="same"))
     else:
         model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:], activation=activation))
-
-
     if bn:
         model.add(BatchNormalization())
     #model.add(Lambda(activation))
@@ -44,7 +42,6 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
             model.add(Conv2D(f,k,activation=activation, padding="same"))
         else:
             model.add(Conv2D(f, k, activation=activation))
-
         if bn:
             model.add(BatchNormalization())
         # ReLU activation
@@ -73,16 +70,18 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     model.summary()
     print("Traing a {} layer model, saving to {}".format(len(filters) + 1, file_name))
 
+    start_time = time.time()
     if use_early_stopping:
-        early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True,
+        early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=20, restore_best_weights=True,
                                                           verbose=1)
         history = model.fit(data.train_data, data.train_labels,
                             batch_size=batch_size,
                             validation_data=(data.validation_data, data.validation_labels),
-                            epochs=100,
+                            epochs=400,
                             shuffle=True,
                             callbacks=[early_stopping],
                             verbose=0)
+        best_epoc = len(history.history['loss']) - early_stopping.wait
 
     else:
         history = model.fit(data.train_data, data.train_labels,
@@ -91,22 +90,23 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                             epochs=num_epochs,
                             shuffle=True,
                             verbose=0)
+        best_epoc = len(history.history['loss'])
+    time_taken = (time.time() - start_time)
 
 
     # run training with given dataset, and print progress
 
-
+    num_epocs = len(history.history['loss'])
     metafile="output/models_meta.csv"
     if not os.path.exists(metafile):
         with open(metafile, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(["num_epochs", "accuracy", "file_name"])
+            writer.writerow(["num_epochs", "best_epoch", "time_taken", "time_per_epoch", "accuracy", "file_name"])
     with open(metafile, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow([len(history.history['loss']), history.history["val_acc"][-1], file_name])
+        writer.writerow([num_epocs, best_epoc, time_taken, time_taken/num_epochs, history.history["val_acc"][-1], file_name])
 
-    print("saving")
-    print(file_name)
+    print("saving - ", file_name)
     # save model to a file
     if file_name != None:
         is_saved = False

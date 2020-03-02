@@ -23,12 +23,19 @@ _depth = "depth"
 _accuracy = "accuracy"
 _filter = "filter"
 _activation_function = "activation_function"
+_early_stoppping = "early_stoppping"
+_padding_same = "padding_same"
 
 
 def get_df(columns):
     results = pd.read_csv('results/results.csv')
     accuracy = pd.read_csv('models_meta.csv')
-    results = results[~results[_file_name].duplicated(keep="first")]
+    results = results[~results["Cnn-cert-core"]]
+    padding_query = (~results["padding_same"])
+    es_query = (results["early_stoppping"])
+    ac_query = (results[_activation_function] != "arctan")
+    results = results[padding_query & es_query & ac_query]
+    results = results[~results[[_file_name, "Cnn-cert-core"]].duplicated(keep="first")]
     data_df: pd.DataFrame = pd.merge(left=results, right=accuracy, left_on='file_name', right_on='file_name',
                                      suffixes=("_x", ""))
     df_with_dummies = data_df.iloc[0:, [data_df.columns.get_loc(c) for c in columns]]
@@ -87,10 +94,11 @@ def pca(X, y):
     finalDf = pd.concat([principalDf, df[['target']]], axis=1)
 
 
-def decicion_tree(X, y):
-    clf = tree.DecisionTreeRegressor(random_state=0, max_depth=3)
+def decicion_tree(X, y, columns=None):
+    clf = tree.DecisionTreeRegressor(random_state=0, max_depth=4)
     clf = clf.fit(X, y)
-    tree.plot_tree(clf)
+    plt.figure(figsize=(7, 4), dpi=250)
+    tree.plot_tree(clf, feature_names=columns)
     # tree.export_graphviz(clf)
     plt.show()
 
@@ -125,7 +133,14 @@ def error_plot_column(df, column_name, query=None):
 
 def get_result_df():
     results = pd.read_csv('results/results.csv')
-    df = results[~results[_file_name].duplicated(keep="first")]
+
+    padding_query = (~results["padding_same"])
+    es_query = (results["early_stoppping"])
+    ac_query = (results[_activation_function] != "arctan")
+    results = results[padding_query & es_query & ac_query]
+
+    df = results[~results[[_file_name, "Cnn-cert-core"]].duplicated(keep="first")]
+    df = df[~df["Cnn-cert-core"]]
     return df
 
 
@@ -147,17 +162,18 @@ def error_plot():
     depth_query = (df[_depth] == 3)
     kernel_query = (df[_kernel] == 5)
     filter_query = (df[_filter] <= 90)
-    cnnc_query = (~df["Cnn-cert-core"])
     padding_query = (~df["padding_same"])
     es_query = (df["early_stoppping"])
     ac_query = (df[_activation_function] == "ada")
-    all_queries = cnnc_query
-    all_queries = ac_query & depth_query & filter_query & kernel_query & cnnc_query & padding_query & es_query
+    all_queries = None
+    #all_queries = ac_query & depth_query & filter_query & kernel_query
 
     error_plot_column(df, _kernel, query=all_queries)
     error_plot_column(df, _depth, query=all_queries)
     error_plot_column(df, _filter, query=all_queries)
     error_plot_column(df, _activation_function, query=all_queries)
+    error_plot_column(df, _early_stoppping, query=all_queries)
+    error_plot_column(df, _padding_same, query=all_queries)
 
 def set_path(path):
     if not os.path.exists(path):
@@ -173,6 +189,7 @@ def main():
         columns = config["all_columns"]
     else:
         columns = config["small_columns"]
+
     x_df, y_df, af = get_df(columns)
     y = y_df.to_numpy()
     columns = x_df.keys()
@@ -180,23 +197,19 @@ def main():
 
     linear_regression_model = linear_regression(X, y)
     poly_features, plynomial_regression_model = poly_reg(X, y, config["p"])
+    poly_features3, plynomial_regression_model3 = poly_reg(X, y, 3)
     print(linear_regression_model.summary(yname="robustness", xname=list(pd.Index(["bias"]).append(columns))))
     print(plynomial_regression_model.summary(yname="robustness", xname=poly_features.get_feature_names(x_df.columns)))
+    print(plynomial_regression_model3.summary(yname="robustness", xname=poly_features3.get_feature_names(x_df.columns)))
 
     for i in columns:
         if config["print_scatter"]:
             plot_single_variable(input_dict[i], y, i)
-    if config["print_linear"]:
-        for i in range(len(x_df.columns)):
-            print("{}: {}".format(x_df.columns[i], linear_regression_model.coef_[i]))
-    if config["print_ploy"]:
-        for i in range(len(plynomial_regression_model.coef_)):
-            None
-            #print("{}: {}".format(poly_features.get_feature_names(x_df.columns)[i], plynomial_regression_model.coef_[i]))
     if config["use_error_plot"]:
         error_plot()
     # plot_3d(input_dict[_filter], input_dict[_depth], y, af)
-    # decicion_tree(X, y)
+    if config["use_decicion_tree"]:
+        decicion_tree(X, y, columns=list(columns.to_numpy()))
 
 
 main()

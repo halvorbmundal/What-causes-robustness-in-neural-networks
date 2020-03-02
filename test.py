@@ -1,44 +1,7 @@
-import multiprocessing
-import time
+import train_cnn
+from setup_mnist import MNIST
 
-print(False == False)
-print(True == False)
-print(False == True)
-print(True == True)
+h = train_cnn.train(MNIST(), "", [3], [3], 100, 64, 1)
 
-def foo():
-    print("hei")
-    time.sleep(1)
+print(len(h.history['loss']))
 
-
-def fun(i):
-    semaphore.acquire()
-    try:
-        print(i)
-        time.sleep(1)
-        print(semaphore)
-        a=semaphore
-        return
-    except Exception as e:
-        print(e)
-    finally:
-        semaphore.release()
-
-def main():
-    time.sleep(1)
-    for i in range(1000):
-        pool.apply_async(fun, (i,))
-
-
-    pool.close()
-    pool.join()
-
-def pool_init(sema: multiprocessing.Semaphore):
-    global semaphore
-    semaphore = sema
-
-sema = multiprocessing.Semaphore(4)
-pool = multiprocessing.Pool(8, initializer=pool_init, initargs=(sema,), maxtasksperchild=1)
-
-if __name__ == "__main__":
-    main()
