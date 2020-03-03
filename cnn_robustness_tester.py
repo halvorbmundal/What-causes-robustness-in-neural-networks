@@ -8,6 +8,7 @@ from train_cnn import train as train_cnn
 from pymain import run_cnn
 from setup_mnist import MNIST
 from setup_cifar import CIFAR
+from setup_tinyimagenet import tinyImagenet
 import csv
 import os.path
 from Attacks.cw_attack import cw_attack
@@ -123,6 +124,8 @@ def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, b
         data = MNIST()
     elif dataset == "cifar":
         data = CIFAR()
+    elif dataset == "tinyImagenet":
+        data = tinyImagenet()
     else:
         raise NameError(dataset, "is not a valid dataset")
 
@@ -479,7 +482,7 @@ def main():
                     for has_batch_normalization in [False]:
                         for depth in range(1, 6, 1):
                             for use_early_stopping in [True]:
-                                for use_padding_same in [False]:
+                                for use_padding_same in [True]:
 
                                     if dataset != "mnist" and not use_early_stopping:
                                         continue
