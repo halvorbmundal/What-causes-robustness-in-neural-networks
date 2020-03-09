@@ -45,10 +45,12 @@ def load_images(dataset_name, download_url, file_name):
     file_name_zip = file_name + ".zip"
     temp_path = f"{home}/numpy_datasets/temp_data/{dataset_name}/"
     unzipped_path = f"{path}{file_name}/"
+    print(os.path.exists(path))
     if not os.path.exists(path):
         download_dataset(temp_path, file_name_zip, download_url)
     extract_datazip(to_path=path, from_path=temp_path, file_name=file_name, file_name_zip=file_name_zip)
-    shutil.rmtree(temp_path)
+    if os.path.exists(temp_path):
+        shutil.rmtree(temp_path)
     data_dict["X_train"], data_dict["y_train"], data_dict["X_val"], data_dict["y_val"], data_dict["X_test"], \
         data_dict["y_test"] = preprocess_to_ndarray(unzipped_path)
 
