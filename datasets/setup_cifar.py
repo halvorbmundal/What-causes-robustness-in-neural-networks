@@ -174,4 +174,4 @@ class TwoLayerCIFARModel:
 
 if __name__ == "__main__":
     a = CIFAR()
-    print(a.train_labels.shape[1])
+    print(a.train_labels.shape)

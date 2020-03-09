@@ -269,7 +269,7 @@ def tf_reset():
 
 def gpu_calculations(parameters):
     try:
-        print(parameters.dataset_data)
+        print(parameters.dataset_data, flush=True)
         if not file_exists(parameters.file_name):
             train_nn(parameters,
                      parameters.file_name,
@@ -287,7 +287,6 @@ def gpu_calculations(parameters):
             print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
     finally:
         keras_lock.release()
-        print("realease")
 
 
 def get_accuracy_of_nn_from_csv(csv_file, file_name):

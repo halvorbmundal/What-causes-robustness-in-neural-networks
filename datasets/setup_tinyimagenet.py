@@ -22,39 +22,7 @@ import pickle as pkl
 import time
 from pathlib import Path
 
-pbar = None
-downloaded = 0
-
-
-def load_ndarrays(data_dict, path):
-    for i in data_dict.keys():
-        fileName = path + i
-        fileObject = open(fileName, 'rb')
-        data_dict[i] = pkl.load(fileObject)
-        fileObject.close()
-
-
-def save_ndarrays(data_dict, path):
-    print("saving ndarrays")
-    if not os.path.exists(path):
-        os.makedirs(path)
-    for i in data_dict.keys():
-        fileName = path + i
-        fileObject = open(fileName, 'wb')
-        pkl.dump(data_dict[i], fileObject)
-        fileObject.close()
-
-
-def show_progress(count, block_size, total_size):
-    blocks = int(total_size / block_size)
-    amount_finished = count / blocks
-    progress = int(amount_finished * 30)
-    if progress != 30:
-        protgress_bar = '|' + '=' * progress + '>' + ' ' * (30 - progress - 1) + '|'
-    else:
-        protgress_bar = '|' + '=' * progress + '|'
-
-    print(f"\r{count} of {blocks} blocks downloaded - {protgress_bar} - {100 * amount_finished:.2f}%", end='')
+from datasets.setup_util import show_progress, save_ndarrays, download_dataset
 
 
 def load_images(dataset_name, download_url, file_name):
@@ -77,10 +45,10 @@ def load_images(dataset_name, download_url, file_name):
     file_name_zip = file_name + ".zip"
     temp_path = f"{home}/numpy_datasets/temp_data/{dataset_name}/"
     unzipped_path = f"{path}{file_name}/"
-
-    download_dataset(temp_path, file_name_zip, download_url)
-    extract_datazip(path, temp_path, file_name, file_name_zip)
-    #shutil.rmtree(temp_path)
+    if not os.path.exists(path):
+        download_dataset(temp_path, file_name_zip, download_url)
+    extract_datazip(to_path=path, from_path=temp_path, file_name=file_name, file_name_zip=file_name_zip)
+    shutil.rmtree(temp_path)
     data_dict["X_train"], data_dict["y_train"], data_dict["X_val"], data_dict["y_val"], data_dict["X_test"], \
         data_dict["y_test"] = preprocess_to_ndarray(unzipped_path)
 
@@ -92,6 +60,7 @@ def load_images(dataset_name, download_url, file_name):
 
 def download_and_save_to_ndarrays(data_dict, download_url, file_name, path, dataset_name):
     home = str(Path.home())
+    print("Home dir:", home)
     file_name_zip = file_name + ".zip"
     temp_path = f"{home}/numpy_datasets/temp_data/{dataset_name}/"
     unzipped_path = f"{temp_path}{file_name}/"
@@ -107,11 +76,11 @@ def download_and_save_to_ndarrays(data_dict, download_url, file_name, path, data
     shutil.rmtree(temp_path)
 
 
-def extract_datazip(path, temp_path, file_name, file_name_zip):
-    if not os.path.exists(path + file_name + "/"):
+def extract_datazip(to_path, from_path, file_name, file_name_zip):
+    if not os.path.exists(to_path + file_name + "/"):
         print("Unzipping")
-        with ZipFile(temp_path + file_name_zip, 'r') as zipObj:
-            zipObj.extractall(path=path)
+        with ZipFile(from_path + file_name_zip, 'r') as zipObj:
+            zipObj.extractall(path=to_path)
         print("Unzipped")
 
 
@@ -169,21 +138,9 @@ def get_train_data(num_classes, train_path):
     return X_train, y_train
 
 
-def download_dataset(path, file_name_zip, download_url):
-    if not os.path.exists(path + file_name_zip):
-        print('Loading 200 classes')
-        if not os.path.exists(path):
-            os.makedirs(path)
-        print(path)
-
-        urllib.request.urlretrieve(download_url,
-                                   path + file_name_zip, show_progress)
-        print("\nDone downloading!")
-
-
 class TinyImagenet():
     def __init__(self):
-        print("Setting up tinyImagenet")
+        print("Setting up tinyImagenet", flush=True)
 
         dataset = 'tiny-imagenet-200'
         download_url = "http://cs231n.stanford.edu/tiny-imagenet-200.zip"

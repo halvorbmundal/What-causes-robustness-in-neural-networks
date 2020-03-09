@@ -254,3 +254,4 @@ class MadryMNISTModel(object):
 
 if __name__ == "__main__":
     a = MNIST()
+    print(a.test_labels.shape)
