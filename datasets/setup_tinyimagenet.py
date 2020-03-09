@@ -47,14 +47,16 @@ def load_images(dataset_name, download_url, file_name):
     unzipped_path = f"{path}{file_name}/"
     print(os.path.exists(path), flush=True)
     if not os.path.exists(path):
+        print("Did not find dataset.", flush=True)
         download_dataset(temp_path, file_name_zip, download_url)
-    extract_datazip(to_path=path, from_path=temp_path, file_name=file_name, file_name_zip=file_name_zip)
+        extract_datazip(to_path=path, from_path=temp_path, file_name=file_name, file_name_zip=file_name_zip)
     if os.path.exists(temp_path):
+        print("Deleting temp data", flush=True)
         shutil.rmtree(temp_path)
     data_dict["X_train"], data_dict["y_train"], data_dict["X_val"], data_dict["y_val"], data_dict["X_test"], \
         data_dict["y_test"] = preprocess_to_ndarray(unzipped_path)
 
-    print(f"Done loading {dataset_name}. It took {time.time() - start} seconds.")
+    print(f"Done loading {dataset_name}. It took {time.time() - start} seconds.", flush=True)
 
     return data_dict["X_train"], data_dict["y_train"], data_dict["X_val"], data_dict["y_val"], data_dict["X_test"], \
            data_dict["y_test"]
@@ -88,7 +90,7 @@ def extract_datazip(to_path, from_path, file_name, file_name_zip):
 
 
 def preprocess_to_ndarray(path):
-    print("Converting data to ndarray")
+    print("Converting data to ndarray", flush=True)
     train_path = path + "train"
     test_path = path + "train"
     np.random.seed(1215)
