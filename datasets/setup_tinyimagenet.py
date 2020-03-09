@@ -45,7 +45,7 @@ def load_images(dataset_name, download_url, file_name):
     file_name_zip = file_name + ".zip"
     temp_path = f"{home}/numpy_datasets/temp_data/{dataset_name}/"
     unzipped_path = f"{path}{file_name}/"
-    print(os.path.exists(path))
+    print(os.path.exists(path), flush=True)
     if not os.path.exists(path):
         download_dataset(temp_path, file_name_zip, download_url)
     extract_datazip(to_path=path, from_path=temp_path, file_name=file_name, file_name_zip=file_name_zip)
