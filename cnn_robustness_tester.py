@@ -269,6 +269,7 @@ def tf_reset():
 
 def gpu_calculations(parameters):
     try:
+        print(parameters.dataset_data)
         if not file_exists(parameters.file_name):
             train_nn(parameters,
                      parameters.file_name,
@@ -466,8 +467,7 @@ def main():
     cpu_pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
     gpu_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
 
-    if debugging:
-        pool_init(l1, l2, sema)
+    pool_init(l1, l2, sema)
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
@@ -504,6 +504,8 @@ def main():
                                     parameters.use_cpu = cpu
 
                                     parameters.file_name = get_name_new_convention(parameters)
+
+                                    print(parameters.dataset_data)
 
                                     if debugging:
                                         print("Aquired lock?", keras_lock.acquire())
