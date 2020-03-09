@@ -1,5 +1,5 @@
 import train_cnn
-from setup_mnist import MNIST
+from datasets.setup_mnist import MNIST
 
 h = train_cnn.train(MNIST(), "", [1], [1], 100, 264, 1)
 

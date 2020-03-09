@@ -1,15 +1,12 @@
-import time
-
 from train_cnn import train as train_cnn
 from pymain import run_cnn
-from setup_mnist import MNIST
 import csv
 import os.path
 from Attacks.cw_attack import cw_attack
 import time as timer
 from tensorflow.contrib.keras.api.keras.models import load_model
 import tensorflow as tf
-from setup_mnist import MNIST
+from datasets.setup_mnist import MNIST
 from enum import Enum
 
 class NnArchitecture(Enum):

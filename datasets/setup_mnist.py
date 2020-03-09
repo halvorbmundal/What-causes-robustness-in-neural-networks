@@ -60,6 +60,7 @@ class MNIST:
         self.train_labels = train_labels[VALIDATION_SIZE:]
         #print(" ========= data type ============")
         #print("data type = {}".format(self.test_data))
+        self.inp_shape = self.train_data.shape[1:]
         
 
 class MNISTModel:
@@ -250,3 +251,6 @@ class MadryMNISTModel(object):
               strides=[1,2,2,1],
               padding='SAME')
 
+
+if __name__ == "__main__":
+    a = MNIST()

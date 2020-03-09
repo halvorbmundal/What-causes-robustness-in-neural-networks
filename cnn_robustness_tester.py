@@ -2,19 +2,17 @@ import sys
 import traceback
 
 _b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
-import time
 
 from train_cnn import train as train_cnn
 from pymain import run_cnn
-from setup_mnist import MNIST
-from setup_cifar import CIFAR
-from setup_tinyimagenet import tinyImagenet
+from datasets.setup_cifar import CIFAR
+from datasets.setup_tinyimagenet import TinyImagenet
 import csv
 import os.path
 from Attacks.cw_attack import cw_attack
 import time as timer
 import tensorflow as tf
-from setup_mnist import MNIST
+from datasets.setup_mnist import MNIST
 from enum import Enum
 import logging
 from datetime import datetime
@@ -119,17 +117,9 @@ def setDynamicGPUAllocation():
 
 
 def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
-                           use_early_stopping, batch_size, dataset="mnist"):
-    if dataset == "mnist":
-        data = MNIST()
-    elif dataset == "cifar":
-        data = CIFAR()
-    elif dataset == "tinyImagenet":
-        data = tinyImagenet()
-    else:
-        raise NameError(dataset, "is not a valid dataset")
+                           use_early_stopping, batch_size, dataset_data):
 
-    train_cnn(data,
+    train_cnn(dataset_data,
               file_name=file_name,
               filters=filters,
               kernels=kernels,
@@ -141,13 +131,9 @@ def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, b
               use_early_stopping=use_early_stopping)
 
 
-def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function, dataset):
-    use_cifar = False
-    if dataset == "cifar":
-        use_cifar = True
-
-    avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, core=use_cnnc_core,
-                                          activation=activation_function, cifar=use_cifar)
+def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function, dataset_data):
+    avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, dataset_data, core=use_cnnc_core,
+                                          activation=activation_function)
     return avg_lower_bound
 
 
@@ -208,13 +194,13 @@ def get_tf_activation_function_from_string(activation_function_string):
         return tf.math.atan
 
 
-def calculate_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function_string, dataset):
+def calculate_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function_string, dataset_data):
     return get_lower_bound(file_name,
                            num_image,
                            l_norm,
                            use_cnnc_core,
                            activation_function_string,
-                           dataset)
+                           dataset_data)
 
 
 def reset_keras():
@@ -239,7 +225,7 @@ def get_dynamic_keras_config():
 
 
 def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
-             use_early_stopping, batch_size, dataset):
+             use_early_stopping, batch_size, dataset_data):
     try:
         #reset_cuda()
         print(datetime.now())
@@ -255,12 +241,11 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
                                    use_padding_same,
                                    use_early_stopping,
                                    batch_size,
-                                   dataset=dataset)
+                                   dataset_data=dataset_data)
         #reset_cuda()
         gc.collect()
         sess.close()
     except Exception as e:
-        keras_lock.release()
         print("Error: An exeption occured while training network", e)
         date = str(datetime.now())
         logging.exception("\n =================\n\n"
@@ -295,12 +280,13 @@ def gpu_calculations(parameters):
                      parameters.use_padding_same,
                      parameters.use_early_stopping,
                      parameters.batch_size,
-                     parameters.dataset)
+                     parameters.dataset_data)
             print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
         else:
             print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
     finally:
         keras_lock.release()
+        print("realease")
 
 
 def get_accuracy_of_nn_from_csv(csv_file, file_name):
@@ -368,7 +354,7 @@ def multithreadded_calculations(parameters):
                                                 parameters.l_norm,
                                                 parameters.use_cnnc_core,
                                                 parameters.activation_function_string,
-                                                parameters.dataset)
+                                                parameters.dataset_data)
 
         time_elapsed = timer.time() - start_time
 
@@ -401,7 +387,6 @@ def pool_init(l1, l2, sema):
     write_lock = l1
     keras_lock = l2
 
-
 def parameter_string(parameters):
     return "depth={} filter_size={} kernel_size={} ac={} es={} pad={} cnnc={}" \
         .format(
@@ -427,6 +412,16 @@ def debugprint(isDebugging, text):
     if isDebugging:
         print(text)
 
+def get_data(dataset):
+    if dataset == "mnist":
+        data = MNIST()
+    elif dataset == "cifar":
+        data = CIFAR()
+    elif dataset == "tinyImagenet":
+        data = TinyImagenet()
+    else:
+        raise NameError(dataset, "is not a valid dataset")
+    return data
 
 def main():
     _, arg1, arg2, arg3, arg4, arg5 = sys.argv
@@ -471,7 +466,8 @@ def main():
     cpu_pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
     gpu_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
 
-    pool_init(l1, l2, sema)
+    if debugging:
+        pool_init(l1, l2, sema)
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
@@ -502,6 +498,7 @@ def main():
                                     parameters.use_padding_same = use_padding_same
                                     parameters.use_cnnc_core = use_cnnc_core
                                     parameters.dataset = dataset
+                                    parameters.dataset_data = get_data(dataset)
 
                                     parameters.use_gpu = gpu
                                     parameters.use_cpu = cpu
@@ -509,7 +506,7 @@ def main():
                                     parameters.file_name = get_name_new_convention(parameters)
 
                                     if debugging:
-                                        keras_lock.acquire()
+                                        print("Aquired lock?", keras_lock.acquire())
                                         gpu_calculations(parameters)
                                         multithreadded_calculations(parameters)
                                     else:

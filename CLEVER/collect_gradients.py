@@ -51,7 +51,7 @@ def collect_gradients(dataset, model_name, norm, numimg=10):
     
     import tensorflow as tf
     from setup_cifar import CIFAR
-    from setup_mnist import MNIST
+    from datasets.setup_mnist import MNIST
     from setup_tinyimagenet import tinyImagenet
 
     np.random.seed(1215)

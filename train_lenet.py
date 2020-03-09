@@ -12,17 +12,14 @@
 ## contained in the LICENCE file in this directory.
 
 
-import numpy as np
 from tensorflow.contrib.keras.api.keras.models import Sequential
-from tensorflow.contrib.keras.api.keras.layers import Dense, Dropout, Activation, Flatten
-from tensorflow.contrib.keras.api.keras.layers import Conv2D, MaxPooling2D, AveragePooling2D
+from tensorflow.contrib.keras.api.keras.layers import Dense, Flatten
+from tensorflow.contrib.keras.api.keras.layers import Conv2D, MaxPooling2D
 from tensorflow.contrib.keras.api.keras.layers import Lambda
-from tensorflow.contrib.keras.api.keras.models import load_model
 from tensorflow.contrib.keras.api.keras.optimizers import SGD
 
 import tensorflow as tf
-from setup_mnist import MNIST
-from setup_cifar import CIFAR
+from datasets.setup_mnist import MNIST
 import os
 
 def train(data, file_name, params, num_epochs=50, batch_size=128, train_temp=1, init=None, pool = True):

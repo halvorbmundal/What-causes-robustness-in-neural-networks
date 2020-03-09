@@ -12,7 +12,7 @@ import numpy as np
 
 import argparse
 
-from setup_mnist import MNIST
+from datasets.setup_mnist import MNIST
 from setup_cifar import CIFAR
 
 import tensorflow as tf
@@ -22,7 +22,6 @@ import random
 import time
 
 from utils import generate_data
-from PIL import Image
 
 # import our bounds
 from get_bounds_ours_sparse import get_weights_list, compute_worst_bound

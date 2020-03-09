@@ -12,11 +12,10 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
 from numba import njit
 import numpy as np
 
-from setup_mnist import MNIST
-from setup_cifar import CIFAR
-from setup_tinyimagenet import tinyImagenet
+from datasets.setup_mnist import MNIST
+from datasets.setup_cifar import CIFAR
+from datasets.setup_tinyimagenet import TinyImagenet
 
-from tensorflow.contrib.keras.api.keras.models import Sequential
 from tensorflow.contrib.keras.api.keras.layers import Dense, Dropout, Activation, Flatten, GlobalAveragePooling2D, Lambda
 from tensorflow.contrib.keras.api.keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, InputLayer, BatchNormalization, Reshape
 from tensorflow.contrib.keras.api.keras.models import load_model

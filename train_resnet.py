@@ -9,17 +9,13 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
                     Sijia Liu <Sijia.Liu@ibm.com>
                     Luca Daniel <dluca@mit.edu>
 """
-import numpy as np
-from tensorflow.contrib.keras.api.keras.models import Sequential, Model
-from tensorflow.contrib.keras.api.keras.layers import Input, Dense, Activation, Flatten, Lambda, Conv2D, Add, AveragePooling2D, BatchNormalization, Lambda
-from tensorflow.contrib.keras.api.keras.models import load_model
-from tensorflow.contrib.keras.api.keras import backend as K
-from tensorflow.contrib.keras.api.keras.optimizers import SGD, Adam
+from tensorflow.contrib.keras.api.keras.models import Model
+from tensorflow.contrib.keras.api.keras.layers import Input, Dense, Flatten, Conv2D, Add, AveragePooling2D, BatchNormalization, Lambda
+from tensorflow.contrib.keras.api.keras.optimizers import Adam
 from tensorflow.python.keras.engine.base_layer import Layer
 
 import tensorflow as tf
-from setup_mnist import MNIST
-from setup_cifar import CIFAR
+from datasets.setup_mnist import MNIST
 import os
 
 

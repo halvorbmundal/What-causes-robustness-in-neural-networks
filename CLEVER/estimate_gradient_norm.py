@@ -16,8 +16,6 @@ contained in the LICENCE file in this directory.
 from __future__ import division
 
 import numpy as np
-import random
-import ctypes
 import time
 import sys
 import os
@@ -65,8 +63,6 @@ class EstimateLipschitz(object):
         dataset: mnist, cifar and imagenet. recommend to use mnist and cifar as a starting point.
         model_name: possible options are 2-layer, distilled, and normal
         """
-        from setup_cifar import CIFAR, CIFARModel, TwoLayerCIFARModel
-        from setup_mnist import MNIST, MNISTModel, TwoLayerMNISTModel
         from setup_tinyimagenet import tinyImagenet
 
         # if set this to true, we will use the logit layer output instead of probability

@@ -61,11 +61,13 @@ def load_batch(fpath):
 
 class CIFAR:
     def __init__(self):
+        print("Setting up cifar")
+
         train_data = []
         train_labels = []
-        
+
         if not os.path.exists("cifar-10-batches-bin"):
-            urllib.request.urlretrieve("https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz",
+            urllib.request.urlretrieve("http://cs231n.stanford.edu/tiny-imagenet-200.zip",
                                        "cifar-data.tar.gz")
             os.popen("tar -xzf cifar-data.tar.gz").read()
             
@@ -86,6 +88,10 @@ class CIFAR:
         self.validation_labels = train_labels[:VALIDATION_SIZE]
         self.train_data = train_data[VALIDATION_SIZE:, :, :, :]
         self.train_labels = train_labels[VALIDATION_SIZE:]
+        self.inp_shape = self.train_data.shape[1:]
+
+
+        print("Done setting up cifar")
 
 class CIFARModel:
     def __init__(self, restore=None, session=None, use_log=False, use_brelu = False):
@@ -165,3 +171,7 @@ class TwoLayerCIFARModel:
     def predict(self, data):
 
         return self.model(data)
+
+if __name__ == "__main__":
+    a = CIFAR()
+    print(a.train_labels.shape[1])

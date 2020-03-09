@@ -1,0 +1,209 @@
+"""
+setup_tinyimagenet.py
+
+Tinyimagenet data and model loading code
+
+Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
+                    Lily Weng  <twweng@mit.edu>
+                    Pin-Yu Chen <Pin-Yu.Chen@ibm.com>
+                    Sijia Liu <Sijia.Liu@ibm.com>
+                    Luca Daniel <dluca@mit.edu>
+"""
+
+import os
+import shutil
+import urllib.request
+from zipfile import ZipFile
+
+import numpy as np
+from PIL import Image
+import pickle as pkl
+
+import time
+from pathlib import Path
+
+pbar = None
+downloaded = 0
+
+
+def load_ndarrays(data_dict, path):
+    for i in data_dict.keys():
+        fileName = path + i
+        fileObject = open(fileName, 'rb')
+        data_dict[i] = pkl.load(fileObject)
+        fileObject.close()
+
+
+def save_ndarrays(data_dict, path):
+    print("saving ndarrays")
+    if not os.path.exists(path):
+        os.makedirs(path)
+    for i in data_dict.keys():
+        fileName = path + i
+        fileObject = open(fileName, 'wb')
+        pkl.dump(data_dict[i], fileObject)
+        fileObject.close()
+
+
+def show_progress(count, block_size, total_size):
+    blocks = int(total_size / block_size)
+    amount_finished = count / blocks
+    progress = int(amount_finished * 30)
+    if progress != 30:
+        protgress_bar = '|' + '=' * progress + '>' + ' ' * (30 - progress - 1) + '|'
+    else:
+        protgress_bar = '|' + '=' * progress + '|'
+
+    print(f"\r{count} of {blocks} blocks downloaded - {protgress_bar} - {100 * amount_finished:.2f}%", end='')
+
+
+def load_images(dataset_name, download_url, file_name):
+    home = str(Path.home())
+    path = f"{home}/numpy_datasets/{dataset_name}/"
+
+    start = time.time()
+    data_dict = {}
+    """
+    This takes 10 GB
+        
+    if not os.path.exists(path):
+        download_and_save_to_ndarrays(data_dict, download_url, file_name, path, dataset_name)
+
+    data_dict["X_train"], data_dict["y_train"], data_dict["X_val"], data_dict["y_val"], data_dict["X_test"], \
+    data_dict["y_test"] = None, None, None, None, None, None
+    
+    """
+
+    file_name_zip = file_name + ".zip"
+    temp_path = f"{home}/numpy_datasets/temp_data/{dataset_name}/"
+    unzipped_path = f"{path}{file_name}/"
+
+    download_dataset(temp_path, file_name_zip, download_url)
+    extract_datazip(path, temp_path, file_name, file_name_zip)
+    #shutil.rmtree(temp_path)
+    data_dict["X_train"], data_dict["y_train"], data_dict["X_val"], data_dict["y_val"], data_dict["X_test"], \
+        data_dict["y_test"] = preprocess_to_ndarray(unzipped_path)
+
+    print(f"Done loading {dataset_name}. It took {time.time() - start} seconds.")
+
+    return data_dict["X_train"], data_dict["y_train"], data_dict["X_val"], data_dict["y_val"], data_dict["X_test"], \
+           data_dict["y_test"]
+
+
+def download_and_save_to_ndarrays(data_dict, download_url, file_name, path, dataset_name):
+    home = str(Path.home())
+    file_name_zip = file_name + ".zip"
+    temp_path = f"{home}/numpy_datasets/temp_data/{dataset_name}/"
+    unzipped_path = f"{temp_path}{file_name}/"
+
+    download_dataset(temp_path, file_name_zip, download_url)
+    extract_datazip(temp_path, file_name, file_name_zip)
+    data_dict["X_train"], data_dict["y_train"], data_dict["X_val"], data_dict["y_val"], data_dict["X_test"], \
+        data_dict["y_test"] = preprocess_to_ndarray(unzipped_path)
+
+    save_ndarrays(data_dict, path)
+
+    os.makedirs(path)
+    shutil.rmtree(temp_path)
+
+
+def extract_datazip(path, temp_path, file_name, file_name_zip):
+    if not os.path.exists(path + file_name + "/"):
+        print("Unzipping")
+        with ZipFile(temp_path + file_name_zip, 'r') as zipObj:
+            zipObj.extractall(path=path)
+        print("Unzipped")
+
+
+
+def preprocess_to_ndarray(path):
+    print("Converting data to ndarray")
+    train_path = path + "train"
+    test_path = path + "train"
+    np.random.seed(1215)
+    num_classes = 200
+
+    X_train, y_train = get_train_data(num_classes, train_path)
+
+    VAL_FRACTION = 0.1
+    TEST_FRACTION = 0.1
+
+    num_pts = X_train.shape[0]
+    idx = np.random.permutation(num_pts)
+    test_idx = idx[:int(TEST_FRACTION * num_pts)]
+    train_idxs = idx[int(TEST_FRACTION * num_pts):]
+    val_idx = train_idxs[:int(VAL_FRACTION * num_pts)]
+    train_idx = train_idxs[int(VAL_FRACTION * num_pts):]
+    X_test = X_train[test_idx]
+    y_test = np.eye(num_classes)[y_train[test_idx]]
+    X_val = X_train[val_idx]
+    y_val = np.eye(num_classes)[y_train[val_idx]]
+    X_train = X_train[train_idx]
+    y_train = np.eye(num_classes)[y_train[train_idx]]
+    X_train = np.float32(X_train)
+    X_val = np.float32(X_val)
+    X_test = np.float32(X_test)
+    return np.swapaxes(X_train, 1, 3), y_train, np.swapaxes(X_val, 1, 3), y_val, np.swapaxes(X_test, 1, 3), y_test
+
+
+def get_train_data(num_classes, train_path):
+    X_train = np.zeros([num_classes * 500, 3, 64, 64], dtype='uint8')
+    y_train = np.zeros([num_classes * 500], dtype='uint8')
+    i = 0
+    j = 0
+    annotations = {}
+    for sChild in os.listdir(train_path):
+        sChildPath = os.path.join(os.path.join(train_path, sChild), 'images')
+        annotations[sChild] = j
+        for c in os.listdir(sChildPath):
+            X = np.array(Image.open(os.path.join(sChildPath, c)))
+            if len(np.shape(X)) == 2:
+                X_train[i] = np.array([X, X, X])
+            else:
+                X_train[i] = np.transpose(X, (2, 0, 1))
+            y_train[i] = j
+            i += 1
+        j += 1
+        if (j >= num_classes):
+            break
+    return X_train, y_train
+
+
+def download_dataset(path, file_name_zip, download_url):
+    if not os.path.exists(path + file_name_zip):
+        print('Loading 200 classes')
+        if not os.path.exists(path):
+            os.makedirs(path)
+        print(path)
+
+        urllib.request.urlretrieve(download_url,
+                                   path + file_name_zip, show_progress)
+        print("\nDone downloading!")
+
+
+class TinyImagenet():
+    def __init__(self):
+        print("Setting up tinyImagenet")
+
+        dataset = 'tiny-imagenet-200'
+        download_url = "http://cs231n.stanford.edu/tiny-imagenet-200.zip"
+        file_name = "tiny-imagenet-200"
+
+        # X_train shape: num_train*3*64*64 
+        X_train, y_train, X_val, y_val, X_test, y_test = load_images(dataset, download_url, file_name)
+
+        # convetion is num_train*size*size*channel, e.g. MNIST: num*28*28*1
+        self.train_data = X_train
+        self.train_labels = y_train
+
+        self.validation_data = X_val
+        self.validation_labels = y_val
+
+        self.test_data = X_test
+        self.test_labels = y_test
+
+        self.inp_shape = self.train_data.shape[1:]
+
+
+if __name__ == "__main__":
+    print(TinyImagenet().train_labels.shape[1])

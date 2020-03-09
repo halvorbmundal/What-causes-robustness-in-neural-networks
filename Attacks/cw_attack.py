@@ -1,18 +1,14 @@
 #Interface to run CW/EAD attacks
 
-import tensorflow as tf
 import numpy as np
 from Attacks.li_attack import CarliniLi
 from Attacks.l2_attack import CarliniL2
 from Attacks.l1_attack import EADL1
-from setup_mnist import MNIST
-from setup_cifar import CIFAR
-from setup_tinyimagenet import tinyImagenet
-from tensorflow.contrib.keras.api.keras.models import load_model, Sequential
+from datasets.setup_cifar import CIFAR
+from datasets.setup_tinyimagenet import TinyImagenet
+from tensorflow.contrib.keras.api.keras.models import load_model
 from utils import generate_data
-from tensorflow.contrib.keras.api.keras import backend as K
 import time as timer
-import tensorflow as tf
 import random
 from train_resnet import *
 
@@ -38,7 +34,7 @@ def cw_attack(file_name, norm, sess, num_image=10, cifar = False, tinyimagenet =
     if cifar:
         data = CIFAR()
     elif tinyimagenet:
-        data = tinyImagenet()
+        data = TinyImagenet()
     else:
         data = MNIST()
     model = load_model(file_name, custom_objects={'fn':loss,'tf':tf, 'ResidualStart' : ResidualStart, 'ResidualStart2' : ResidualStart2})

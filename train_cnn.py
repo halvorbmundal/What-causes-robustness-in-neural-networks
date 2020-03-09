@@ -12,7 +12,6 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
 import csv
 import time
 
-import numpy as np
 from tensorflow.contrib.keras.api.keras.models import Sequential
 from tensorflow.contrib.keras.api.keras.layers import Dense, Activation, Flatten, Lambda, Conv2D, BatchNormalization
 from tensorflow.contrib.keras.api.keras.models import load_model
@@ -20,8 +19,6 @@ from tensorflow.contrib.keras.api.keras import backend as K
 from tensorflow.contrib.keras.api.keras.optimizers import Adam
 
 import tensorflow as tf
-from setup_mnist import MNIST
-from setup_cifar import CIFAR
 import os
 
 def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, train_temp=1, init=None, activation=tf.nn.relu, bn = False, use_padding_same=False, use_early_stopping=True):
@@ -48,8 +45,8 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
         #model.add(Lambda(activation))
     # the output layer, with 10 classes
     model.add(Flatten())
-    model.add(Dense(10))
-    
+    model.add(Dense(data.train_labels.shape[1]))
+
     # load initial weights when given
     if init != None:
         model.load_weights(init)
@@ -61,12 +58,12 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
 
     # initiate the Adam optimizer
     sgd = Adam()
-    
+
     # compile the Keras model, given the specified loss and optimizer
     model.compile(loss=fn,
                   optimizer=sgd,
                   metrics=['accuracy'])
-    
+
     model.summary()
     print("Traing a {} layer model, saving to {}".format(len(filters) + 1, file_name))
 
@@ -118,49 +115,8 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                 print("could not save model: ", e)
                 time.sleep(5)
 
-    
+
     return history
 
 
 
-if __name__ == '__main__':
-    train(MNIST(), file_name="models/mnist_cnn_2layer_5_3", filters=[5], kernels = [3], num_epochs=10)
-    train(MNIST(), file_name="models/mnist_cnn_3layer_5_3", filters=[5,5], kernels = [3,3], num_epochs=10)
-    train(MNIST(), file_name="models/mnist_cnn_4layer_5_3", filters=[5,5,5], kernels = [3,3,3], num_epochs=10)
-    train(MNIST(), file_name="models/mnist_cnn_4layer_5_3_bn", filters=[5,5,5], kernels = [3,3,3], num_epochs=10, bn = True)
-    train(MNIST(), file_name="models/mnist_cnn_5layer_5_3", filters=[5,5,5,5], kernels = [3,3,3,3], num_epochs=10)
-    train(MNIST(), file_name="models/mnist_cnn_6layer_5_3", filters=[5,5,5,5,5], kernels = [3,3,3,3,3], num_epochs=10)
-    train(MNIST(), file_name="models/mnist_cnn_7layer_5_3", filters=[5,5,5,5,5,5], kernels = [3,3,3,3,3,3,3], num_epochs=10)
-    train(MNIST(), file_name="models/mnist_cnn_8layer_5_3", filters=[5,5,5,5,5,5,5], kernels = [3,3,3,3,3,3,3,3], num_epochs=10)
-    train(CIFAR(), file_name="models/cifar_cnn_5layer_5_3", filters=[5,5,5,5], kernels = [3,3,3,3], num_epochs=10)
-    train(CIFAR(), file_name="models/cifar_cnn_6layer_5_3", filters=[5,5,5,5,5], kernels = [3,3,3,3,3], num_epochs=10)
-    train(CIFAR(), file_name="models/cifar_cnn_7layer_5_3", filters=[5,5,5,5,5,5], kernels = [3,3,3,3,3,3], num_epochs=10)
-    train(CIFAR(), file_name="models/cifar_cnn_8layer_5_3", filters=[5,5,5,5,5,5,5], kernels = [3,3,3,3,3,3,3], num_epochs=10)
-    
-    train(MNIST(), file_name="models/mnist_cnn_4layer_10_3", filters=[10,10,10], kernels = [3,3,3], num_epochs=10)
-    train(MNIST(), file_name="models/mnist_cnn_8layer_10_3", filters=[10,10,10,10,10,10,10], kernels = [3,3,3,3,3,3,3,3], num_epochs=10)
-    train(CIFAR(), file_name="models/cifar_cnn_5layer_10_3", filters=[10,10,10,10], kernels = [3,3,3,3], num_epochs=10)
-    train(CIFAR(), file_name="models/cifar_cnn_7layer_10_3", filters=[10,10,10,10,10,10], kernels = [3,3,3,3,3,3], num_epochs=10)
-    
-    train(MNIST(), file_name="models/mnist_cnn_4layer_20_3", filters=[20,20,20], kernels = [3,3,3], num_epochs=10)
-    train(MNIST(), file_name="models/mnist_cnn_8layer_20_3", filters=[20,20,20,20,20,20,20], kernels = [3,3,3,3,3,3,3,3], num_epochs=10)
-    train(CIFAR(), file_name="models/cifar_cnn_5layer_20_3", filters=[20,20,20,20], kernels = [3,3,3,3], num_epochs=10)
-    train(CIFAR(), file_name="models/cifar_cnn_7layer_20_3", filters=[20,20,20,20,20,20], kernels = [3,3,3,3,3,3], num_epochs=10)
-
-    train(MNIST(), file_name="models/mnist_cnn_4layer_5_3_sigmoid", filters=[5,5,5], kernels = [3,3,3], num_epochs=10, activation = tf.sigmoid)
-    train(MNIST(), file_name="models/mnist_cnn_8layer_5_3_sigmoid", filters=[5,5,5,5,5,5,5], kernels = [3,3,3,3,3,3,3,3], num_epochs=10, activation=tf.sigmoid)
-    train(CIFAR(), file_name="models/cifar_cnn_5layer_5_3_sigmoid", filters=[5,5,5,5], kernels = [3,3,3,3], num_epochs=10, activation=tf.sigmoid)
-    train(CIFAR(), file_name="models/cifar_cnn_7layer_5_3_sigmoid", filters=[5,5,5,5,5,5], kernels = [3,3,3,3,3,3], num_epochs=10, activation=tf.sigmoid)
-
-    train(MNIST(), file_name="models/mnist_cnn_4layer_5_3_tanh", filters=[5,5,5], kernels = [3,3,3], num_epochs=10, activation = tf.tanh)
-    train(MNIST(), file_name="models/mnist_cnn_8layer_5_3_tanh", filters=[5,5,5,5,5,5,5], kernels = [3,3,3,3,3,3,3,3], num_epochs=10, activation=tf.tanh)
-    train(CIFAR(), file_name="models/cifar_cnn_5layer_5_3_tanh", filters=[5,5,5,5], kernels = [3,3,3,3], num_epochs=10, activation=tf.tanh)
-    train(CIFAR(), file_name="models/cifar_cnn_7layer_5_3_tanh", filters=[5,5,5,5,5,5], kernels = [3,3,3,3,3,3], num_epochs=10, activation=tf.tanh)
-
-    train(MNIST(), file_name="models/mnist_cnn_4layer_5_3_atan", filters=[5,5,5], kernels = [3,3,3], num_epochs=10, activation = tf.atan)
-    train(MNIST(), file_name="models/mnist_cnn_8layer_5_3_atan", filters=[5,5,5,5,5,5,5], kernels = [3,3,3,3,3,3,3,3], num_epochs=10, activation=tf.atan)
-    train(CIFAR(), file_name="models/cifar_cnn_5layer_5_3_atan", filters=[5,5,5,5], kernels = [3,3,3,3], num_epochs=10, activation=tf.atan)
-    train(CIFAR(), file_name="models/cifar_cnn_7layer_5_3_atan", filters=[5,5,5,5,5,5], kernels = [3,3,3,3,3,3], num_epochs=10, activation=tf.atan)
-
-
-    

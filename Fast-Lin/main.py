@@ -12,7 +12,7 @@ import numpy as np
 
 import argparse
 
-from setup_mnist import MNIST
+from datasets.setup_mnist import MNIST
 from setup_cifar import CIFAR
 from setup_tinyimagenet import tinyImagenet
 

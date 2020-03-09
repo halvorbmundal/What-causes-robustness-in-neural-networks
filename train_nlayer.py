@@ -13,11 +13,9 @@ This program is licenced under the Apache 2.0 licence,
 contained in the LICENCE file in this directory.
 """
 
-import numpy as np
 from tensorflow.contrib.keras.api.keras.models import Sequential
 from tensorflow.contrib.keras.api.keras.layers import Dense, Dropout, Activation, Flatten, Lambda
 from tensorflow.contrib.keras.api.keras.layers import Conv2D, MaxPooling2D
-from tensorflow.contrib.keras.api.keras.models import load_model
 from tensorflow.contrib.keras.api.keras import backend as K
 from tensorflow.contrib.keras.api.keras.optimizers import SGD, Adam
 import tensorflow as tf
@@ -26,10 +24,6 @@ config.gpu_options.allow_growth = True
 K.set_session(tf.Session(config=config))
 
 import tensorflow as tf
-from setup_mnist import MNIST
-from setup_cifar import CIFAR
-import argparse
-import os
 from setup_tinyimagenet import tinyImagenet
 
 # train cnn 7-layer mnist/cifar model

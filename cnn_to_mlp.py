@@ -18,8 +18,8 @@ from tensorflow.contrib.keras.api.keras.optimizers import SGD, Adam
 from tensorflow.contrib.keras.api.keras import backend as K
 
 import numpy as np
-from setup_mnist import MNIST
-from setup_cifar import CIFAR
+from datasets.setup_mnist import MNIST
+from datasets.setup_cifar import CIFAR
 import tensorflow as tf
 
 import time as timing

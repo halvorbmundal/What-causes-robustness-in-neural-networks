@@ -12,12 +12,8 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
 from numba import njit, jit
 import numpy as np
 
-from setup_mnist import MNIST
-from setup_cifar import CIFAR
-from setup_tinyimagenet import tinyImagenet
 from cnn_bounds_full_core import pool, conv, conv_bound, conv_full, conv_bound_full, pool_linear_bounds
 
-from tensorflow.contrib.keras.api.keras.models import Sequential
 from tensorflow.contrib.keras.api.keras.layers import Dense, Dropout, Activation, Flatten, GlobalAveragePooling2D, Lambda
 from tensorflow.contrib.keras.api.keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, InputLayer, BatchNormalization, Reshape
 from tensorflow.contrib.keras.api.keras.models import load_model
@@ -585,17 +581,12 @@ def warmup(model, x, eps_0, p_n, func):
     func(weights, biases, shapes, model.pads, model.strides, model.sizes, model.types, x, eps_0, p_n)
 
 #Main function to compute CNN-Cert bound
-def run(file_name, n_samples, p_n, q_n, activation = 'relu', cifar=False, tinyimagenet=False):
+def run(file_name, n_samples, p_n, q_n, data_set_class, activation = 'relu'):
     np.random.seed(1215)
     tf.set_random_seed(1215)
     random.seed(1215)
     keras_model = load_model(file_name, custom_objects={'fn':loss, 'ResidualStart':ResidualStart, 'ResidualStart2':ResidualStart2, 'tf':tf, 'atan': tf.math.atan})
-    if tinyimagenet:
-        model = Model(keras_model, inp_shape = (64,64,3))
-    elif cifar:
-        model = Model(keras_model, inp_shape = (32,32,3))
-    else:
-        model = Model(keras_model)
+    model = Model(keras_model, inp_shape=data_set_class.inp_shape)
 
     #Set correct linear_bounds function
     global linear_bounds
@@ -610,12 +601,7 @@ def run(file_name, n_samples, p_n, q_n, activation = 'relu', cifar=False, tinyim
     elif activation == 'arctan':
         linear_bounds = atan_linear_bounds
     
-    if cifar:
-        inputs, targets, true_labels, true_ids, img_info = generate_data(CIFAR(), samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.model.predict, start=0)
-    elif tinyimagenet:
-        inputs, targets, true_labels, true_ids, img_info = generate_data(tinyImagenet(), samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.model.predict, start=0)
-    else:
-        inputs, targets, true_labels, true_ids, img_info = generate_data(MNIST(), samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.model.predict, start=0)
+    inputs, targets, true_labels, true_ids, img_info = generate_data(data_set_class, samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.model.predict, start=0)
 
     if len(inputs) == 0:
         return 0, 0

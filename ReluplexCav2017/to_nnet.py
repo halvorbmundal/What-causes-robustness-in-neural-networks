@@ -1,7 +1,5 @@
 from tensorflow.contrib.keras.api.keras.models import load_model
 
-import numpy as np
-from setup_mnist import MNIST
 import tensorflow as tf
 
 def fn(correct, predicted):
