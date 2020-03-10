@@ -3,6 +3,7 @@ from pathlib import Path
 
 import numpy as np
 from scipy.io import loadmat
+import sklearn.model_selection
 
 from datasets.setup_util import download_dataset
 
@@ -30,27 +31,21 @@ def preprocess_to_ndarray(X, Y):
 
     VAL_FRACTION = 0.1
     TEST_FRACTION = 0.1
+    num_classes = 101
 
     X_train = X
     y_train = Y
-    print(y_train)
-    num_pts = X_train.shape[0]
 
-    idx = np.random.permutation(num_pts)
+    # stratifies the splits
+    X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X_train, y_train,
+                                                                                test_size=TEST_FRACTION,
+                                                                                random_state=1215, stratify=y_train)
+    X_train, X_val, y_train, y_val = sklearn.model_selection.train_test_split(X_train, y_train, test_size=VAL_FRACTION,
+                                                                              random_state=1215, stratify=y_train)
 
-    test_idx = idx[:int(TEST_FRACTION * num_pts)]
-    train_idxs = idx[int(TEST_FRACTION * num_pts):]
-    val_idx = train_idxs[:int(VAL_FRACTION * num_pts)]
-    train_idx = train_idxs[int(VAL_FRACTION * num_pts):]
-
-    X_test = X_train[test_idx]
-    y_test = y_train[test_idx]
-
-    X_val = X_train[val_idx]
-    y_val = y_train[val_idx]
-
-    X_train = X_train[train_idx]
-    y_train = y_train[train_idx]
+    y_test = np.eye(num_classes)[y_test - 1]
+    y_val = np.eye(num_classes)[y_val - 1]
+    y_train = np.eye(num_classes)[y_train - 1]
 
     return X_train, y_train, X_val, y_val, X_test, y_test
 

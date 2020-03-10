@@ -1,6 +1,6 @@
 import pickle as pkl
 import os
-import urllib
+import urllib.request
 
 
 def show_progress(count, block_size, total_size):

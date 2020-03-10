@@ -12,10 +12,6 @@ import urllib.request
 from pathlib import Path
 
 import numpy as np
-from tensorflow.contrib.keras.api.keras import backend as K
-from tensorflow.contrib.keras.api.keras.layers import Conv2D, MaxPooling2D
-from tensorflow.contrib.keras.api.keras.layers import Dense, Activation, Flatten
-from tensorflow.contrib.keras.api.keras.models import Sequential
 
 from datasets.setup_util import show_progress
 
@@ -44,7 +40,7 @@ def load_batch(fpath, label_key='labels'):
     return final, labels
 
 def load_batch(fpath):
-    f = open(fpath,"rb").read()
+    f = open(fpath, "rb").read()
     size = 32*32*3+1
     labels = []
     images = []
@@ -61,26 +57,33 @@ def load_batch(fpath):
 class CIFAR:
     def __init__(self):
         home = str(Path.home())
+        path = f"{home}/numpy_datasets/cifar"
         print("Setting up cifar")
 
         train_data = []
         train_labels = []
 
-        if not os.path.exists(f"{home}/cifar-10-batches-bin"):
+        if not os.path.exists(path):
+            os.mkdir(path)
+
+        if not os.path.exists(f"{path}/cifar-data.tar.gz"):
             urllib.request.urlretrieve("https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz",
-                                       f"{home}/cifar-data.tar.gz", show_progress)
-            os.popen(f"tar -xzf {home}/cifar-data.tar.gz").read()
+                                       f"{path}/cifar-data.tar.gz", show_progress)
+
+        if not os.path.exists(f"{path}/cifar-10-batches-bin"):
+            print("hmm")
+            os.popen(f"tar -xzf {path}/cifar-data.tar.gz -C {path}").read()
             
 
         for i in range(5):
-            r,s = load_batch(f"{home}/cifar-10-batches-bin/data_batch_"+str(i+1)+".bin")
+            r,s = load_batch(f"{path}/cifar-10-batches-bin/data_batch_"+str(i+1)+".bin")
             train_data.extend(r)
             train_labels.extend(s)
             
         train_data = np.array(train_data,dtype=np.float32)
         train_labels = np.array(train_labels)
         
-        self.test_data, self.test_labels = load_batch(f"{home}/cifar-10-batches-bin/test_batch.bin")
+        self.test_data, self.test_labels = load_batch(f"{path}/cifar-10-batches-bin/test_batch.bin")
         
         VALIDATION_SIZE = 5000
         
@@ -92,85 +95,6 @@ class CIFAR:
 
 
         print("Done setting up cifar")
-
-class CIFARModel:
-    def __init__(self, restore=None, session=None, use_log=False, use_brelu = False):
-        def bounded_relu(x):
-                return K.relu(x, max_value=1)
-        if use_brelu:
-            activation = bounded_relu
-        else:
-            activation = 'relu'
-        self.num_channels = 3
-        self.image_size = 32
-        self.num_labels = 10
-
-        model = Sequential()
-
-        model.add(Conv2D(64, (3, 3),
-                                input_shape=(32, 32, 3)))
-        model.add(Activation(activation))
-        model.add(Conv2D(64, (3, 3)))
-        model.add(Activation(activation))
-        model.add(MaxPooling2D(pool_size=(2, 2)))
-        
-        model.add(Conv2D(128, (3, 3)))
-        model.add(Activation(activation))
-        model.add(Conv2D(128, (3, 3)))
-        model.add(Activation(activation))
-        model.add(MaxPooling2D(pool_size=(2, 2)))
-        
-        model.add(Flatten())
-        model.add(Dense(256))
-        model.add(Activation(activation))
-        model.add(Dense(256))
-        model.add(Activation(activation))
-        model.add(Dense(10))
-        if use_log:
-            model.add(Activation('softmax'))
-        if restore:
-            model.load_weights(restore)
-
-        layer_outputs = []
-        for layer in model.layers:
-            if isinstance(layer, Conv2D) or isinstance(layer, Dense):
-                layer_outputs.append(K.function([model.layers[0].input], [layer.output]))
-
-        self.layer_outputs = layer_outputs
-        self.model = model
-
-    def predict(self, data):
-        return self.model(data)
-        
-    
-class TwoLayerCIFARModel:
-    def __init__(self, restore = None, session=None, use_log=False):
-        self.num_channels = 3
-        self.image_size = 32
-        self.num_labels = 10
-
-        model = Sequential()
-        model.add(Flatten(input_shape=(32, 32, 3)))
-        model.add(Dense(1024))
-        model.add(Activation('softplus'))
-        model.add(Dense(10))
-        # output log probability, used for black-box attack
-        if use_log:
-            model.add(Activation('softmax'))
-        if restore:
-            model.load_weights(restore)
-
-        layer_outputs = []
-        for layer in model.layers:
-            if isinstance(layer, Conv2D) or isinstance(layer, Dense):
-                layer_outputs.append(K.function([model.layers[0].input], [layer.output]))
-
-        self.layer_outputs = layer_outputs
-        self.model = model
-
-    def predict(self, data):
-
-        return self.model(data)
 
 if __name__ == "__main__":
     a = CIFAR()

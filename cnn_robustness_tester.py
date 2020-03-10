@@ -417,6 +417,8 @@ def get_data(dataset):
         data = CIFAR()
     elif dataset == "tinyImagenet":
         data = TinyImagenet()
+    elif dataset == "caltechSilhouettes":
+        data = TinyImagenet()
     else:
         raise NameError(dataset, "is not a valid dataset")
     return data

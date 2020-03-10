@@ -12,17 +12,16 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
 
 import os
 import shutil
-import urllib.request
+import time
+from pathlib import Path
 from zipfile import ZipFile
 
 import numpy as np
+import sklearn
+import sklearn.model_selection
 from PIL import Image
-import pickle as pkl
 
-import time
-from pathlib import Path
-
-from datasets.setup_util import show_progress, save_ndarrays, download_dataset
+from datasets.setup_util import save_ndarrays, download_dataset
 
 
 def load_images(dataset_name, download_url, file_name):
@@ -90,27 +89,26 @@ def extract_datazip(to_path, from_path, file_name, file_name_zip):
 def preprocess_to_ndarray(path):
     print("Converting data to ndarray", flush=True)
     train_path = path + "train"
-    test_path = path + "train"
     np.random.seed(1215)
     num_classes = 200
 
     X_train, y_train = get_train_data(num_classes, train_path)
+    print("Done converting", flush=True)
 
     VAL_FRACTION = 0.1
     TEST_FRACTION = 0.1
 
-    num_pts = X_train.shape[0]
-    idx = np.random.permutation(num_pts)
-    test_idx = idx[:int(TEST_FRACTION * num_pts)]
-    train_idxs = idx[int(TEST_FRACTION * num_pts):]
-    val_idx = train_idxs[:int(VAL_FRACTION * num_pts)]
-    train_idx = train_idxs[int(VAL_FRACTION * num_pts):]
-    X_test = X_train[test_idx]
-    y_test = np.eye(num_classes)[y_train[test_idx]]
-    X_val = X_train[val_idx]
-    y_val = np.eye(num_classes)[y_train[val_idx]]
-    X_train = X_train[train_idx]
-    y_train = np.eye(num_classes)[y_train[train_idx]]
+    # stratifies the splits
+    X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X_train, y_train,
+                                                                                test_size=TEST_FRACTION,
+                                                                                random_state=1215, stratify=y_train)
+    X_train, X_val, y_train, y_val = sklearn.model_selection.train_test_split(X_train, y_train, test_size=VAL_FRACTION,
+                                                                              random_state=1215, stratify=y_train)
+
+    y_test = np.eye(num_classes)[y_test]
+    y_val = np.eye(num_classes)[y_val]
+    y_train = np.eye(num_classes)[y_train]
+
     X_train = np.float32(X_train)
     X_val = np.float32(X_val)
     X_test = np.float32(X_test)
@@ -166,4 +164,5 @@ class TinyImagenet():
 
 
 if __name__ == "__main__":
-    print(TinyImagenet().train_labels.shape[1])
+    a = TinyImagenet()
+    print(a.train_labels.shape)
