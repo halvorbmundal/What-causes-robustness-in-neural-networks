@@ -1,14 +1,10 @@
 import os
-import time
-import urllib.request
 from pathlib import Path
+
+import numpy as np
 from scipy.io import loadmat
 
-import h5py
-import numpy as np
-from PIL import Image
-
-from datasets.setup_util import show_progress, download_dataset
+from datasets.setup_util import download_dataset
 
 
 def load_images(dataset_name, download_url, file_name):

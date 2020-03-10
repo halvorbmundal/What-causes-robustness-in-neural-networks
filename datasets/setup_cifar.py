@@ -6,20 +6,19 @@
 ## contained in the LICENCE file in this directory.
 
 
-import tensorflow as tf
-import numpy as np
 import os
 import pickle
-import gzip
-import pickle
 import urllib.request
+from pathlib import Path
 
-from tensorflow.contrib.keras.api.keras.models import Sequential
-from tensorflow.contrib.keras.api.keras.layers import Dense, Dropout, Activation, Flatten
-from tensorflow.contrib.keras.api.keras.layers import Conv2D, MaxPooling2D
-from tensorflow.contrib.keras.api.keras.layers import Lambda
-from tensorflow.contrib.keras.api.keras.models import load_model
+import numpy as np
 from tensorflow.contrib.keras.api.keras import backend as K
+from tensorflow.contrib.keras.api.keras.layers import Conv2D, MaxPooling2D
+from tensorflow.contrib.keras.api.keras.layers import Dense, Activation, Flatten
+from tensorflow.contrib.keras.api.keras.models import Sequential
+
+from datasets.setup_util import show_progress
+
 
 def load_batch(fpath, label_key='labels'):
     f = open(fpath, 'rb')
@@ -61,26 +60,27 @@ def load_batch(fpath):
 
 class CIFAR:
     def __init__(self):
+        home = str(Path.home())
         print("Setting up cifar")
 
         train_data = []
         train_labels = []
 
-        if not os.path.exists("cifar-10-batches-bin"):
-            urllib.request.urlretrieve("http://cs231n.stanford.edu/tiny-imagenet-200.zip",
-                                       "cifar-data.tar.gz")
-            os.popen("tar -xzf cifar-data.tar.gz").read()
+        if not os.path.exists(f"{home}/cifar-10-batches-bin"):
+            urllib.request.urlretrieve("https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz",
+                                       f"{home}/cifar-data.tar.gz", show_progress)
+            os.popen(f"tar -xzf {home}/cifar-data.tar.gz").read()
             
 
         for i in range(5):
-            r,s = load_batch("cifar-10-batches-bin/data_batch_"+str(i+1)+".bin")
+            r,s = load_batch(f"{home}/cifar-10-batches-bin/data_batch_"+str(i+1)+".bin")
             train_data.extend(r)
             train_labels.extend(s)
             
         train_data = np.array(train_data,dtype=np.float32)
         train_labels = np.array(train_labels)
         
-        self.test_data, self.test_labels = load_batch("cifar-10-batches-bin/test_batch.bin")
+        self.test_data, self.test_labels = load_batch(f"{home}/cifar-10-batches-bin/test_batch.bin")
         
         VALIDATION_SIZE = 5000
         
