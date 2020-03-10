@@ -28,19 +28,21 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     # create a Keras sequential model
     model = Sequential()
     if use_padding_same:
-        model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:], activation=activation, padding="same"))
+        model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:], padding="same"))
     else:
-        model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:], activation=activation))
+        model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:]))
     if bn:
         model.add(BatchNormalization())
+    model.add(Activation(activation))
     #model.add(Lambda(activation))
     for f, k in zip(filters[1:], kernels[1:]):
         if use_padding_same:
-            model.add(Conv2D(f,k,activation=activation, padding="same"))
+            model.add(Conv2D(f,k, padding="same"))
         else:
-            model.add(Conv2D(f, k, activation=activation))
+            model.add(Conv2D(f, k))
         if bn:
             model.add(BatchNormalization())
+        model.add(Activation(activation))
         # ReLU activation
         #model.add(Lambda(activation))
     # the output layer, with 10 classes
