@@ -504,7 +504,7 @@ def main():
 
                                     parameters.file_name = get_name_new_convention(parameters)
 
-                                    print(parameters.dataset_data)
+                                    print(parameters.dataset_data, flush=True)
 
                                     if debugging:
                                         print("Aquired lock?", keras_lock.acquire())

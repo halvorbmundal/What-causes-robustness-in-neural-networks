@@ -116,6 +116,9 @@ def preprocess_to_ndarray(path):
     X_train = np.float32(X_train)
     X_val = np.float32(X_val)
     X_test = np.float32(X_test)
+
+    # X_train shape: num_train*3*64*64
+    # convetion is num_train*size*size*channel, e.g. MNIST: num*28*28*1
     return np.swapaxes(X_train, 1, 3), y_train, np.swapaxes(X_val, 1, 3), y_val, np.swapaxes(X_test, 1, 3), y_test
 
 
@@ -150,10 +153,10 @@ class TinyImagenet():
         download_url = "http://cs231n.stanford.edu/tiny-imagenet-200.zip"
         file_name = "tiny-imagenet-200"
 
-        # X_train shape: num_train*3*64*64 
+
         X_train, y_train, X_val, y_val, X_test, y_test = load_images(dataset, download_url, file_name)
 
-        # convetion is num_train*size*size*channel, e.g. MNIST: num*28*28*1
+
         self.train_data = X_train
         self.train_labels = y_train
 
