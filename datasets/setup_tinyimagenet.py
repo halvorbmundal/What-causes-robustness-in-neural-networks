@@ -79,10 +79,10 @@ def download_and_save_to_ndarrays(data_dict, download_url, file_name, path, data
 
 def extract_datazip(to_path, from_path, file_name, file_name_zip):
     if not os.path.exists(to_path + file_name + "/"):
-        print("Unzipping")
+        print("Unzipping", flush=True)
         with ZipFile(from_path + file_name_zip, 'r') as zipObj:
             zipObj.extractall(path=to_path)
-        print("Unzipped")
+        print("Unzipped", flush=True)
 
 
 def preprocess_to_ndarray(path):

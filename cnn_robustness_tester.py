@@ -377,13 +377,15 @@ def multithreadded_calculations(parameters):
         gc.collect()
 
 
-def pool_init(l1, l2, sema):
+def pool_init(l1, l2, sema, data):
     global write_lock
     global keras_lock
     global semaphore
+    global dataset_data
     semaphore = sema
     write_lock = l1
     keras_lock = l2
+    dataset_data = data
 
 def parameter_string(parameters):
     return "depth={} filter_size={} kernel_size={} ac={} es={} pad={} cnnc={}" \
@@ -460,17 +462,16 @@ def main():
     else:
         processes = multiprocessing.cpu_count()
 
-    global dataset_data
-    dataset_data = get_data(dataset)
+    data = get_data(dataset)
 
     l1 = multiprocessing.Lock()
     l2 = multiprocessing.Lock()
     sema = multiprocessing.Semaphore(processes)
 
-    cpu_pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
-    gpu_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
+    cpu_pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
+    gpu_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
 
-    pool_init(l1, l2, sema)
+    pool_init(l1, l2, sema, data)
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
