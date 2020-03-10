@@ -281,7 +281,7 @@ def gpu_calculations(parameters):
                      parameters.use_padding_same,
                      parameters.use_early_stopping,
                      parameters.batch_size,
-                     parameters.dataset_data)
+                     dataset_data)
             print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
         else:
             print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
@@ -352,7 +352,7 @@ def multithreadded_calculations(parameters):
                                                 parameters.l_norm,
                                                 parameters.use_cnnc_core,
                                                 parameters.activation_function_string,
-                                                parameters.dataset_data)
+                                                dataset_data)
 
         time_elapsed = timer.time() - start_time
 
@@ -467,6 +467,7 @@ def main():
 
     pool_init(l1, l2, sema)
 
+    global dataset_data
     dataset_data = get_data(dataset)
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
@@ -498,14 +499,11 @@ def main():
                                     parameters.use_padding_same = use_padding_same
                                     parameters.use_cnnc_core = use_cnnc_core
                                     parameters.dataset = dataset
-                                    parameters.dataset_data = dataset_data
 
                                     parameters.use_gpu = gpu
                                     parameters.use_cpu = cpu
 
                                     parameters.file_name = get_name_new_convention(parameters)
-
-                                    print(parameters.dataset_data, flush=True)
 
                                     if debugging:
                                         print("Aquired lock?", keras_lock.acquire(), flush=True)
