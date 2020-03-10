@@ -57,7 +57,7 @@ pip install -r cnn-cert-master/idun/requirements_gpu.txt
 nvidia-smi
 
 # Start training
-python cnn-cert-master/cnn_robustness_tester.py cpu gpu no_debugging v6 caltechSilhouettes
+python cnn-cert-master/cnn_robustness_tester.py cpu gpu no_debugging v7 caltechSilhouettes
 
 # Print information about the system
 uname -a
