@@ -17,7 +17,6 @@ from pathlib import Path
 from zipfile import ZipFile
 
 import numpy as np
-import sklearn
 import sklearn.model_selection
 from PIL import Image
 
