@@ -509,6 +509,7 @@ def main():
                                     parameters.file_name = get_name_new_convention(parameters)
 
                                     if debugging:
+                                        keras_lock.acquire()
                                         gpu_calculations(parameters)
                                         multithreadded_calculations(parameters)
                                     else:
