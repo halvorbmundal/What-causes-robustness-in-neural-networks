@@ -269,7 +269,7 @@ def tf_reset():
 
 def gpu_calculations(parameters):
     try:
-        print(parameters.dataset_data, flush=True)
+        print("In gpu calculations", flush=True)
         if not file_exists(parameters.file_name):
             train_nn(parameters,
                      parameters.file_name,
@@ -287,6 +287,7 @@ def gpu_calculations(parameters):
             print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
     finally:
         keras_lock.release()
+        print("Keras lock released")
 
 
 def get_accuracy_of_nn_from_csv(csv_file, file_name):
@@ -346,9 +347,6 @@ def multithreadded_calculations(parameters):
         session_config = tf.ConfigProto(device_count={'GPU': 0}, gpu_options=gpu_options)
         sess = tf.Session(config=session_config)
         with sess.as_default():
-            #may be too global:
-            #cpu_devices = tf.config.experimental.list_physical_devices(device_type='CPU')
-            #tf.config.experimental.set_visible_devices(devices=cpu_devices, device_type='CPU')
             lower_bound = calculate_lower_bound(parameters.file_name,
                                                 parameters.num_image,
                                                 parameters.l_norm,
@@ -454,8 +452,9 @@ def main():
         print(f"gpu: {gpu}")
         print(f"path: {path}/")
 
-    if multiprocessing.cpu_count() > 36:
-        processes = 36
+    max_processes = 23
+    if multiprocessing.cpu_count() > max_processes:
+        processes = max_processes
     else:
         processes = multiprocessing.cpu_count()
 

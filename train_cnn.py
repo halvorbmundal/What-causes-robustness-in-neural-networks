@@ -65,7 +65,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                   metrics=['accuracy'])
 
     model.summary()
-    print("Traing a {} layer model, saving to {}".format(len(filters) + 1, file_name))
+    print("Traing a {} layer model, saving to {}".format(len(filters) + 1, file_name), flush=True)
 
     start_time = time.time()
     if use_early_stopping:
