@@ -271,7 +271,6 @@ def tf_reset():
 
 def gpu_calculations(parameters):
     try:
-        print("In gpu calculations", flush=True)
         if not file_exists(parameters.file_name):
             train_nn(parameters,
                      parameters.file_name,
@@ -289,7 +288,6 @@ def gpu_calculations(parameters):
             print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
     finally:
         keras_lock.release()
-        print("Keras lock released")
 
 
 def get_accuracy_of_nn_from_csv(csv_file, file_name):
@@ -462,6 +460,9 @@ def main():
     else:
         processes = multiprocessing.cpu_count()
 
+    global dataset_data
+    dataset_data = get_data(dataset)
+
     l1 = multiprocessing.Lock()
     l2 = multiprocessing.Lock()
     sema = multiprocessing.Semaphore(processes)
@@ -470,9 +471,6 @@ def main():
     gpu_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema), maxtasksperchild=1)
 
     pool_init(l1, l2, sema)
-
-    global dataset_data
-    dataset_data = get_data(dataset)
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")

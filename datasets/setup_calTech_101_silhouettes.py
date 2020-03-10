@@ -73,5 +73,5 @@ class CaltechSiluettes():
 
 
 if __name__ == "__main__":
-    a = Caltech_siluettes()
+    a = CaltechSiluettes()
     print(a.train_labels.shape)
