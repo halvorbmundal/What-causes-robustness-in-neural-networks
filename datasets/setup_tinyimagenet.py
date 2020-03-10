@@ -45,7 +45,6 @@ def load_images(dataset_name, download_url, file_name):
     file_name_zip = file_name + ".zip"
     temp_path = f"{home}/numpy_datasets/temp_data/{dataset_name}/"
     unzipped_path = f"{path}{file_name}/"
-    print(os.path.exists(path), flush=True)
     if not os.path.exists(path):
         print("Did not find dataset.", flush=True)
         download_dataset(temp_path, file_name_zip, download_url)
@@ -72,7 +71,7 @@ def download_and_save_to_ndarrays(data_dict, download_url, file_name, path, data
     download_dataset(temp_path, file_name_zip, download_url)
     extract_datazip(temp_path, file_name, file_name_zip)
     data_dict["X_train"], data_dict["y_train"], data_dict["X_val"], data_dict["y_val"], data_dict["X_test"], \
-        data_dict["y_test"] = preprocess_to_ndarray(unzipped_path)
+    data_dict["y_test"] = preprocess_to_ndarray(unzipped_path)
 
     save_ndarrays(data_dict, path)
 
@@ -86,7 +85,6 @@ def extract_datazip(to_path, from_path, file_name, file_name_zip):
         with ZipFile(from_path + file_name_zip, 'r') as zipObj:
             zipObj.extractall(path=to_path)
         print("Unzipped")
-
 
 
 def preprocess_to_ndarray(path):
@@ -140,7 +138,7 @@ def get_train_data(num_classes, train_path):
             y_train[i] = j
             i += 1
         j += 1
-        if (j >= num_classes):
+        if j >= num_classes:
             break
     return X_train, y_train
 
@@ -153,9 +151,7 @@ class TinyImagenet():
         download_url = "http://cs231n.stanford.edu/tiny-imagenet-200.zip"
         file_name = "tiny-imagenet-200"
 
-
         X_train, y_train, X_val, y_val, X_test, y_test = load_images(dataset, download_url, file_name)
-
 
         self.train_data = X_train
         self.train_labels = y_train

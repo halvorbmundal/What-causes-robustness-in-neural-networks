@@ -507,15 +507,16 @@ def main():
                                     print(parameters.dataset_data, flush=True)
 
                                     if debugging:
-                                        print("Aquired lock?", keras_lock.acquire())
+                                        print("Aquired lock?", keras_lock.acquire(), flush=True)
                                         gpu_calculations(parameters)
                                         multithreadded_calculations(parameters)
                                     else:
                                         if parameters.use_gpu:
-                                            print("Aquired lock (gpu)?", keras_lock.acquire())
+                                            print("Aquired lock (gpu)?", keras_lock.acquire(), flush=True)
                                             gpu_pool.apply_async(gpu_calculations, (parameters,))
+                                            print("Hva skjer her?", flush=True)
                                         if parameters.use_cpu:
-                                            print("Aquired lock? (cpu)?", keras_lock.acquire())
+                                            print("Aquired lock? (cpu)?", keras_lock.acquire(), flush=True)
                                             keras_lock.release()
                                             cpu_pool.apply_async(multithreadded_calculations, (parameters,))
 
