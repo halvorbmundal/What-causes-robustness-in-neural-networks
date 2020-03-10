@@ -103,7 +103,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
             writer.writerow(["num_epochs", "best_epoch", "time_taken", "time_per_epoch", "accuracy", "file_name"])
     with open(metafile, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow([num_ephocs_trained, best_epoc, time_taken, float(time_taken)/float(num_ephocs_trained), history.history["val_acc"][-1], file_name])
+        writer.writerow([num_ephocs_trained, best_epoc, time_taken, float(time_taken)/float(num_ephocs_trained), history.history["val_acc"][best_epoc], file_name])
 
     print("saving - ", file_name)
     # save model to a file

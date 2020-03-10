@@ -1,8 +1,9 @@
-import train_cnn
-from datasets.setup_mnist import MNIST
+import numpy as np
 
-h = train_cnn.train(MNIST(), "", [1], [1], 100, 264, 1)
+a = np.arange(2).reshape(2,)
+d = np.array([1,2])
+b = np.arange(18).reshape(2, 3,3,1)
+c = np.arange(18*3).reshape(2, 3, 3, 3)
 
-print(53.22/float(13))
-print(float(13))
-print(53.22/13)
+
+print(a*d)
