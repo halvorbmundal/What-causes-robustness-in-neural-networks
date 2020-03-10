@@ -512,10 +512,10 @@ def main():
                                         multithreadded_calculations(parameters)
                                     else:
                                         if parameters.use_gpu:
-                                            keras_lock.acquire()
+                                            print("Aquired lock (gpu)?", keras_lock.acquire())
                                             gpu_pool.apply_async(gpu_calculations, (parameters,))
                                         if parameters.use_cpu:
-                                            keras_lock.acquire()
+                                            print("Aquired lock? (cpu)?", keras_lock.acquire())
                                             keras_lock.release()
                                             cpu_pool.apply_async(multithreadded_calculations, (parameters,))
 
