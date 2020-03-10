@@ -467,6 +467,8 @@ def main():
 
     pool_init(l1, l2, sema)
 
+    dataset_data = get_data(dataset)
+
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
     for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
@@ -496,7 +498,7 @@ def main():
                                     parameters.use_padding_same = use_padding_same
                                     parameters.use_cnnc_core = use_cnnc_core
                                     parameters.dataset = dataset
-                                    parameters.dataset_data = get_data(dataset)
+                                    parameters.dataset_data = dataset_data
 
                                     parameters.use_gpu = gpu
                                     parameters.use_cpu = cpu
