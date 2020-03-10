@@ -50,7 +50,7 @@ def preprocess_to_ndarray(X, Y):
     return X_train, y_train, X_val, y_val, X_test, y_test
 
 
-class Caltech_siluettes():
+class CaltechSiluettes():
     def __init__(self):
         dataset = 'caltech_siluettes'
         download_location = "https://people.cs.umass.edu/~marlin/data/caltech101_silhouettes_28.mat"

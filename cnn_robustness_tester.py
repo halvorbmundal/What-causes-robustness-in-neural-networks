@@ -1,6 +1,8 @@
 import sys
 import traceback
 
+from datasets.setup_calTech_101_silhouettes import CaltechSiluettes
+
 _b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
 
 from train_cnn import train as train_cnn
@@ -418,7 +420,7 @@ def get_data(dataset):
     elif dataset == "tinyImagenet":
         data = TinyImagenet()
     elif dataset == "caltechSilhouettes":
-        data = TinyImagenet()
+        data = CaltechSiluettes()
     else:
         raise NameError(dataset, "is not a valid dataset")
     return data
