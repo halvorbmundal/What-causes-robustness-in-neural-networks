@@ -521,6 +521,7 @@ def main():
                                             keras_lock.release()
                                             cpu_pool.apply_async(multithreadded_calculations, (parameters,))
 
+    print("Waiting for processes to finish")
     gpu_pool.close()
     cpu_pool.close()
     gpu_pool.join()
