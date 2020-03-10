@@ -141,7 +141,7 @@ class Model:
                 std = np.sqrt(std**2+0.001) #Avoids zero division
                 a = gamma/std
                 b = -gamma*mean/std+beta
-                self.weights[-1] = a*self.weights[-1]
+                self.weights[-1] = a[:, None, None, None]*self.weights[-1]
                 self.biases[-1] = a*self.biases[-1]+b
             elif type(layer) == Dense:
                 print('FC')
