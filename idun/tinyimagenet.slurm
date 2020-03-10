@@ -5,7 +5,7 @@
 #SBATCH --time=7-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=23
-#SBATCH --mem=111000
+#SBATCH --mem=740000
 # Memory per node specification is in MB. It is optional.
 # The default limit is 3000MB per core.
 #SBATCH --job-name="gpu-t-CNN-Cert"
