@@ -12,6 +12,7 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
 import csv
 import time
 
+from keras_preprocessing.image import ImageDataGenerator
 from tensorflow.contrib.keras.api.keras.models import Sequential
 from tensorflow.contrib.keras.api.keras.layers import Dense, Activation, Flatten, Lambda, Conv2D, BatchNormalization
 from tensorflow.contrib.keras.api.keras.models import load_model
@@ -67,14 +68,24 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                   metrics=['accuracy'])
 
     model.summary()
+
+    if data.dataset == "tiny-imagenet-200":
+        datagen = ImageDataGenerator(
+            horizontal_flip=True,
+            width_shift_range=0.1,
+            height_shift_range=0.1)
+    else:
+        datagen = ImageDataGenerator()
+
+    datagen.fit(data.train_data)
+
     print("Traing a {} layer model, saving to {}".format(len(filters) + 1, file_name), flush=True)
 
     start_time = time.time()
     if use_early_stopping:
         early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=20, restore_best_weights=True,
                                                           verbose=1)
-        history = model.fit(data.train_data, data.train_labels,
-                            batch_size=batch_size,
+        history = model.fit_generator(datagen.flow(data.train_data, data.train_labels, batch_size=batch_size),
                             validation_data=(data.validation_data, data.validation_labels),
                             epochs=400,
                             shuffle=True,

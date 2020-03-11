@@ -144,11 +144,11 @@ class TinyImagenet():
     def __init__(self):
         print("Setting up tinyImagenet", flush=True)
 
-        dataset = 'tiny-imagenet-200'
+        self.dataset = 'tiny-imagenet-200'
         download_url = "http://cs231n.stanford.edu/tiny-imagenet-200.zip"
         file_name = "tiny-imagenet-200"
 
-        X_train, y_train, X_val, y_val, X_test, y_test = load_images(dataset, download_url, file_name)
+        X_train, y_train, X_val, y_val, X_test, y_test = load_images(self.dataset, download_url, file_name)
 
         self.train_data = X_train
         self.train_labels = y_train

@@ -52,12 +52,12 @@ def preprocess_to_ndarray(X, Y):
 
 class CaltechSiluettes():
     def __init__(self):
-        dataset = 'caltech_siluettes'
+        self.dataset = 'caltech_siluettes'
         download_location = "https://people.cs.umass.edu/~marlin/data/caltech101_silhouettes_28.mat"
         download_name = "caltech101_silhouettes_28.mat"
 
         # X_train shape: num_train*3*64*64
-        X_train, y_train, X_val, y_val, X_test, y_test = load_images(dataset, download_location, download_name)
+        X_train, y_train, X_val, y_val, X_test, y_test = load_images(self.dataset, download_location, download_name)
 
         # convetion is num_train*size*size*channel, e.g. MNIST: num*28*28*1
         self.train_data = X_train

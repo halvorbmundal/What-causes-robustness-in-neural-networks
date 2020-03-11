@@ -56,6 +56,7 @@ def load_batch(fpath):
 
 class CIFAR:
     def __init__(self):
+        self.dataset="cifar"
         home = str(Path.home())
         path = f"{home}/numpy_datasets/cifar"
         print("Setting up cifar")

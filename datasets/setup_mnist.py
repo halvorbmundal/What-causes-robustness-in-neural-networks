@@ -37,6 +37,8 @@ def extract_labels(filename, num_images):
 
 class MNIST:
     def __init__(self):
+        self.dataset="mnist"
+
         if not os.path.exists("data"):
             os.mkdir("data")
             files = ["train-images-idx3-ubyte.gz",

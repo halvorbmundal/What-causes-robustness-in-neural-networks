@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d5cef5c9-828a-45b9-b66e-d5943f64af0c" name="Default" comment=".">
-      <change beforePath="$PROJECT_DIR$/.idea/CNN-Cert.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CNN-Cert.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+    <list default="true" id="d5cef5c9-828a-45b9-b66e-d5943f64af0c" name="Default" comment="Add">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cnn_robustness_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/cnn_robustness_tester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/setup_calTech_101_silhouettes.py" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/setup_calTech_101_silhouettes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/setup_cifar.py" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/setup_cifar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/setup_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/setup_mnist.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/setup_tinyimagenet.py" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/setup_tinyimagenet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_cnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_cnn.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,6 +75,28 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.cnn_robustness_tester">
+    <configuration name="cnn_bounds_full" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CNN-Cert" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cnn_bounds_full.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="cnn_robustness_tester" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CNN-Cert" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -87,7 +111,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cnn_robustness_tester.py" />
-      <option name="PARAMETERS" value="cpu gpu no_debugging v2 caltechSilhouettes" />
+      <option name="PARAMETERS" value="cpu gpu debugging v3 mnist" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -117,50 +141,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="setup_cifar" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="CNN-Cert" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/datasets" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/datasets/setup_cifar.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="setup_mnist" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="CNN-Cert" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/datasets" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/datasets/setup_mnist.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="setup_tinyimagenet" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CNN-Cert" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -183,20 +163,42 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CNN-Cert" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.cnn_robustness_tester" />
-      <item itemvalue="Python.setup_mnist" />
-      <item itemvalue="Python.setup_cifar" />
       <item itemvalue="Python.setup_tinyimagenet" />
       <item itemvalue="Python.setup_calTech_101_silhouettes" />
+      <item itemvalue="Python.cnn_bounds_full" />
+      <item itemvalue="Python.test" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.cnn_robustness_tester" />
+        <item itemvalue="Python.test" />
+        <item itemvalue="Python.cnn_bounds_full" />
         <item itemvalue="Python.setup_tinyimagenet" />
         <item itemvalue="Python.setup_calTech_101_silhouettes" />
-        <item itemvalue="Python.setup_cifar" />
-        <item itemvalue="Python.setup_mnist" />
       </list>
     </recent_temporary>
   </component>
@@ -217,7 +219,7 @@
       <workItem from="1583760193006" duration="2946000" />
       <workItem from="1583834925572" duration="11511000" />
       <workItem from="1583849968539" duration="5620000" />
-      <workItem from="1583861194708" duration="1399000" />
+      <workItem from="1583861194708" duration="11480000" />
     </task>
     <task id="LOCAL-00001" summary="Reduce problem">
       <created>1582877633728</created>
@@ -450,7 +452,56 @@
       <option name="project" value="LOCAL" />
       <updated>1583862085591</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary=".">
+      <created>1583862807766</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1583862807766</updated>
+    </task>
+    <task id="LOCAL-00035" summary=".">
+      <created>1583864028683</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1583864028683</updated>
+    </task>
+    <task id="LOCAL-00036" summary=".">
+      <created>1583871845833</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1583871845833</updated>
+    </task>
+    <task id="LOCAL-00037" summary="add bn">
+      <created>1583874818397</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1583874818397</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Changed dimentions of a from (num_filters[?],) to (num_filters[?],1, 1, 1)">
+      <created>1583880057801</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1583880057801</updated>
+    </task>
+    <task id="LOCAL-00039" summary="hmmmmm">
+      <created>1583882204636</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1583882204636</updated>
+    </task>
+    <task id="LOCAL-00040" summary=".">
+      <created>1583882254810</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1583882254810</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TodoView">
@@ -466,9 +517,6 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fix bug" />
-    <MESSAGE value="epocs =&gt; ephocs" />
-    <MESSAGE value="Increase depth range" />
     <MESSAGE value="Add timyImagenet" />
     <MESSAGE value="Bugfix" />
     <MESSAGE value="bugfix" />
@@ -490,6 +538,9 @@
     <MESSAGE value="squeuemefdasfasd" />
     <MESSAGE value="remove requiruments" />
     <MESSAGE value="ffs" />
+    <MESSAGE value="add bn" />
+    <MESSAGE value="Changed dimentions of a from (num_filters[?],) to (num_filters[?],1, 1, 1)" />
+    <MESSAGE value="hmmmmm" />
     <MESSAGE value="." />
     <option name="LAST_COMMIT_MESSAGE" value="." />
   </component>
@@ -498,52 +549,53 @@
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="300" y="-1043" key="#Inspections/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583332314180" />
-    <state x="164" y="-1047" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1583853107936">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state x="488" y="268" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1583876270299">
+      <screen x="0" y="23" width="1680" height="940" />
     </state>
     <state x="164" y="-1047" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583853107936" />
+    <state x="488" y="268" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.940@0.23.1680.940" timestamp="1583876270299" />
     <state x="427" y="-899" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1583760228994">
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="427" y="-899" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583760228994" />
-    <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2" timestamp="1583862085210">
+    <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2" timestamp="1583922634971">
       <screen x="0" y="23" width="1680" height="940" />
     </state>
     <state x="-300" y="-1382" width="2013" height="1280" key="CommitChangelistDialog2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583853709863" />
-    <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2/0.23.1680.940@0.23.1680.940" timestamp="1583862085210" />
+    <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2/0.23.1680.940@0.23.1680.940" timestamp="1583922634971" />
     <state x="34" y="-1129" key="DiffContextDialog" timestamp="1583760372078">
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="34" y="-1129" key="DiffContextDialog/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583760372078" />
-    <state width="2518" height="354" key="GridCell.Tab.0.bottom" timestamp="1583858097887">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state width="1638" height="216" key="GridCell.Tab.0.bottom" timestamp="1583881694396">
+      <screen x="0" y="23" width="1680" height="940" />
     </state>
     <state width="2518" height="354" key="GridCell.Tab.0.bottom/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583858097887" />
-    <state width="1638" height="437" key="GridCell.Tab.0.bottom/0.23.1680.940@0.23.1680.940" timestamp="1583764908262" />
-    <state width="2518" height="354" key="GridCell.Tab.0.center" timestamp="1583858097887">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state width="1638" height="216" key="GridCell.Tab.0.bottom/0.23.1680.940@0.23.1680.940" timestamp="1583881694396" />
+    <state width="1638" height="216" key="GridCell.Tab.0.center" timestamp="1583881694395">
+      <screen x="0" y="23" width="1680" height="940" />
     </state>
     <state width="2518" height="354" key="GridCell.Tab.0.center/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583858097887" />
-    <state width="1638" height="437" key="GridCell.Tab.0.center/0.23.1680.940@0.23.1680.940" timestamp="1583764908261" />
-    <state width="2518" height="354" key="GridCell.Tab.0.left" timestamp="1583858097886">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state width="1638" height="216" key="GridCell.Tab.0.center/0.23.1680.940@0.23.1680.940" timestamp="1583881694395" />
+    <state width="1638" height="216" key="GridCell.Tab.0.left" timestamp="1583881694395">
+      <screen x="0" y="23" width="1680" height="940" />
     </state>
     <state width="2518" height="354" key="GridCell.Tab.0.left/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583858097886" />
-    <state width="1638" height="437" key="GridCell.Tab.0.left/0.23.1680.940@0.23.1680.940" timestamp="1583764908261" />
-    <state width="2518" height="354" key="GridCell.Tab.0.right" timestamp="1583858097887">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state width="1638" height="216" key="GridCell.Tab.0.left/0.23.1680.940@0.23.1680.940" timestamp="1583881694395" />
+    <state width="1638" height="216" key="GridCell.Tab.0.right" timestamp="1583881694395">
+      <screen x="0" y="23" width="1680" height="940" />
     </state>
     <state width="2518" height="354" key="GridCell.Tab.0.right/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583858097887" />
-    <state width="1638" height="437" key="GridCell.Tab.0.right/0.23.1680.940@0.23.1680.940" timestamp="1583764908262" />
+    <state width="1638" height="216" key="GridCell.Tab.0.right/0.23.1680.940@0.23.1680.940" timestamp="1583881694395" />
     <state x="209" y="-1070" key="SettingsEditor" timestamp="1583856626325">
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="209" y="-1070" key="SettingsEditor/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583856626325" />
-    <state x="578" y="320" key="Vcs.Push.Dialog.v2" timestamp="1583862088432">
+    <state x="578" y="320" key="Vcs.Push.Dialog.v2" timestamp="1583882256783">
       <screen x="0" y="23" width="1680" height="940" />
     </state>
     <state x="300" y="-969" key="Vcs.Push.Dialog.v2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583853714616" />
-    <state x="578" y="320" key="Vcs.Push.Dialog.v2/0.23.1680.940@0.23.1680.940" timestamp="1583862088432" />
+    <state x="578" y="320" key="Vcs.Push.Dialog.v2/0.23.1680.940@0.23.1680.940" timestamp="1583882256783" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -564,9 +616,11 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CNN_Cert$cnn_robustness_tester.coverage" NAME="cnn_robustness_tester Coverage Results" MODIFIED="1583853109132" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$cnn_bounds_full.coverage" NAME="cnn_bounds_full Coverage Results" MODIFIED="1583877322246" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$cnn_robustness_tester.coverage" NAME="cnn_robustness_tester Coverage Results" MODIFIED="1583881694386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CNN_Cert$setup_tinyimagenet.coverage" NAME="setup_tinyimagenet Coverage Results" MODIFIED="1583849214569" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
     <SUITE FILE_PATH="coverage/CNN_Cert$setup_caltech101.coverage" NAME="setup_caltech101 Coverage Results" MODIFIED="1583241038923" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$test.coverage" NAME="test Coverage Results" MODIFIED="1583881689638" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CNN_Cert$setup_cifar.coverage" NAME="setup_cifar Coverage Results" MODIFIED="1583846958929" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
     <SUITE FILE_PATH="coverage/CNN_Cert$setup_calTech_101_silhouettes.coverage" NAME="setup_calTech_101_silhouettes Coverage Results" MODIFIED="1583849035113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
   </component>
