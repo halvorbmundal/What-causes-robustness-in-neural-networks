@@ -1,6 +1,7 @@
 import sys
 import traceback
 
+from datasets.setup_GTSRB import GTSRB
 from datasets.setup_calTech_101_silhouettes import CaltechSiluettes
 
 _b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
@@ -421,6 +422,8 @@ def get_data(dataset):
         data = TinyImagenet()
     elif dataset == "caltechSilhouettes":
         data = CaltechSiluettes()
+    elif dataset == "GTSRB":
+        data = GTSRB()
     else:
         raise NameError(dataset, "is not a valid dataset")
     return data

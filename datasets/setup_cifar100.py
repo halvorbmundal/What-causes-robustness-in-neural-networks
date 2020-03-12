@@ -53,13 +53,22 @@ def load_batch(fpath):
         images.append((img/255)-.5)
     return np.array(images),np.array(labels)
     
+def unpickle(file):
+    with open(file, 'rb') as fo:
+        u = pickle._Unpickler(fo)
+        u.encoding = 'latin1'
+        p = u.load()
+        print(p.keys())
+    return p
 
-class CIFAR:
+class CIFAR100:
     def __init__(self):
-        self.dataset="cifar"
+        self.dataset="cifar100"
         home = str(Path.home())
-        path = f"{home}/numpy_datasets/cifar"
-        print("Setting up cifar")
+        path = f"{home}/numpy_datasets/cifar-100-python"
+        temp_path = f"{home}/numpy_datasets/temp_data/cifar100"
+        url = "https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz"
+        print("Setting up cifar100")
 
         train_data = []
         train_labels = []
@@ -67,23 +76,20 @@ class CIFAR:
         if not os.path.exists(path):
             os.mkdir(path)
 
-        if not os.path.exists(f"{path}/cifar-data.tar.gz"):
-            urllib.request.urlretrieve("https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz",
-                                       f"{path}/cifar-data.tar.gz", show_progress)
+        if not os.path.exists(f"{temp_path}/cifar-100-python.tar.gz") and not os.path.exists(f"{path}/cifar-100-batches-bin"):
+            os.mkdir(temp_path)
+            urllib.request.urlretrieve(url,
+                                       f"{temp_path}/cifar-100-python.tar.gz", show_progress)
 
-        if not os.path.exists(f"{path}/cifar-10-batches-bin"):
-            os.popen(f"tar -xzf {path}/cifar-data.tar.gz -C {path}").read()
-            
+        if not os.path.exists(f"{path}/cifar-100-python"):
+            os.popen(f"tar -xzf {temp_path}/cifar-100-python.tar.gz -C {home}/numpy_datasets").read()
 
-        for i in range(5):
-            r,s = load_batch(f"{path}/cifar-10-batches-bin/data_batch_"+str(i+1)+".bin")
-            train_data.extend(r)
-            train_labels.extend(s)
+        unpickle(f"{path}/test")
             
         train_data = np.array(train_data,dtype=np.float32)
         train_labels = np.array(train_labels)
         
-        self.test_data, self.test_labels = load_batch(f"{path}/cifar-10-batches-bin/test_batch.bin")
+        self.test_data, self.test_labels = load_batch(f"{path}/cifar-100-batches-bin/test_batch.bin")
         
         VALIDATION_SIZE = 5000
         
@@ -94,8 +100,8 @@ class CIFAR:
         self.inp_shape = self.train_data.shape[1:]
 
 
-        print("Done setting up cifar")
+        print("Done setting up cifar100")
 
 if __name__ == "__main__":
-    a = CIFAR()
+    a = CIFAR100()
     print(a.train_labels.shape)
