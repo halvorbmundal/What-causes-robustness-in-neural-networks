@@ -43,6 +43,8 @@ class GTSRB:
         self.test_data = X_test
         self.test_labels = y_test
 
+        self.inp_shape = self.train_data.shape[1:]
+
         print("Done loading GTSRB")
 
 def load_gt_sign(path):

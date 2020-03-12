@@ -73,11 +73,8 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
 
     if data.dataset == "tiny-imagenet-200" or "GTSRB":
         datagen = ImageDataGenerator(
-            rotation_range=10,
-            zoom_range=0.1,
             width_shift_range=0.1,
             height_shift_range=0.1,
-            shear_range=0.1,
             horizontal_flip=False,
             vertical_flip=False,
             fill_mode="nearest")
