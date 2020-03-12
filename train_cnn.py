@@ -11,6 +11,7 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
 """
 import csv
 import time
+import tensorflow as tf
 
 from tensorflow.contrib.keras.api.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.contrib.keras.api.keras.models import Sequential
@@ -19,9 +20,15 @@ from tensorflow.contrib.keras.api.keras.models import load_model
 from tensorflow.contrib.keras.api.keras import backend as K
 from tensorflow.contrib.keras.api.keras.optimizers import Adam
 
-import tensorflow as tf
+
 import os
 
+from tensorflow.python.client import device_lib
+
+
+def get_available_gpus():
+    local_device_protos = device_lib.list_local_devices()
+    return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
 def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, train_temp=1, init=None, activation=tf.nn.relu, bn=False, use_padding_same=False,
           use_early_stopping=True):
@@ -65,13 +72,19 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     sgd = Adam()
 
     # compile the Keras model, given the specified loss and optimizer
+
+    devices = get_available_gpus()
+
+    if len(devices) >= 2:
+        model = tf.keras.utils.multi_gpu_model(model, gpus=len(devices))
+
     model.compile(loss=fn,
                   optimizer=sgd,
                   metrics=['accuracy'])
 
     model.summary()
 
-    if data.dataset == "tiny-imagenet-200" or "GTSRB":
+    if data.dataset == "tiny-imagenet-200" or "GTSRB" or "cifar100":
         datagen = ImageDataGenerator(
             width_shift_range=0.1,
             height_shift_range=0.1,
