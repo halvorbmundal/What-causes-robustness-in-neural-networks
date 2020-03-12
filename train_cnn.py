@@ -94,7 +94,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                             epochs=400,
                             shuffle=True,
                             callbacks=[early_stopping],
-                            verbose=0)
+                            verbose=1)
         best_epoc = len(history.history['loss']) - early_stopping.wait
 
     else:
