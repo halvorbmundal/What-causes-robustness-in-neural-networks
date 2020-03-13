@@ -12,6 +12,7 @@ import urllib.request
 from pathlib import Path
 
 import numpy as np
+import sklearn.model_selection
 
 from datasets.setup_util import show_progress
 
@@ -57,9 +58,10 @@ def unpickle(file):
     with open(file, 'rb') as fo:
         u = pickle._Unpickler(fo)
         u.encoding = 'latin1'
-        p = u.load()
-        print(p.keys())
-    return p
+        p: dict = u.load()
+        X = p['data'].reshape(-1,32,32,3)
+        y = np.array(p['fine_labels'])
+    return X, y
 
 class CIFAR100:
     def __init__(self):
@@ -70,35 +72,48 @@ class CIFAR100:
         url = "https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz"
         print("Setting up cifar100")
 
-        train_data = []
-        train_labels = []
+        num_classes = 100
+        VAL_FRACTION = 0.1
+        TEST_FRACTION = 0.1
 
         if not os.path.exists(path):
             os.mkdir(path)
 
         if not os.path.exists(f"{temp_path}/cifar-100-python.tar.gz") and not os.path.exists(f"{path}/cifar-100-batches-bin"):
             os.mkdir(temp_path)
-            urllib.request.urlretrieve(url,
-                                       f"{temp_path}/cifar-100-python.tar.gz", show_progress)
+            urllib.request.urlretrieve(url, f"{temp_path}/cifar-100-python.tar.gz", show_progress)
 
         if not os.path.exists(f"{path}/cifar-100-python"):
             os.popen(f"tar -xzf {temp_path}/cifar-100-python.tar.gz -C {home}/numpy_datasets").read()
 
-        unpickle(f"{path}/test")
-            
-        train_data = np.array(train_data,dtype=np.float32)
-        train_labels = np.array(train_labels)
-        
-        self.test_data, self.test_labels = load_batch(f"{path}/cifar-100-batches-bin/test_batch.bin")
-        
-        VALIDATION_SIZE = 5000
-        
-        self.validation_data = train_data[:VALIDATION_SIZE, :, :, :]
-        self.validation_labels = train_labels[:VALIDATION_SIZE]
-        self.train_data = train_data[VALIDATION_SIZE:, :, :, :]
-        self.train_labels = train_labels[VALIDATION_SIZE:]
-        self.inp_shape = self.train_data.shape[1:]
+        X_train, y_train = unpickle(f"{path}/train")
+        X_test, y_test = unpickle(f"{path}/test")
 
+        # To choose our own train-test split
+        X_train = np.concatenate((X_train, X_test), axis=0)
+        y_train = np.concatenate((y_train, y_test), axis=0)
+
+        # stratifies the splits
+        X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X_train, y_train,
+                                                                                    test_size=TEST_FRACTION,
+                                                                                    random_state=1215, stratify=y_train)
+        X_train, X_val, y_train, y_val = sklearn.model_selection.train_test_split(X_train, y_train, test_size=VAL_FRACTION,
+                                                                                  random_state=1215, stratify=y_train)
+
+        y_test = np.eye(num_classes)[y_test]
+        y_val = np.eye(num_classes)[y_val]
+        y_train = np.eye(num_classes)[y_train]
+
+        self.train_data = X_train
+        self.train_labels = y_train
+
+        self.validation_data = X_val
+        self.validation_labels = y_val
+
+        self.test_data = X_test
+        self.test_labels = y_test
+
+        self.inp_shape = self.train_data.shape[1:]
 
         print("Done setting up cifar100")
 
