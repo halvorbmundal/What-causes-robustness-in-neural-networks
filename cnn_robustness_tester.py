@@ -3,6 +3,7 @@ import traceback
 
 from datasets.setup_GTSRB import GTSRB
 from datasets.setup_calTech_101_silhouettes import CaltechSiluettes
+from datasets.setup_cifar100 import CIFAR100
 
 _b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
 
@@ -424,8 +425,10 @@ def get_data(dataset):
         data = CaltechSiluettes()
     elif dataset == "GTSRB":
         data = GTSRB()
+    elif dataset == "cifar100":
+        data = CIFAR100()
     else:
-        raise NameError(dataset, "is not a valid dataset")
+        raise NameError(f"{dataset} is not a valid dataset")
     return data
 
 def main():
