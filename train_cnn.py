@@ -85,11 +85,24 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
 
     model.summary()
 
-    if data.dataset == "tiny-imagenet-200" or "GTSRB" or "cifar100":
+    if data.dataset == "GTSRB":
         datagen = ImageDataGenerator(
+            rotation_range=10,
+            zoom_range=0.15,
             width_shift_range=0.1,
             height_shift_range=0.1,
+            shear_range=0.15,
             horizontal_flip=False,
+            vertical_flip=False,
+            fill_mode="nearest")
+    elif data.dataset == "tiny-imagenet-200" or "cifar100" or "cifar" or "caltech_siluettes":
+        datagen = ImageDataGenerator(
+            rotation_range=10,
+            zoom_range=0.15,
+            width_shift_range=0.1,
+            height_shift_range=0.1,
+            shear_range=0.15,
+            horizontal_flip=True,
             vertical_flip=False,
             fill_mode="nearest")
     else:
@@ -101,7 +114,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
 
     start_time = time.time()
     if use_early_stopping:
-        early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=20, restore_best_weights=True,
+        early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=30, restore_best_weights=True,
                                                           verbose=1)
         history = model.fit_generator(datagen.flow(data.train_data, data.train_labels, batch_size=batch_size),
                             validation_data=(data.validation_data, data.validation_labels),
@@ -133,7 +146,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     with open(metafile, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(
-            [num_ephocs_trained, best_epoc, time_taken, float(time_taken) / float(num_ephocs_trained), history.history["val_acc"][best_epoc], file_name])
+            [num_ephocs_trained, best_epoc, round(time_taken, 1), round(float(time_taken) / float(num_ephocs_trained), 1), history.history["val_acc"][best_epoc], file_name])
 
     print("saving - ", file_name)
     # save model to a file
