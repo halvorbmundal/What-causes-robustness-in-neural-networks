@@ -69,7 +69,10 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                                                        logits=predicted / train_temp)
 
     # initiate the Adam optimizer
-    sgd = Adam()
+    if data.dataset == "GTSRB":
+        sgd = Adam(lr=0.0005)
+    else:
+        sgd = Adam()
 
     # compile the Keras model, given the specified loss and optimizer
 
