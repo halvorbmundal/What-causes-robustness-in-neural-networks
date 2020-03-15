@@ -3,13 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d5cef5c9-828a-45b9-b66e-d5943f64af0c" name="Default" comment="Add">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/idun/100cifar.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/100cifar.slurm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/idun/GTSRB.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/GTSRB.slurm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/idun/caltechSilhouettes.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/caltechSilhouettes.slurm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/idun/cifar.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/cifar.slurm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/idun/debug.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/debug.slurm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/idun/gpujob.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/gpujob.slurm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/idun/tinyimagenet.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/tinyimagenet.slurm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_cnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_cnn.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -222,28 +216,7 @@
       <workItem from="1583760193006" duration="2946000" />
       <workItem from="1583834925572" duration="11511000" />
       <workItem from="1583849968539" duration="5620000" />
-      <workItem from="1583861194708" duration="44227000" />
-    </task>
-    <task id="LOCAL-00016" summary="dafuc">
-      <created>1583838378592</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1583838378592</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Dafuq?">
-      <created>1583838611648</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1583838611648</updated>
-    </task>
-    <task id="LOCAL-00018" summary="fdsafdsaf">
-      <created>1583840001780</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1583840001780</updated>
+      <workItem from="1583861194708" duration="47100000" />
     </task>
     <task id="LOCAL-00019" summary="Set max processes">
       <created>1583840450337</created>
@@ -567,7 +540,28 @@
       <option name="project" value="LOCAL" />
       <updated>1584290988622</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="Add">
+      <created>1584291191164</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1584291191164</updated>
+    </task>
+    <task id="LOCAL-00066" summary="Add">
+      <created>1584291359551</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1584291359551</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Add">
+      <created>1584306389092</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1584306389092</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TodoView">
@@ -606,9 +600,9 @@
     <MESSAGE value="Add print" />
     <MESSAGE value="more gpus" />
     <MESSAGE value="Increase max_queue_size" />
-    <MESSAGE value="Add" />
     <MESSAGE value="Add SGD optimizer to caltech silhouettes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add SGD optimizer to caltech silhouettes" />
+    <MESSAGE value="Add" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add" />
   </component>
   <component name="WindowStateProjectService">
     <state x="300" y="-1043" key="#Inspections" timestamp="1583332314180">
@@ -624,10 +618,11 @@
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="427" y="-899" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583760228994" />
-    <state x="-300" y="-1382" width="1146" height="770" key="CommitChangelistDialog2" timestamp="1584290988417">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state x="-300" y="-1384" width="1146" height="770" key="CommitChangelistDialog2" timestamp="1584306388831">
+      <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state x="-300" y="-1382" width="2013" height="1280" key="CommitChangelistDialog2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584290988417" />
+    <state x="-300" y="-1384" key="CommitChangelistDialog2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584306388831" />
+    <state x="-300" y="-1382" width="2013" height="1280" key="CommitChangelistDialog2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584291359415" />
     <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2/0.23.1680.940@0.23.1680.940" timestamp="1583922676651" />
     <state x="34" y="-1129" key="DiffContextDialog" timestamp="1583760372078">
       <screen x="-580" y="-1417" width="2560" height="1417" />
@@ -661,10 +656,11 @@
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="209" y="-1070" key="SettingsEditor/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584047065999" />
-    <state x="300" y="-969" key="Vcs.Push.Dialog.v2" timestamp="1584291121626">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state x="300" y="-997" key="Vcs.Push.Dialog.v2" timestamp="1584306659829">
+      <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state x="300" y="-969" key="Vcs.Push.Dialog.v2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584291121626" />
+    <state x="300" y="-997" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584306659829" />
+    <state x="300" y="-969" key="Vcs.Push.Dialog.v2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584291361360" />
     <state x="578" y="320" key="Vcs.Push.Dialog.v2/0.23.1680.940@0.23.1680.940" timestamp="1583922679031" />
   </component>
   <component name="XDebuggerManager">
