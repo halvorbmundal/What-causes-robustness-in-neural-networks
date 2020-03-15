@@ -73,7 +73,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
         sgd = Adam(lr=0.0005)
     elif data.dataset == "caltech_siluettes":
         steps = data.train_data.shape[0]/batch_size
-        sgd = SGD(lr=0.5, nesterov=True, decay=0.0015)
+        sgd = SGD(lr=0.05, nesterov=True, decay=0.0015)
     else:
         sgd = Adam()
 
