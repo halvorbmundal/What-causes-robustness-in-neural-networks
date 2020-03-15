@@ -72,7 +72,8 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     if data.dataset == "GTSRB":
         sgd = Adam(lr=0.0005)
     elif data.dataset == "caltech_siluettes":
-        sgd = SGD(lr=0.1, nesterov=True)
+        steps = data.train_data.shape[0]/batch_size
+        sgd = SGD(lr=1, nesterov=True, decay=0.0015)
     else:
         sgd = Adam()
 
