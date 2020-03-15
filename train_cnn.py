@@ -111,9 +111,9 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     elif data.dataset == "caltech_siluettes":
         datagen = ImageDataGenerator(
             rotation_range=10,
+            zoom_range=0.05,
             width_shift_range=0.05,
             height_shift_range=0.05,
-            horizontal_flip=True,
             vertical_flip=False,
             fill_mode="nearest")
     else:
