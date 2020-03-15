@@ -98,13 +98,21 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
             horizontal_flip=False,
             vertical_flip=False,
             fill_mode="nearest")
-    elif data.dataset == "tiny-imagenet-200" or "cifar100" or "cifar" or "caltech_siluettes":
+    elif data.dataset == "tiny-imagenet-200" or "cifar100" or "cifar":
         datagen = ImageDataGenerator(
             rotation_range=15,
             zoom_range=0.15,
             width_shift_range=0.15,
             height_shift_range=0.15,
             shear_range=0.15,
+            horizontal_flip=True,
+            vertical_flip=False,
+            fill_mode="nearest")
+    elif data.dataset == "caltech_siluettes":
+        datagen = ImageDataGenerator(
+            rotation_range=10,
+            width_shift_range=0.05,
+            height_shift_range=0.05,
             horizontal_flip=True,
             vertical_flip=False,
             fill_mode="nearest")
