@@ -18,7 +18,7 @@ from tensorflow.contrib.keras.api.keras.models import Sequential
 from tensorflow.contrib.keras.api.keras.layers import Dense, Activation, Flatten, Lambda, Conv2D, BatchNormalization
 from tensorflow.contrib.keras.api.keras.models import load_model
 from tensorflow.contrib.keras.api.keras import backend as K
-from tensorflow.contrib.keras.api.keras.optimizers import Adam
+from tensorflow.contrib.keras.api.keras.optimizers import Adam, SGD
 
 
 import os
@@ -71,6 +71,8 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     # initiate the Adam optimizer
     if data.dataset == "GTSRB":
         sgd = Adam(lr=0.0005)
+    elif data.dataset == "caltech_siluettes":
+        sgd = SGD(nesterov=True)
     else:
         sgd = Adam()
 
