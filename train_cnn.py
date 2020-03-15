@@ -68,12 +68,14 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
         return tf.nn.softmax_cross_entropy_with_logits(labels=correct,
                                                        logits=predicted / train_temp)
 
+    patience = 30
     # initiate the Adam optimizer
     if data.dataset == "GTSRB":
         sgd = Adam(lr=0.0005)
     elif data.dataset == "caltech_siluettes":
         steps = data.train_data.shape[0]/batch_size
-        sgd = SGD(lr=0.07, nesterov=True, decay=0.001)
+        sgd = Adam()
+        patience = 50
     else:
         sgd = Adam()
 
@@ -99,7 +101,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
 
     start_time = time.time()
     if use_early_stopping:
-        early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=30, restore_best_weights=True,
+        early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True,
                                                           verbose=1)
         history = model.fit_generator(datagen.flow(data.train_data, data.train_labels, batch_size=batch_size),
                             validation_data=(data.validation_data, data.validation_labels),
