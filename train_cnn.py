@@ -42,7 +42,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     else:
         model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:]))
     if bn:
-        model.add(BatchNormalization())
+        apply_bn(data, model)
     model.add(Activation(activation))
     # model.add(Lambda(activation))
     for f, k in zip(filters[1:], kernels[1:]):
@@ -51,7 +51,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
         else:
             model.add(Conv2D(f, k))
         if bn:
-            model.add(BatchNormalization())
+            apply_bn(data, model)
         model.add(Activation(activation))
         # ReLU activation
         # model.add(Lambda(activation))
@@ -100,10 +100,10 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
             fill_mode="nearest")
     elif data.dataset == "tiny-imagenet-200" or "cifar100" or "cifar" or "caltech_siluettes":
         datagen = ImageDataGenerator(
-            rotation_range=10,
+            rotation_range=15,
             zoom_range=0.15,
-            width_shift_range=0.1,
-            height_shift_range=0.1,
+            width_shift_range=0.15,
+            height_shift_range=0.15,
             shear_range=0.15,
             horizontal_flip=True,
             vertical_flip=False,
@@ -164,3 +164,12 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                 time.sleep(5)
 
     return history
+
+
+def apply_bn(data, model):
+    if data.dataset == "cifar" or "caltech_siluettes" or "cifar100" or "tiny-imagenet-200":
+        model.add(BatchNormalization(momentum=0.9))
+    elif data.dataset == "GTSRB":
+        model.add(BatchNormalization(momentum=0.8))
+    else:
+        model.add(BatchNormalization())

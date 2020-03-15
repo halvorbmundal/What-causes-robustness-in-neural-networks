@@ -5,7 +5,7 @@ from datasets.setup_GTSRB import GTSRB
 from datasets.setup_calTech_101_silhouettes import CaltechSiluettes
 from datasets.setup_cifar100 import CIFAR100
 
-_b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
+_b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode('latin1'))
 
 from train_cnn import train as train_cnn
 from pymain import run_cnn
@@ -122,7 +122,6 @@ def setDynamicGPUAllocation():
 
 def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
                            use_early_stopping, batch_size, dataset_data):
-
     train_cnn(dataset_data,
               file_name=file_name,
               filters=filters,
@@ -167,10 +166,8 @@ def csv_contains_file(csv_file, file_name, parameters):
                 cnnc_column = i
                 break
 
-
-
         for row in csvreader:
-            if row[file_name_column] == file_name:# and row[cnnc_column] == parameters.use_cnnc_core:
+            if row[file_name_column] == file_name:  # and row[cnnc_column] == parameters.use_cnnc_core:
                 if str(row[cnnc_column]) == str(parameters.use_cnnc_core):
                     return True
     return False
@@ -231,7 +228,7 @@ def get_dynamic_keras_config():
 def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
              use_early_stopping, batch_size, dataset_data):
     try:
-        #reset_cuda()
+        # reset_cuda()
         print(datetime.now())
         print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
         sess = tf.Session(config=get_dynamic_keras_config())
@@ -246,7 +243,7 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
                                    use_early_stopping,
                                    batch_size,
                                    dataset_data=dataset_data)
-        #reset_cuda()
+        # reset_cuda()
         gc.collect()
         sess.close()
     except Exception as e:
@@ -270,6 +267,7 @@ def reset_cuda():
 
 def tf_reset():
     tf.reset_default_graph()
+
 
 def gpu_calculations(parameters):
     try:
@@ -375,7 +373,7 @@ def multithreadded_calculations(parameters):
                           "\n\n")
     finally:
         semaphore.release()
-        #reset_cuda()
+        # reset_cuda()
         gc.collect()
 
 
@@ -388,6 +386,7 @@ def pool_init(l1, l2, sema, data):
     write_lock = l1
     keras_lock = l2
     dataset_data = data
+
 
 def parameter_string(parameters):
     return "depth={} filter_size={} kernel_size={} ac={} es={} pad={} cnnc={}" \
@@ -414,6 +413,7 @@ def debugprint(isDebugging, text):
     if isDebugging:
         print(text)
 
+
 def get_data(dataset):
     if dataset == "mnist":
         data = MNIST()
@@ -430,6 +430,7 @@ def get_data(dataset):
     else:
         raise NameError(f"{dataset} is not a valid dataset")
     return data
+
 
 def main():
     _, arg1, arg2, arg3, arg4, arg5 = sys.argv
@@ -481,16 +482,23 @@ def main():
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
-    if dataset == "tinyImagenet":
+    if dataset == "tinyImagenet" or "cifar100" or "cifar":
         reduction = 2
     else:
-        reduction = 1
+        reduction = 2
+
+    if dataset == "GTSRB":
+        bn_choices = [False]
+    elif dataset == "tinyImagenet":
+        bn_choices = [True]
+    else:
+        bn_choices = [True, False]
 
     for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
         for kernel_size in range(3, 8, 1 * reduction):
             for use_cnnc_core in [False]:
                 for filter_size in range(4 * reduction, 64, 4 * reduction):
-                    for has_batch_normalization in [True, False]:
+                    for has_batch_normalization in bn_choices:
                         for depth in range(1, 6, 1 * reduction):
                             for use_early_stopping in [True]:
                                 for use_padding_same in [True]:
