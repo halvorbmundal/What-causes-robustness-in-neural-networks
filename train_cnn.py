@@ -88,36 +88,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
 
     model.summary()
 
-    if data.dataset == "GTSRB":
-        datagen = ImageDataGenerator(
-            rotation_range=10,
-            zoom_range=0.15,
-            width_shift_range=0.1,
-            height_shift_range=0.1,
-            shear_range=0.15,
-            horizontal_flip=False,
-            vertical_flip=False,
-            fill_mode="nearest")
-    elif data.dataset == "tiny-imagenet-200" or "cifar100" or "cifar":
-        datagen = ImageDataGenerator(
-            rotation_range=15,
-            zoom_range=0.15,
-            width_shift_range=0.15,
-            height_shift_range=0.15,
-            shear_range=0.15,
-            horizontal_flip=True,
-            vertical_flip=False,
-            fill_mode="nearest")
-    elif data.dataset == "caltech_siluettes":
-        datagen = ImageDataGenerator(
-            rotation_range=10,
-            zoom_range=0.05,
-            width_shift_range=0.05,
-            height_shift_range=0.05,
-            vertical_flip=False,
-            fill_mode="nearest")
-    else:
-        datagen = ImageDataGenerator()
+    datagen = get_data_augmenter(data)
 
     datagen.fit(data.train_data)
 
@@ -172,6 +143,38 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                 time.sleep(5)
 
     return history
+
+
+def get_data_augmenter(data):
+    if data.dataset == "GTSRB":
+        datagen = ImageDataGenerator(
+            rotation_range=10,
+            zoom_range=0.15,
+            width_shift_range=0.1,
+            height_shift_range=0.1,
+            shear_range=0.15,
+            horizontal_flip=False,
+            vertical_flip=False,
+            fill_mode="nearest")
+    elif data.dataset == "tiny-imagenet-200" or "cifar100" or "cifar":
+        datagen = ImageDataGenerator(
+            rotation_range=15,
+            zoom_range=0.15,
+            width_shift_range=0.15,
+            height_shift_range=0.15,
+            shear_range=0.15,
+            horizontal_flip=True,
+            vertical_flip=False,
+            fill_mode="nearest")
+    elif data.dataset == "caltech_siluettes":
+        datagen = ImageDataGenerator(
+            width_shift_range=0.1,
+            height_shift_range=0.1,
+            vertical_flip=False,
+            fill_mode="nearest")
+    else:
+        datagen = ImageDataGenerator()
+    return datagen
 
 
 def apply_bn(data, model):
