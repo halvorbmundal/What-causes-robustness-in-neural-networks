@@ -3,11 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="d5cef5c9-828a-45b9-b66e-d5943f64af0c" name="Default" comment="Add">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/setup_calTech_101_silhouettes.py" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/setup_calTech_101_silhouettes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/setup_cifar.py" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/setup_cifar.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/setup_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/setup_mnist.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/setup_tinyimagenet.py" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/setup_tinyimagenet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_cnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_cnn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/idun/100cifar.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/100cifar.slurm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/idun/GTSRB.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/GTSRB.slurm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/idun/caltechSilhouettes.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/caltechSilhouettes.slurm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/idun/cifar.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/cifar.slurm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/idun/debug.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/debug.slurm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/idun/gpujob.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/gpujob.slurm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/idun/tinyimagenet.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/tinyimagenet.slurm" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,39 +66,18 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/idun" />
-      <recent name="$PROJECT_DIR$/datasets/data" />
-      <recent name="$PROJECT_DIR$/datasets" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/idun" />
+      <recent name="$PROJECT_DIR$/datasets/data" />
       <recent name="$PROJECT_DIR$/../idun" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/datasets" />
+      <recent name="$PROJECT_DIR$/idun" />
+      <recent name="$PROJECT_DIR$/datasets/data" />
+    </key>
   </component>
-  <component name="RunManager" selected="Python.cnn_robustness_tester">
-    <configuration name="cnn_bounds_full" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="CNN-Cert" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cnn_bounds_full.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.setup_cifar100">
     <configuration name="cnn_robustness_tester" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CNN-Cert" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -119,7 +100,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="setup_calTech_101_silhouettes" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="setup_GTSRB" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CNN-Cert" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -132,7 +113,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/datasets/setup_calTech_101_silhouettes.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/datasets/setup_GTSRB.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -141,7 +122,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="setup_tinyimagenet" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="setup_cifar100" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CNN-Cert" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -154,7 +135,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/datasets/setup_tinyimagenet.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/datasets/setup_cifar100.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -185,20 +166,42 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="train_cnn" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CNN-Cert" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/train_cnn.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.cnn_robustness_tester" />
-      <item itemvalue="Python.setup_tinyimagenet" />
-      <item itemvalue="Python.setup_calTech_101_silhouettes" />
-      <item itemvalue="Python.cnn_bounds_full" />
       <item itemvalue="Python.test" />
+      <item itemvalue="Python.setup_cifar100" />
+      <item itemvalue="Python.setup_GTSRB" />
+      <item itemvalue="Python.train_cnn" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.setup_cifar100" />
         <item itemvalue="Python.cnn_robustness_tester" />
+        <item itemvalue="Python.train_cnn" />
+        <item itemvalue="Python.setup_GTSRB" />
         <item itemvalue="Python.test" />
-        <item itemvalue="Python.cnn_bounds_full" />
-        <item itemvalue="Python.setup_tinyimagenet" />
-        <item itemvalue="Python.setup_calTech_101_silhouettes" />
       </list>
     </recent_temporary>
   </component>
@@ -219,112 +222,7 @@
       <workItem from="1583760193006" duration="2946000" />
       <workItem from="1583834925572" duration="11511000" />
       <workItem from="1583849968539" duration="5620000" />
-      <workItem from="1583861194708" duration="11480000" />
-    </task>
-    <task id="LOCAL-00001" summary="Reduce problem">
-      <created>1582877633728</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1582877633728</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Fix bug">
-      <created>1582880004346</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1582880004346</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Fix bug">
-      <created>1582880425298</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1582880425298</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Increase depth range">
-      <created>1582889194655</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1582889194655</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Increase depth range">
-      <created>1583151709694</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1583151709695</updated>
-    </task>
-    <task id="LOCAL-00006" summary="epocs =&gt; ephocs">
-      <created>1583157462770</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1583157462770</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Increase depth range">
-      <created>1583229892560</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1583229892560</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Add timyImagenet">
-      <created>1583751493272</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1583751493272</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Bugfix">
-      <created>1583752444475</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1583752444475</updated>
-    </task>
-    <task id="LOCAL-00010" summary="squeueme">
-      <created>1583760396744</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1583760396744</updated>
-    </task>
-    <task id="LOCAL-00011" summary="bugfix">
-      <created>1583763432261</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1583763432261</updated>
-    </task>
-    <task id="LOCAL-00012" summary="flush=tre">
-      <created>1583763571992</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1583763571992</updated>
-    </task>
-    <task id="LOCAL-00013" summary="edit">
-      <created>1583764095680</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1583764095680</updated>
-    </task>
-    <task id="LOCAL-00014" summary="Add prints">
-      <created>1583835083866</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1583835083866</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Add cluster files">
-      <created>1583835542469</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1583835542469</updated>
+      <workItem from="1583861194708" duration="44227000" />
     </task>
     <task id="LOCAL-00016" summary="dafuc">
       <created>1583838378592</created>
@@ -501,7 +399,175 @@
       <option name="project" value="LOCAL" />
       <updated>1583882254810</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="Add">
+      <created>1583922676993</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1583922676993</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Add">
+      <created>1584025985455</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1584025985456</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Datagen">
+      <created>1584026542191</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1584026542191</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Add">
+      <created>1584026697782</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1584026697782</updated>
+    </task>
+    <task id="LOCAL-00045" summary="hmmm">
+      <created>1584036186723</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1584036186723</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Add">
+      <created>1584042008300</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1584042008300</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Add">
+      <created>1584045254235</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1584045254235</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Add multi gpu support">
+      <created>1584047457733</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1584047457733</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Add print">
+      <created>1584049332904</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1584049332904</updated>
+    </task>
+    <task id="LOCAL-00050" summary="more gpus">
+      <created>1584049452711</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1584049452714</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Increase max_queue_size">
+      <created>1584050718441</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1584050718441</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Add">
+      <created>1584052793569</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1584052793570</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Add">
+      <created>1584053471135</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1584053471135</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Add">
+      <created>1584055939030</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1584055939030</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Add">
+      <created>1584056282130</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1584056282130</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Add">
+      <created>1584093176539</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1584093176541</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Add">
+      <created>1584093736716</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1584093736716</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Add">
+      <created>1584225582485</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1584225582485</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Add">
+      <created>1584225933986</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1584225933987</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Add">
+      <created>1584271219588</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1584271219588</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Add">
+      <created>1584273460407</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1584273460407</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Add">
+      <created>1584273799028</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1584273799030</updated>
+    </task>
+    <task id="LOCAL-00063" summary="Add">
+      <created>1584290577358</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1584290577358</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Add SGD optimizer to caltech silhouettes">
+      <created>1584290988622</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1584290988622</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TodoView">
@@ -517,13 +583,6 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add timyImagenet" />
-    <MESSAGE value="Bugfix" />
-    <MESSAGE value="bugfix" />
-    <MESSAGE value="flush=tre" />
-    <MESSAGE value="edit" />
-    <MESSAGE value="Add prints" />
-    <MESSAGE value="Add cluster files" />
     <MESSAGE value="dafuc" />
     <MESSAGE value="Dafuq?" />
     <MESSAGE value="fdsafdsaf" />
@@ -532,7 +591,6 @@
     <MESSAGE value="Remove debugging" />
     <MESSAGE value="make dataset global" />
     <MESSAGE value="remove prints" />
-    <MESSAGE value="hmmm" />
     <MESSAGE value="squeueme" />
     <MESSAGE value="fjsdkahfkslaπ" />
     <MESSAGE value="squeuemefdasfasd" />
@@ -542,60 +600,72 @@
     <MESSAGE value="Changed dimentions of a from (num_filters[?],) to (num_filters[?],1, 1, 1)" />
     <MESSAGE value="hmmmmm" />
     <MESSAGE value="." />
-    <option name="LAST_COMMIT_MESSAGE" value="." />
+    <MESSAGE value="Datagen" />
+    <MESSAGE value="hmmm" />
+    <MESSAGE value="Add multi gpu support" />
+    <MESSAGE value="Add print" />
+    <MESSAGE value="more gpus" />
+    <MESSAGE value="Increase max_queue_size" />
+    <MESSAGE value="Add" />
+    <MESSAGE value="Add SGD optimizer to caltech silhouettes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add SGD optimizer to caltech silhouettes" />
   </component>
   <component name="WindowStateProjectService">
     <state x="300" y="-1043" key="#Inspections" timestamp="1583332314180">
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="300" y="-1043" key="#Inspections/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583332314180" />
-    <state x="488" y="268" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1583876270299">
-      <screen x="0" y="23" width="1680" height="940" />
+    <state x="164" y="-1047" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584041246557">
+      <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="164" y="-1047" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583853107936" />
+    <state x="164" y="-1047" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584041246557" />
     <state x="488" y="268" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.940@0.23.1680.940" timestamp="1583876270299" />
     <state x="427" y="-899" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1583760228994">
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="427" y="-899" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583760228994" />
-    <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2" timestamp="1583922634971">
-      <screen x="0" y="23" width="1680" height="940" />
+    <state x="-300" y="-1382" width="1146" height="770" key="CommitChangelistDialog2" timestamp="1584290988417">
+      <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="-300" y="-1382" width="2013" height="1280" key="CommitChangelistDialog2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583853709863" />
-    <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2/0.23.1680.940@0.23.1680.940" timestamp="1583922634971" />
+    <state x="-300" y="-1382" width="2013" height="1280" key="CommitChangelistDialog2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584290988417" />
+    <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2/0.23.1680.940@0.23.1680.940" timestamp="1583922676651" />
     <state x="34" y="-1129" key="DiffContextDialog" timestamp="1583760372078">
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="34" y="-1129" key="DiffContextDialog/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583760372078" />
-    <state width="1638" height="216" key="GridCell.Tab.0.bottom" timestamp="1583881694396">
-      <screen x="0" y="23" width="1680" height="940" />
-    </state>
-    <state width="2518" height="354" key="GridCell.Tab.0.bottom/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583858097887" />
-    <state width="1638" height="216" key="GridCell.Tab.0.bottom/0.23.1680.940@0.23.1680.940" timestamp="1583881694396" />
-    <state width="1638" height="216" key="GridCell.Tab.0.center" timestamp="1583881694395">
-      <screen x="0" y="23" width="1680" height="940" />
-    </state>
-    <state width="2518" height="354" key="GridCell.Tab.0.center/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583858097887" />
-    <state width="1638" height="216" key="GridCell.Tab.0.center/0.23.1680.940@0.23.1680.940" timestamp="1583881694395" />
-    <state width="1638" height="216" key="GridCell.Tab.0.left" timestamp="1583881694395">
-      <screen x="0" y="23" width="1680" height="940" />
-    </state>
-    <state width="2518" height="354" key="GridCell.Tab.0.left/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583858097886" />
-    <state width="1638" height="216" key="GridCell.Tab.0.left/0.23.1680.940@0.23.1680.940" timestamp="1583881694395" />
-    <state width="1638" height="216" key="GridCell.Tab.0.right" timestamp="1583881694395">
-      <screen x="0" y="23" width="1680" height="940" />
-    </state>
-    <state width="2518" height="354" key="GridCell.Tab.0.right/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583858097887" />
-    <state width="1638" height="216" key="GridCell.Tab.0.right/0.23.1680.940@0.23.1680.940" timestamp="1583881694395" />
-    <state x="209" y="-1070" key="SettingsEditor" timestamp="1583856626325">
+    <state width="2518" height="289" key="GridCell.Tab.0.bottom" timestamp="1584266885827">
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="209" y="-1070" key="SettingsEditor/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583856626325" />
-    <state x="578" y="320" key="Vcs.Push.Dialog.v2" timestamp="1583882256783">
-      <screen x="0" y="23" width="1680" height="940" />
+    <state width="2518" height="289" key="GridCell.Tab.0.bottom/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584266885827" />
+    <state width="1638" height="216" key="GridCell.Tab.0.bottom/0.23.1680.940@0.23.1680.940" timestamp="1583923686485" />
+    <state width="2518" height="289" key="GridCell.Tab.0.center" timestamp="1584266885826">
+      <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="300" y="-969" key="Vcs.Push.Dialog.v2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583853714616" />
-    <state x="578" y="320" key="Vcs.Push.Dialog.v2/0.23.1680.940@0.23.1680.940" timestamp="1583882256783" />
+    <state width="2518" height="289" key="GridCell.Tab.0.center/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584266885826" />
+    <state width="1638" height="216" key="GridCell.Tab.0.center/0.23.1680.940@0.23.1680.940" timestamp="1583923686484" />
+    <state width="2518" height="289" key="GridCell.Tab.0.left" timestamp="1584266885825">
+      <screen x="-580" y="-1417" width="2560" height="1417" />
+    </state>
+    <state width="2518" height="289" key="GridCell.Tab.0.left/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584266885825" />
+    <state width="1638" height="216" key="GridCell.Tab.0.left/0.23.1680.940@0.23.1680.940" timestamp="1583923686484" />
+    <state width="2518" height="289" key="GridCell.Tab.0.right" timestamp="1584266885826">
+      <screen x="-580" y="-1417" width="2560" height="1417" />
+    </state>
+    <state width="2518" height="289" key="GridCell.Tab.0.right/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584266885826" />
+    <state width="1638" height="216" key="GridCell.Tab.0.right/0.23.1680.940@0.23.1680.940" timestamp="1583923686484" />
+    <state x="516" y="-827" key="ReplaceDuplicatesPrompt" timestamp="1584266876966">
+      <screen x="-580" y="-1417" width="2560" height="1417" />
+    </state>
+    <state x="516" y="-827" key="ReplaceDuplicatesPrompt/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584266876966" />
+    <state x="209" y="-1070" key="SettingsEditor" timestamp="1584047065999">
+      <screen x="-580" y="-1417" width="2560" height="1417" />
+    </state>
+    <state x="209" y="-1070" key="SettingsEditor/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584047065999" />
+    <state x="300" y="-969" key="Vcs.Push.Dialog.v2" timestamp="1584291121626">
+      <screen x="-580" y="-1417" width="2560" height="1417" />
+    </state>
+    <state x="300" y="-969" key="Vcs.Push.Dialog.v2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584291121626" />
+    <state x="578" y="320" key="Vcs.Push.Dialog.v2/0.23.1680.940@0.23.1680.940" timestamp="1583922679031" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -617,10 +687,13 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/CNN_Cert$cnn_bounds_full.coverage" NAME="cnn_bounds_full Coverage Results" MODIFIED="1583877322246" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CNN_Cert$cnn_robustness_tester.coverage" NAME="cnn_robustness_tester Coverage Results" MODIFIED="1583881694386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$cnn_robustness_tester.coverage" NAME="cnn_robustness_tester Coverage Results" MODIFIED="1584041736964" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$setup_cifar100.coverage" NAME="setup_cifar100 Coverage Results" MODIFIED="1584093073045" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
     <SUITE FILE_PATH="coverage/CNN_Cert$setup_tinyimagenet.coverage" NAME="setup_tinyimagenet Coverage Results" MODIFIED="1583849214569" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
     <SUITE FILE_PATH="coverage/CNN_Cert$setup_caltech101.coverage" NAME="setup_caltech101 Coverage Results" MODIFIED="1583241038923" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
     <SUITE FILE_PATH="coverage/CNN_Cert$test.coverage" NAME="test Coverage Results" MODIFIED="1583881689638" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$train_cnn.coverage" NAME="train_cnn Coverage Results" MODIFIED="1584041253761" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$setup_GTSRB.coverage" NAME="setup_GTSRB Coverage Results" MODIFIED="1584023406506" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
     <SUITE FILE_PATH="coverage/CNN_Cert$setup_cifar.coverage" NAME="setup_cifar Coverage Results" MODIFIED="1583846958929" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
     <SUITE FILE_PATH="coverage/CNN_Cert$setup_calTech_101_silhouettes.coverage" NAME="setup_calTech_101_silhouettes Coverage Results" MODIFIED="1583849035113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
   </component>
