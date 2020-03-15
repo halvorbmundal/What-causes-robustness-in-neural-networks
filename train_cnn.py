@@ -72,7 +72,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     if data.dataset == "GTSRB":
         sgd = Adam(lr=0.0005)
     elif data.dataset == "caltech_siluettes":
-        sgd = SGD(nesterov=True)
+        sgd = SGD(lr=0.1, nesterov=True)
     else:
         sgd = Adam()
 
