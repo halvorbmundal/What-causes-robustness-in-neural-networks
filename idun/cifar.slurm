@@ -1,5 +1,5 @@
 #!/bin/sh
-#SBATCH --partition=GPUQ
+#SBATCH --partition=GPUQ,V100-IDI
 #SBATCH --account=share-ie-idi
 #SBATCH --gres=gpu:1
 #SBATCH --time=7-00:00:00
