@@ -29,8 +29,8 @@ def extract_dataset(from_path, file_name):
 def preprocess_to_ndarray(X, Y):
     np.random.seed(1215)
 
-    VAL_FRACTION = 0.1
-    TEST_FRACTION = 0.1
+    VAL_FRACTION = 0.2
+    TEST_FRACTION = 0.5
     num_classes = 101
 
     X_train = X
