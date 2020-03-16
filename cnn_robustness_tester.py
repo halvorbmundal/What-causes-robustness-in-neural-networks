@@ -482,10 +482,14 @@ def main():
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
-    if dataset == "tinyImagenet" or "cifar100" or "cifar":
-        reduction = 2
+    if dataset == "tinyImagenet" or "cifar100":
+        reduction = 4
+        filter_size_range = range(4 * reduction, 128, 4 * reduction)
+        depth_range = range(1, 12, 1 * reduction)
     else:
         reduction = 2
+        filter_size_range = range(4 * reduction, 64, 4 * reduction)
+        depth_range = range(1, 6, 1 * reduction)
 
     if dataset == "GTSRB":
         bn_choices = [False]
@@ -497,9 +501,9 @@ def main():
     for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
         for kernel_size in range(3, 8, 1 * reduction):
             for use_cnnc_core in [False]:
-                for filter_size in range(4 * reduction, 64, 4 * reduction):
+                for filter_size in filter_size_range:
                     for has_batch_normalization in bn_choices:
-                        for depth in range(1, 6, 1 * reduction):
+                        for depth in depth_range:
                             for use_early_stopping in [True]:
                                 for use_padding_same in [True]:
 
