@@ -69,6 +69,8 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                                                        logits=predicted / train_temp)
 
     patience = 30
+    if data.dataset == "cifar100":
+        patience = 50
     # initiate the Adam optimizer
     if data.dataset == "GTSRB":
         sgd = Adam(lr=0.0005)
