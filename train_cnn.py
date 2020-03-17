@@ -70,16 +70,16 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                                                        logits=predicted / train_temp)
 
     patience = 30
+    min_delta = 0
+    sgd = Adam()
     if data.dataset == "cifar100":
         patience = 50
-    # initiate the Adam optimizer
-    if data.dataset == "GTSRB":
+    elif data.dataset == "GTSRB":
         sgd = Adam(lr=0.0005)
     elif data.dataset == "caltech_siluettes":
-        sgd = Adam()
         patience = 50
-    else:
-        sgd = Adam()
+    elif data.dataset == "mnist":
+        min_delta = 0.01
 
     # compile the Keras model, given the specified loss and optimizer
 
@@ -103,7 +103,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     start_time = time.time()
     if use_early_stopping:
         early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True,
-                                                          verbose=1)
+                                                          verbose=1, min_delta=min_delta)
         flow = datagen.flow(data.train_data, data.train_labels, batch_size=batch_size)
         history = model.fit_generator(flow,
                                       validation_data=(data.validation_data, data.validation_labels),
