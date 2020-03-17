@@ -277,10 +277,12 @@ def gpu_calculations(parameters):
                      dataset_data,
                      tf)
             print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
+            return
         else:
             print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
     finally:
         keras_lock.release()
+        print("lock released", flush=True)
 
 
 def get_accuracy_of_nn_from_csv(csv_file, file_name):
@@ -537,7 +539,7 @@ def main():
                                         gpu_process.start()
                                         print("gpu_prosess startet")
                                         gpu_process.join()
-                                        print("gpu_prosess joinet")
+                                        print("gpu_prosess joinet", flush=True)
                                     if parameters.use_cpu:
                                         keras_lock.acquire()
                                         keras_lock.release()
