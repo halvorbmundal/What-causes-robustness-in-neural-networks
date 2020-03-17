@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d5cef5c9-828a-45b9-b66e-d5943f64af0c" name="Default" comment="    Add">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cnn_bounds_full.py" beforeDir="false" afterPath="$PROJECT_DIR$/cnn_bounds_full.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/idun/gpujob.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/gpujob.slurm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cnn_robustness_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/cnn_robustness_tester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_cnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_cnn.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -220,14 +218,7 @@
       <workItem from="1583834925572" duration="11511000" />
       <workItem from="1583849968539" duration="5620000" />
       <workItem from="1583861194708" duration="63778000" />
-      <workItem from="1584452766812" duration="9864000" />
-    </task>
-    <task id="LOCAL-00036" summary=".">
-      <created>1583871845833</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1583871845833</updated>
+      <workItem from="1584452766812" duration="10089000" />
     </task>
     <task id="LOCAL-00037" summary="add bn">
       <created>1583874818397</created>
@@ -565,7 +556,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584477028416</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="    Add">
+      <created>1584478504491</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1584478504491</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="TodoView">
@@ -623,11 +621,11 @@
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="427" y="-899" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583760228994" />
-    <state x="-300" y="-1382" width="1676" height="1029" key="CommitChangelistDialog2" timestamp="1584477028141">
+    <state x="-300" y="-1382" width="1676" height="1029" key="CommitChangelistDialog2" timestamp="1584478504314">
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584366142806" />
-    <state x="-300" y="-1382" width="2013" height="1280" key="CommitChangelistDialog2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584477028141" />
+    <state x="-300" y="-1382" width="2013" height="1280" key="CommitChangelistDialog2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584478504314" />
     <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2/0.23.1680.940@0.23.1680.940" timestamp="1583922676651" />
     <state x="34" y="-1129" key="DiffContextDialog" timestamp="1583760372078">
       <screen x="-580" y="-1417" width="2560" height="1417" />
@@ -670,11 +668,11 @@
     </state>
     <state x="209" y="-1091" key="SettingsEditor/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584308208430" />
     <state x="209" y="-1070" key="SettingsEditor/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584467502933" />
-    <state x="300" y="-969" key="Vcs.Push.Dialog.v2" timestamp="1584477030332">
+    <state x="300" y="-969" key="Vcs.Push.Dialog.v2" timestamp="1584478506297">
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="300" y="-997" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584366144787" />
-    <state x="300" y="-969" key="Vcs.Push.Dialog.v2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584477030332" />
+    <state x="300" y="-969" key="Vcs.Push.Dialog.v2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584478506297" />
     <state x="578" y="320" key="Vcs.Push.Dialog.v2/0.23.1680.940@0.23.1680.940" timestamp="1583922679031" />
   </component>
   <component name="XDebuggerManager">

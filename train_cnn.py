@@ -96,7 +96,6 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     model.summary()
 
     datagen = get_data_augmenter(data)
-    datagen.fit(data.train_data)
 
     print("Traing a {} layer model, saving to {}".format(len(filters) + 1, file_name), flush=True)
 

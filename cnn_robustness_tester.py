@@ -507,7 +507,7 @@ def main():
             for filter_size in filter_size_range:
                 for has_batch_normalization in bn_choices:
                     for depth in depth_range:
-                        for use_early_stopping in [False]:
+                        for use_early_stopping in [True, False]:
                             for use_padding_same in [True]:
 
                                 if dataset != "mnist" and not use_early_stopping:
