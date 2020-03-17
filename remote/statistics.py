@@ -160,16 +160,17 @@ def error_plot():
     bn_query = (~df["has_batch_normalization"])
     ac_query = (df[_activation_function] == "ada")
     core_query = (~df["Cnn-cert-core"])
-    all_queries = core_query & bn_query & ac_query
+    all_queries = core_query & bn_query & ac_query & es_query
     #all_queries = ac_query & depth_query & filter_query & kernel_query
 
+    error_plot_column(df, _filter, query=all_queries)
+    """
     error_plot_column(df, _kernel, query=all_queries)
     error_plot_column(df, _depth, query=all_queries)
-    error_plot_column(df, _filter, query=all_queries)
     error_plot_column(df, _activation_function, query=all_queries)
     error_plot_column(df, _early_stoppping, query=all_queries)
     error_plot_column(df, _padding_same, query=all_queries)
-    error_plot_column(df, _batch_normalization, query=all_queries)
+    error_plot_column(df, _batch_normalization, query=all_queries)"""
 
 def set_path(path):
     if not os.path.exists(path):
@@ -227,7 +228,7 @@ def do_linear_regression(config, x_df, y, name):
     linear_regression_model = linear_regression(X, y)
     poly_features, plynomial_regression_model = poly_reg(X, y, config["p"])
     poly_features3, plynomial_regression_model3 = poly_reg(X, y, 3)
-    print(linear_regression_model.summary(yname="robustness", xname=list(pd.Index(["bias"]).append(columns))))
+    #print(linear_regression_model.summary(yname="robustness", xname=list(pd.Index(["bias"]).append(columns))))
     #print(plynomial_regression_model.summary(yname="robustness", xname=poly_features.get_feature_names(x_df.columns)))
     #print(plynomial_regression_model3.summary(yname="robustness", xname=poly_features3.get_feature_names(x_df.columns)))
     return X, columns, input_dict
