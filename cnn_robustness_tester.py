@@ -236,8 +236,8 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
                                    batch_size,
                                    _dataset_data=_dataset_data)
         # reset_cuda()
-        gc.collect()
         sess.close()
+        gc.collect()
     except Exception as e:
         print("Error: An exeption occured while training network", e)
         date = str(datetime.now())
@@ -257,7 +257,7 @@ def reset_cuda():
         print("Could not reset cuda: ", traceback.format_exc())
 
 
-def gpu_calculations(parameters):
+def gpu_calculations(parameters, is_sub_process=False):
     import tensorflow as tf
     try:
         parameters.tf_activation = get_tf_activation_function_from_string(
@@ -283,6 +283,8 @@ def gpu_calculations(parameters):
     finally:
         keras_lock.release()
         print("lock released", flush=True)
+        if is_sub_process:
+            sys.exit(0)
 
 
 def get_accuracy_of_nn_from_csv(csv_file, file_name):
@@ -535,7 +537,7 @@ def main():
                                 else:
                                     if parameters.use_gpu:
                                         keras_lock.acquire()
-                                        gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters,))
+                                        gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters, True))
                                         gpu_process.start()
                                         print("gpu_prosess startet")
                                         gpu_process.join()
