@@ -10,6 +10,7 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
                     Luca Daniel <dluca@mit.edu>
 """
 import csv
+import threading
 import time
 import tensorflow as tf
 
@@ -20,7 +21,6 @@ from tensorflow.contrib.keras.api.keras.models import load_model
 from tensorflow.contrib.keras.api.keras import backend as K
 from tensorflow.contrib.keras.api.keras.optimizers import Adam, SGD
 
-
 import os
 
 from tensorflow.python.client import device_lib
@@ -29,6 +29,7 @@ from tensorflow.python.client import device_lib
 def get_available_gpus():
     local_device_protos = device_lib.list_local_devices()
     return [x.name for x in local_device_protos if x.device_type == 'GPU']
+
 
 def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, train_temp=1, init=None, activation=tf.nn.relu, bn=False, use_padding_same=False,
           use_early_stopping=True):
@@ -95,7 +96,6 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     model.summary()
 
     datagen = get_data_augmenter(data)
-
     datagen.fit(data.train_data)
 
     print("Traing a {} layer model, saving to {}".format(len(filters) + 1, file_name), flush=True)
@@ -104,13 +104,16 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     if use_early_stopping:
         early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True,
                                                           verbose=1)
-        history = model.fit_generator(datagen.flow(data.train_data, data.train_labels, batch_size=batch_size),
-                            validation_data=(data.validation_data, data.validation_labels),
-                            epochs=400,
-                            shuffle=True,
-                            callbacks=[early_stopping],
-                            verbose=1,
-                            max_queue_size=batch_size*2)
+        flow = datagen.flow(data.train_data, data.train_labels, batch_size=batch_size)
+        history = model.fit_generator(flow,
+                                      validation_data=(data.validation_data, data.validation_labels),
+                                      epochs=400,
+                                      shuffle=True,
+                                      callbacks=[early_stopping],
+                                      verbose=1,
+                                      max_queue_size=batch_size * 2,
+                                      workers=16,
+                                      use_multiprocessing=True)
         best_epoc = len(history.history['loss']) - 1 - early_stopping.wait
 
     else:
@@ -119,7 +122,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                             validation_data=(data.validation_data, data.validation_labels),
                             epochs=num_epochs,
                             shuffle=True,
-                            verbose=0)
+                            verbose=1)
         best_epoc = len(history.history['loss']) - 1
     time_taken = (time.time() - start_time)
 
@@ -134,7 +137,8 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     with open(metafile, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(
-            [num_ephocs_trained, best_epoc, round(time_taken, 1), round(float(time_taken) / float(num_ephocs_trained), 1), history.history["val_acc"][best_epoc], file_name])
+            [num_ephocs_trained, best_epoc, round(time_taken, 1), round(float(time_taken) / float(num_ephocs_trained), 1),
+             history.history["val_acc"][best_epoc], file_name])
 
     print("saving - ", file_name)
     # save model to a file

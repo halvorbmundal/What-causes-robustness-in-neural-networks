@@ -463,7 +463,7 @@ def main():
         print(f"gpu: {gpu}")
         print(f"path: {path}/")
 
-    max_processes = 23
+    max_processes = 22
     if multiprocessing.cpu_count() > max_processes:
         processes = max_processes
     else:
@@ -476,7 +476,7 @@ def main():
     sema = multiprocessing.Semaphore(processes)
 
     cpu_pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
-    gpu_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
+    #gpu_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
 
     pool_init(l1, l2, sema, data)
 
@@ -507,7 +507,7 @@ def main():
             for filter_size in filter_size_range:
                 for has_batch_normalization in bn_choices:
                     for depth in depth_range:
-                        for use_early_stopping in [True, False]:
+                        for use_early_stopping in [False]:
                             for use_padding_same in [True]:
 
                                 if dataset != "mnist" and not use_early_stopping:
@@ -541,16 +541,18 @@ def main():
                                 else:
                                     if parameters.use_gpu:
                                         keras_lock.acquire()
-                                        gpu_pool.apply_async(gpu_calculations, (parameters,))
+                                        gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters,))
+                                        gpu_process.start()
+                                        gpu_process.join()
                                     if parameters.use_cpu:
                                         keras_lock.acquire()
                                         keras_lock.release()
                                         cpu_pool.apply_async(multithreadded_calculations, (parameters,))
 
     print("Waiting for processes to finish")
-    gpu_pool.close()
+    #gpu_pool.close()
     cpu_pool.close()
-    gpu_pool.join()
+    #gpu_pool.join()
     cpu_pool.join()
     print("program finished")
 
