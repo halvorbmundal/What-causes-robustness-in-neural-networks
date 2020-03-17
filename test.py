@@ -1,2 +1,3 @@
+import numpy as np
 
-from train_cnn import train as train_cnn
+print(np.array([1,2,3])*np.array([2,3,4]))

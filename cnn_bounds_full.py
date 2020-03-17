@@ -1,8 +1,6 @@
 """
 cnn_bounds_full.py
-
 Main CNN-Cert computation file for general networks
-
 Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
                     Lily Weng  <twweng@mit.edu>
                     Pin-Yu Chen <Pin-Yu.Chen@ibm.com>
@@ -43,7 +41,7 @@ class Model:
         self.strides = []
         self.types = []
         self.model = model
-        
+
         cur_shape = inp_shape
         self.shapes.append(cur_shape)
         i = 0
@@ -197,21 +195,21 @@ class Model:
                 W1, bias1 = conv1.get_weights()
                 W2, bias2 = conv2.get_weights()
                 W3, bias3 = conv3.get_weights()
-                
+
                 gamma1, beta1, mean1, std1 = bn1.get_weights()
                 std1 = np.sqrt(std1**2+0.001) #Avoids zero division
                 a1 = gamma1/std1
                 b1 = gamma1*mean1/std1+beta1
                 W1 = a1*W1
                 bias1 = a1*bias1+b1
-                
+
                 gamma2, beta2, mean2, std2 = bn2.get_weights()
                 std2 = np.sqrt(std2**2+0.001) #Avoids zero division
                 a2 = gamma2/std2
                 b2 = gamma2*mean2/std2+beta2
                 W2 = a2*W2
                 bias2 = a2*bias2+b2
-                 
+
                 gamma3, beta3, mean3, std3 = bn3.get_weights()
                 std3 = np.sqrt(std3**2+0.001) #Avoids zero division
                 a3 = gamma3/std3
@@ -273,14 +271,14 @@ class Model:
 
                 W1, bias1 = conv1.get_weights()
                 W2, bias2 = conv2.get_weights()
-                
+
                 gamma1, beta1, mean1, std1 = bn1.get_weights()
                 std1 = np.sqrt(std1**2+0.001) #Avoids zero division
                 a1 = gamma1/std1
                 b1 = gamma1*mean1/std1+beta1
                 W1 = a1*W1
                 bias1 = a1*bias1+b1
-                
+
                 gamma2, beta2, mean2, std2 = bn2.get_weights()
                 std2 = np.sqrt(std2**2+0.001) #Avoids zero division
                 a2 = gamma2/std2
@@ -334,7 +332,7 @@ def UL_conv_bound(A, B, pad, stride, shape, W, b, inner_pad, inner_stride, inner
     A_new = np.zeros((A.shape[0], A.shape[1], A.shape[2], inner_stride[0]*(A.shape[3]-1)+W.shape[1], inner_stride[1]*(A.shape[4]-1)+W.shape[2], W.shape[3]), dtype=np.float32)
     B_new = B.copy()
     assert A.shape[5] == W.shape[0]
-                                                
+
 
     for x in range(A_new.shape[0]):
         p_start = np.maximum(0, pad[0]-stride[0]*x)
@@ -508,7 +506,7 @@ def compute_bounds(weights, biases, out_shape, nlayer, x0, eps, p_n, pads, strid
         stride = (1,1)
         A_u, B_u = UL_basic_block_bound(A_u, B_u, pad, stride, *weights[nlayer-1], *biases[nlayer-1], *pads[nlayer-1], *strides[nlayer-1], upper=True)
         A_l, B_l = UL_basic_block_bound(A_l, B_l, pad, stride, *weights[nlayer-1], *biases[nlayer-1], *pads[nlayer-1], *strides[nlayer-1], upper=False)
-    
+
     for i in range(nlayer-2, -1, -1):
         if types[i] == 'conv':
             #print('conv')
@@ -605,7 +603,7 @@ def run(file_name, n_samples, p_n, q_n, data_set_class, activation = 'relu'):
 
     if len(inputs) == 0:
         return 0, 0
-    
+
     #0b01111 <- all
     #0b0010 <- random
     #0b0001 <- top2
@@ -616,7 +614,7 @@ def run(file_name, n_samples, p_n, q_n, data_set_class, activation = 'relu'):
     summation = 0
 
     warmup(model, inputs[0].astype(np.float32), eps_0, p_n, find_output_bounds)
-        
+
     start_time = time.time()
     for i in range(len(inputs)):
         #print('--- CNN-Cert: Computing eps for input image ' + str(i)+ '---')
@@ -646,7 +644,7 @@ def run(file_name, n_samples, p_n, q_n, data_set_class, activation = 'relu'):
             else: #Decrease eps
                 log_eps_max = log_eps
                 log_eps = np.maximum(log_eps-1, (log_eps_max+log_eps_min)/2)
-       
+
         if p_n == 105:
             str_p_n = 'i'
         else:
@@ -655,9 +653,8 @@ def run(file_name, n_samples, p_n, q_n, data_set_class, activation = 'relu'):
         #print("[L1] method = CNN-Cert-{}, model = {}, image no = {}, true_id = {}, target_label = {}, true_label = {}, norm = {}, robustness = {:.5f}".format(activation,file_name, i, true_ids[i],target_label,predict_label,str_p_n,np.exp(log_eps_min)))
         summation += np.exp(log_eps_min)
     K.clear_session()
-    
+
     eps_avg = summation/len(inputs)
     total_time = (time.time()-start_time)/len(inputs)
     print("[L0] method = CNN-Cert-{}, model = {}, total images = {}, norm = {}, avg robustness = {:.5f}, avg runtime = {:.2f}".format(activation,file_name,len(inputs),str_p_n,eps_avg,total_time))
     return eps_avg, total_time
-    
