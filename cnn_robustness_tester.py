@@ -535,7 +535,9 @@ def main():
                                         keras_lock.acquire()
                                         gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters,))
                                         gpu_process.start()
+                                        print("gpu_prosess startet")
                                         gpu_process.join()
+                                        print("gpu_prosess joinet")
                                     if parameters.use_cpu:
                                         keras_lock.acquire()
                                         keras_lock.release()
