@@ -491,58 +491,61 @@ def main():
         filter_size_range = range(4 * reduction, 64, 4 * reduction)
         depth_range = range(1, 6, 1 * reduction)
 
+    kernel_size_range = range(3, 8, 1 * reduction)
     if dataset == "GTSRB":
         bn_choices = [False]
     elif dataset == "tinyImagenet":
         bn_choices = [True]
+    elif dataset == "mnist":
+        bn_choices = [True]
+        kernel_size_range = [5]
     else:
         bn_choices = [True, False]
 
-    for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
-        for kernel_size in range(3, 8, 1 * reduction):
-            for use_cnnc_core in [False]:
-                for filter_size in filter_size_range:
-                    for has_batch_normalization in bn_choices:
-                        for depth in depth_range:
-                            for use_early_stopping in [True]:
-                                for use_padding_same in [True]:
+    for activation_function_string in ["ada"]:
+        for kernel_size in kernel_size_range:
+            for filter_size in filter_size_range:
+                for has_batch_normalization in bn_choices:
+                    for depth in depth_range:
+                        for use_early_stopping in [True, False]:
+                            for use_padding_same in [True]:
 
-                                    if dataset != "mnist" and not use_early_stopping:
-                                        continue
+                                if dataset != "mnist" and not use_early_stopping:
+                                    continue
 
-                                    parameters = CnnTestParameters()
-                                    parameters.tf_activation = get_tf_activation_function_from_string(
-                                        activation_function_string)
-                                    parameters.activation_function_string = activation_function_string
-                                    parameters.depth = depth
-                                    parameters.kernel_size = kernel_size
-                                    parameters.filter_size = filter_size
-                                    parameters.filters = [filter_size for i in range(depth)]
-                                    parameters.kernels = [kernel_size for i in range(depth)]
-                                    parameters.has_batch_normalization = has_batch_normalization
-                                    parameters.isDebugging = debugging
-                                    parameters.use_early_stopping = use_early_stopping
-                                    parameters.use_padding_same = use_padding_same
-                                    parameters.use_cnnc_core = use_cnnc_core
-                                    parameters.dataset = dataset
+                                parameters = CnnTestParameters()
+                                parameters.tf_activation = get_tf_activation_function_from_string(
+                                    activation_function_string)
+                                parameters.activation_function_string = activation_function_string
+                                parameters.depth = depth
+                                parameters.kernel_size = kernel_size
+                                parameters.filter_size = filter_size
+                                parameters.filters = [filter_size for i in range(depth)]
+                                parameters.kernels = [kernel_size for i in range(depth)]
+                                parameters.has_batch_normalization = has_batch_normalization
+                                parameters.isDebugging = debugging
+                                parameters.use_early_stopping = use_early_stopping
+                                parameters.use_padding_same = use_padding_same
+                                parameters.use_cnnc_core = False
+                                parameters.dataset = dataset
 
-                                    parameters.use_gpu = gpu
-                                    parameters.use_cpu = cpu
+                                parameters.use_gpu = gpu
+                                parameters.use_cpu = cpu
 
-                                    parameters.file_name = get_name_new_convention(parameters)
+                                parameters.file_name = get_name_new_convention(parameters)
 
-                                    if debugging:
+                                if debugging:
+                                    keras_lock.acquire()
+                                    gpu_calculations(parameters)
+                                    multithreadded_calculations(parameters)
+                                else:
+                                    if parameters.use_gpu:
                                         keras_lock.acquire()
-                                        gpu_calculations(parameters)
-                                        multithreadded_calculations(parameters)
-                                    else:
-                                        if parameters.use_gpu:
-                                            keras_lock.acquire()
-                                            gpu_pool.apply_async(gpu_calculations, (parameters,))
-                                        if parameters.use_cpu:
-                                            keras_lock.acquire()
-                                            keras_lock.release()
-                                            cpu_pool.apply_async(multithreadded_calculations, (parameters,))
+                                        gpu_pool.apply_async(gpu_calculations, (parameters,))
+                                    if parameters.use_cpu:
+                                        keras_lock.acquire()
+                                        keras_lock.release()
+                                        cpu_pool.apply_async(multithreadded_calculations, (parameters,))
 
     print("Waiting for processes to finish")
     gpu_pool.close()

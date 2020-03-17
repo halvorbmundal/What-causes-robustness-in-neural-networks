@@ -25,24 +25,25 @@ _filter = "filter"
 _activation_function = "activation_function"
 _early_stoppping = "early_stoppping"
 _padding_same = "padding_same"
+_batch_normalization = "has_batch_normalization"
 
 
 def get_df(columns):
     results = pd.read_csv('results/results.csv')
     accuracy = pd.read_csv('models_meta.csv')
+    """
     results = results[~results["Cnn-cert-core"]]
-    padding_query = (~results["padding_same"])
-    es_query = (results["early_stoppping"])
-    ac_query = (results[_activation_function] != "arctan")
-    results = results[padding_query & es_query & ac_query]
+    results = results[~results["has_batch_normalization"]]
+    ac_query = (results[_activation_function] == "ada")
+    results = results[ac_query]
+    """
     results = results[~results[[_file_name, "Cnn-cert-core"]].duplicated(keep="first")]
     data_df: pd.DataFrame = pd.merge(left=results, right=accuracy, left_on='file_name', right_on='file_name',
                                      suffixes=("_x", ""))
-    df_with_dummies = data_df.iloc[0:, [data_df.columns.get_loc(c) for c in columns]]
+    df = data_df.iloc[0:, [data_df.columns.get_loc(c) for c in columns]]
     if _activation_function in columns:
-        df_with_dummies = pd.get_dummies(df_with_dummies,
-                                     columns=[_activation_function], prefix="", drop_first=True)
-    return df_with_dummies, data_df["lower_bound"], data_df[_activation_function]
+        df_with_dummies = pd.get_dummies(df, columns=[_activation_function], prefix="", drop_first=True)
+    return df_with_dummies, data_df["lower_bound"], data_df["accuracy"], data_df["time_per_epoch"], data_df["best_epoch"], data_df[_activation_function]
 
 
 def get_numppy_arrays(df):
@@ -133,15 +134,7 @@ def error_plot_column(df, column_name, query=None):
 
 def get_result_df():
     results = pd.read_csv('results/results.csv')
-
-    padding_query = (~results["padding_same"])
-    es_query = (results["early_stoppping"])
-    ac_query = (results[_activation_function] != "arctan")
-    results = results[padding_query & es_query & ac_query]
-
-    df = results[~results[[_file_name, "Cnn-cert-core"]].duplicated(keep="first")]
-    df = df[~df["Cnn-cert-core"]]
-    return df
+    return results
 
 
 def poly_reg(X, y, p=2):
@@ -160,12 +153,14 @@ def poly_reg(X, y, p=2):
 def error_plot():
     df: pd.DataFrame = get_result_df()
     depth_query = (df[_depth] == 3)
-    kernel_query = (df[_kernel] == 5)
+    kernel_query = (df[_kernel] == 3)
     filter_query = (df[_filter] <= 90)
-    padding_query = (~df["padding_same"])
-    es_query = (df["early_stoppping"])
+    padding_query = (df["padding_same"])
+    es_query = (~df["early_stoppping"])
+    bn_query = (~df["has_batch_normalization"])
     ac_query = (df[_activation_function] == "ada")
-    all_queries = None
+    core_query = (~df["Cnn-cert-core"])
+    all_queries = core_query & bn_query & ac_query
     #all_queries = ac_query & depth_query & filter_query & kernel_query
 
     error_plot_column(df, _kernel, query=all_queries)
@@ -174,6 +169,7 @@ def error_plot():
     error_plot_column(df, _activation_function, query=all_queries)
     error_plot_column(df, _early_stoppping, query=all_queries)
     error_plot_column(df, _padding_same, query=all_queries)
+    error_plot_column(df, _batch_normalization, query=all_queries)
 
 def set_path(path):
     if not os.path.exists(path):
@@ -184,23 +180,28 @@ def main():
     with open("config.json") as json_file:
         config = json.load(json_file)
     set_path(config["path"])
+    print(config["dataset"])
+    if config["dataset"] != "mnist":
+        set_path(config["dataset"])
 
     if config["use_all_columns"]:
         columns = config["all_columns"]
     else:
         columns = config["small_columns"]
 
-    x_df, y_df, af = get_df(columns)
-    y = y_df.to_numpy()
-    columns = x_df.keys()
-    X, input_dict = get_numppy_arrays(x_df)
+    x_df, y_df_lower_bound, y_accuracy, y_time_per_epoch, y_best_epoch, af = get_df(columns)
+    y = y_df_lower_bound.to_numpy()
 
-    linear_regression_model = linear_regression(X, y)
-    poly_features, plynomial_regression_model = poly_reg(X, y, config["p"])
-    poly_features3, plynomial_regression_model3 = poly_reg(X, y, 3)
-    print(linear_regression_model.summary(yname="robustness", xname=list(pd.Index(["bias"]).append(columns))))
-    print(plynomial_regression_model.summary(yname="robustness", xname=poly_features.get_feature_names(x_df.columns)))
-    print(plynomial_regression_model3.summary(yname="robustness", xname=poly_features3.get_feature_names(x_df.columns)))
+    X, columns, input_dict = do_linear_regression(config, x_df, y, "robustness")
+
+    y_acc_metric = normalize_0_to_1(y_accuracy.to_numpy())
+    do_linear_regression(config, x_df, y_acc_metric, "accuracy")
+
+    y_time_metric = normalize_0_to_1(y_time_per_epoch.to_numpy() * y_best_epoch.to_numpy())
+    do_linear_regression(config, x_df, normalize_0_to_1(y_time_per_epoch.to_numpy() * y_best_epoch.to_numpy()), "speed")
+
+    metric = (normalize_0_to_1(y) * y_acc_metric) / (y_time_metric+1.e-17)
+    do_linear_regression(config, x_df, metric, "metric")
 
     for i in columns:
         if config["print_scatter"]:
@@ -209,7 +210,27 @@ def main():
         error_plot()
     # plot_3d(input_dict[_filter], input_dict[_depth], y, af)
     if config["use_decicion_tree"]:
-        decicion_tree(X, y, columns=list(columns.to_numpy()))
+        None
+        #decicion_tree(X, y, columns=list(columns.to_numpy()))
+
+
+def normalize_0_to_1(x):
+    return (x - min(x)) / (max(x) - min(x))
+
+
+def do_linear_regression(config, x_df, y, name):
+    print("====================")
+    print()
+    print(name)
+    columns = x_df.keys()
+    X, input_dict = get_numppy_arrays(x_df)
+    linear_regression_model = linear_regression(X, y)
+    poly_features, plynomial_regression_model = poly_reg(X, y, config["p"])
+    poly_features3, plynomial_regression_model3 = poly_reg(X, y, 3)
+    print(linear_regression_model.summary(yname="robustness", xname=list(pd.Index(["bias"]).append(columns))))
+    #print(plynomial_regression_model.summary(yname="robustness", xname=poly_features.get_feature_names(x_df.columns)))
+    #print(plynomial_regression_model3.summary(yname="robustness", xname=poly_features3.get_feature_names(x_df.columns)))
+    return X, columns, input_dict
 
 
 main()
