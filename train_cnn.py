@@ -80,6 +80,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
         patience = 50
     elif data.dataset == "mnist":
         min_delta = 0.01
+        patience = 10
 
     # compile the Keras model, given the specified loss and optimizer
 
@@ -111,7 +112,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                                       callbacks=[early_stopping],
                                       verbose=1,
                                       max_queue_size=batch_size * 2,
-                                      workers=16,
+                                      workers=24,
                                       use_multiprocessing=True)
         best_epoc = len(history.history['loss']) - 1 - early_stopping.wait
 
