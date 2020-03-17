@@ -111,7 +111,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                             callbacks=[early_stopping],
                             verbose=1,
                             max_queue_size=batch_size*2)
-        best_epoc = len(history.history['loss']) - early_stopping.wait
+        best_epoc = len(history.history['loss']) - 1 - early_stopping.wait
 
     else:
         history = model.fit(data.train_data, data.train_labels,
@@ -120,7 +120,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                             epochs=num_epochs,
                             shuffle=True,
                             verbose=0)
-        best_epoc = len(history.history['loss'])
+        best_epoc = len(history.history['loss']) - 1
     time_taken = (time.time() - start_time)
 
     # run training with given dataset, and print progress
