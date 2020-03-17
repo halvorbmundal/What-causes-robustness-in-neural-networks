@@ -15,7 +15,6 @@ import csv
 import os.path
 from Attacks.cw_attack import cw_attack
 import time as timer
-import tensorflow as tf
 from datasets.setup_mnist import MNIST
 from enum import Enum
 import logging
@@ -25,8 +24,6 @@ import gc
 import time
 import os
 from numba import cuda
-
-tf.get_logger().setLevel('WARNING')
 
 
 class NnArchitecture(Enum):
@@ -107,11 +104,11 @@ def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
         write_lock.release()
 
 
-def fn(correct, predicted):
+def fn(correct, predicted, tf):
     return tf.nn.softmax_cross_entropy_with_logits(labels=correct, logits=predicted)
 
 
-def setDynamicGPUAllocation():
+def setDynamicGPUAllocation(tf):
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
     config.log_device_placement = False  # to log device placement (on which device the operation ran)
@@ -121,8 +118,8 @@ def setDynamicGPUAllocation():
 
 
 def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
-                           use_early_stopping, batch_size, dataset_data):
-    train_cnn(dataset_data,
+                           use_early_stopping, batch_size, _dataset_data):
+    train_cnn(_dataset_data,
               file_name=file_name,
               filters=filters,
               kernels=kernels,
@@ -134,13 +131,13 @@ def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, b
               use_early_stopping=use_early_stopping)
 
 
-def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function, dataset_data):
-    avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, dataset_data, core=use_cnnc_core,
+def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function, _dataset_data):
+    avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, _dataset_data, core=use_cnnc_core,
                                           activation=activation_function)
     return avg_lower_bound
 
 
-def get_upper_bound(file_name, l_norm, num_image):
+def get_upper_bound(file_name, l_norm, num_image, tf):
     sess = tf.keras.backend.get_session()
     tf.keras.backend.set_session(sess)
     upper_bound, time_taken = cw_attack(file_name, l_norm, sess, num_image=num_image)
@@ -184,7 +181,7 @@ def file_exists(file, use_cache=True):
         return os.path.exists(file)
 
 
-def get_tf_activation_function_from_string(activation_function_string):
+def get_tf_activation_function_from_string(activation_function_string, tf):
     if activation_function_string == "sigmoid":
         return tf.math.sigmoid
     if activation_function_string == "ada":
@@ -195,19 +192,13 @@ def get_tf_activation_function_from_string(activation_function_string):
         return tf.math.atan
 
 
-def calculate_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function_string, dataset_data):
+def calculate_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function_string, _dataset_data):
     return get_lower_bound(file_name,
                            num_image,
                            l_norm,
                            use_cnnc_core,
                            activation_function_string,
-                           dataset_data)
-
-
-def reset_keras():
-    sess = tf.compat.v1.keras.backend.get_session()
-    tf.compat.v1.keras.backend.clear_session()
-    sess.close()
+                           _dataset_data)
 
     """
     try:
@@ -218,7 +209,7 @@ def reset_keras():
     print("clear gc", gc.collect())  # if it's done something you should see a number being outputted
 
 
-def get_dynamic_keras_config():
+def get_dynamic_keras_config(tf):
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
     config.log_device_placement = False  # to log device placement (on which device the operation ran)
@@ -226,12 +217,13 @@ def get_dynamic_keras_config():
 
 
 def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
-             use_early_stopping, batch_size, dataset_data):
+             use_early_stopping, batch_size, _dataset_data, tf):
+
     try:
         # reset_cuda()
         print(datetime.now())
         print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
-        sess = tf.Session(config=get_dynamic_keras_config())
+        sess = tf.Session(config=get_dynamic_keras_config(tf))
         with sess.as_default():
             train_and_save_network(file_name,
                                    filters,
@@ -242,7 +234,7 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
                                    use_padding_same,
                                    use_early_stopping,
                                    batch_size,
-                                   dataset_data=dataset_data)
+                                   _dataset_data=_dataset_data)
         # reset_cuda()
         gc.collect()
         sess.close()
@@ -265,12 +257,12 @@ def reset_cuda():
         print("Could not reset cuda: ", traceback.format_exc())
 
 
-def tf_reset():
-    tf.reset_default_graph()
-
-
 def gpu_calculations(parameters):
+    import tensorflow as tf
     try:
+        parameters.tf_activation = get_tf_activation_function_from_string(
+            parameters.activation_function_string, tf)
+
         if not file_exists(parameters.file_name):
             train_nn(parameters,
                      parameters.file_name,
@@ -282,7 +274,8 @@ def gpu_calculations(parameters):
                      parameters.use_padding_same,
                      parameters.use_early_stopping,
                      parameters.batch_size,
-                     dataset_data)
+                     dataset_data,
+                     tf)
             print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
         else:
             print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
@@ -309,9 +302,13 @@ def get_accuracy_of_nn_from_csv(csv_file, file_name):
 
 
 def multithreadded_calculations(parameters):
+    import tensorflow as tf
     semaphore.acquire()
     try:
         print(f"\nCalculating robustness of {parameter_string(parameters)}\n", flush=True)
+
+        parameters.tf_activation = get_tf_activation_function_from_string(
+            parameters.activation_function_string, tf)
 
         if not file_exists(parameters.file_name, use_cache=False):
             print("File does not exist {}".format(parameters.file_name), flush=True)
@@ -390,14 +387,13 @@ def pool_init(l1, l2, sema, data):
 
 def parameter_string(parameters):
     return "depth={} filter_size={} kernel_size={} ac={} es={} pad={} cnnc={}" \
-        .format(
-        parameters.depth,
-        parameters.filter_size,
-        parameters.kernel_size,
-        parameters.activation_function_string,
-        parameters.use_early_stopping,
-        parameters.use_padding_same,
-        parameters.use_cnnc_core)
+        .format(parameters.depth,
+                parameters.filter_size,
+                parameters.kernel_size,
+                parameters.activation_function_string,
+                parameters.use_early_stopping,
+                parameters.use_padding_same,
+                parameters.use_cnnc_core)
 
 
 def print_parameters(parameters):
@@ -453,8 +449,6 @@ def main():
 
     if not debugging:
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-        tf.get_logger().setLevel('ERROR')
-        tf.logging.set_verbosity(tf.logging.ERROR)
 
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
 
@@ -463,7 +457,7 @@ def main():
         print(f"gpu: {gpu}")
         print(f"path: {path}/")
 
-    max_processes = 22
+    max_processes = 24
     if multiprocessing.cpu_count() > max_processes:
         processes = max_processes
     else:
@@ -476,7 +470,7 @@ def main():
     sema = multiprocessing.Semaphore(processes)
 
     cpu_pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
-    #gpu_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
+    # gpu_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
 
     pool_init(l1, l2, sema, data)
 
@@ -514,8 +508,6 @@ def main():
                                     continue
 
                                 parameters = CnnTestParameters()
-                                parameters.tf_activation = get_tf_activation_function_from_string(
-                                    activation_function_string)
                                 parameters.activation_function_string = activation_function_string
                                 parameters.depth = depth
                                 parameters.kernel_size = kernel_size
@@ -550,9 +542,9 @@ def main():
                                         cpu_pool.apply_async(multithreadded_calculations, (parameters,))
 
     print("Waiting for processes to finish")
-    #gpu_pool.close()
+    # gpu_pool.close()
     cpu_pool.close()
-    #gpu_pool.join()
+    # gpu_pool.join()
     cpu_pool.join()
     print("program finished")
 
