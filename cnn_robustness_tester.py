@@ -482,7 +482,7 @@ def main():
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
-    if dataset == "tinyImagenet" or "cifar100":
+    if dataset == "tinyImagenet" or dataset == "cifar100":
         reduction = 4
         filter_size_range = range(4 * reduction, 128, 4 * reduction)
         depth_range = range(1, 12, 1 * reduction)
@@ -497,7 +497,7 @@ def main():
     elif dataset == "tinyImagenet":
         bn_choices = [True]
     elif dataset == "mnist":
-        bn_choices = [True]
+        bn_choices = [True, False]
         kernel_size_range = [5]
     else:
         bn_choices = [True, False]
