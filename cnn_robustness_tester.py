@@ -223,20 +223,17 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
         # reset_cuda()
         print(datetime.now())
         print(f"\ntraining with {parameter_string(parameters)}\n", flush=True)
-        sess = tf.Session(config=get_dynamic_keras_config(tf))
-        with sess.as_default():
-            train_and_save_network(file_name,
-                                   filters,
-                                   kernels,
-                                   epochs,
-                                   tf_activation,
-                                   batch_normalization,
-                                   use_padding_same,
-                                   use_early_stopping,
-                                   batch_size,
-                                   _dataset_data=_dataset_data)
+        train_and_save_network(file_name,
+                               filters,
+                               kernels,
+                               epochs,
+                               tf_activation,
+                               batch_normalization,
+                               use_padding_same,
+                               use_early_stopping,
+                               batch_size,
+                               _dataset_data=_dataset_data)
         # reset_cuda()
-        sess.close()
         gc.collect()
     except Exception as e:
         print("Error: An exeption occured while training network", e)
@@ -541,6 +538,7 @@ def main():
                                         gpu_process.start()
                                         print("gpu_prosess startet")
                                         gpu_process.join()
+                                        gc.collect()
                                         print("gpu_prosess joinet", flush=True)
                                     if parameters.use_cpu:
                                         keras_lock.acquire()

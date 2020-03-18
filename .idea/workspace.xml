@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d5cef5c9-828a-45b9-b66e-d5943f64af0c" name="Default" comment="Remove tf from main thread">
+    <list default="true" id="d5cef5c9-828a-45b9-b66e-d5943f64af0c" name="Default" comment="exit process">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cnn_robustness_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/cnn_robustness_tester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_cnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_cnn.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,21 +218,7 @@
       <workItem from="1583834925572" duration="11511000" />
       <workItem from="1583849968539" duration="5620000" />
       <workItem from="1583861194708" duration="63778000" />
-      <workItem from="1584452766812" duration="15325000" />
-    </task>
-    <task id="LOCAL-00043" summary="Datagen">
-      <created>1584026542191</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1584026542191</updated>
-    </task>
-    <task id="LOCAL-00044" summary="Add">
-      <created>1584026697782</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1584026697782</updated>
+      <workItem from="1584452766812" duration="16868000" />
     </task>
     <task id="LOCAL-00045" summary="hmmm">
       <created>1584036186723</created>
@@ -562,7 +549,21 @@
       <option name="project" value="LOCAL" />
       <updated>1584485591277</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="exit process">
+      <created>1584487524787</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1584487524787</updated>
+    </task>
+    <task id="LOCAL-00093" summary="8 tasks">
+      <created>1584487595409</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1584487595410</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <servers />
   </component>
   <component name="TodoView">
@@ -578,8 +579,6 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Remove debugging" />
-    <MESSAGE value="make dataset global" />
     <MESSAGE value="remove prints" />
     <MESSAGE value="squeueme" />
     <MESSAGE value="fjsdkahfkslaπ" />
@@ -603,7 +602,9 @@
     <MESSAGE value="Set workers to 24π" />
     <MESSAGE value="fjkdsalj" />
     <MESSAGE value="Remove tf from main thread" />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove tf from main thread" />
+    <MESSAGE value="exit process" />
+    <MESSAGE value="8 tasks" />
+    <option name="LAST_COMMIT_MESSAGE" value="8 tasks" />
   </component>
   <component name="WindowStateProjectService">
     <state x="300" y="-1043" key="#Inspections" timestamp="1583332314180">
@@ -620,38 +621,38 @@
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="427" y="-899" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583760228994" />
-    <state x="-300" y="-1382" width="1676" height="1029" key="CommitChangelistDialog2" timestamp="1584485591148">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2" timestamp="1584487595275">
+      <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584366142806" />
+    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584487595275" />
     <state x="-300" y="-1382" width="2013" height="1280" key="CommitChangelistDialog2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584485591148" />
     <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2/0.23.1680.940@0.23.1680.940" timestamp="1583922676651" />
     <state x="34" y="-1129" key="DiffContextDialog" timestamp="1583760372078">
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="34" y="-1129" key="DiffContextDialog/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583760372078" />
-    <state width="2032" height="547" key="GridCell.Tab.0.bottom" timestamp="1584487464264">
+    <state width="2032" height="547" key="GridCell.Tab.0.bottom" timestamp="1584489167109">
       <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state width="2032" height="547" key="GridCell.Tab.0.bottom/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584487464264" />
+    <state width="2032" height="547" key="GridCell.Tab.0.bottom/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584489167109" />
     <state width="2032" height="547" key="GridCell.Tab.0.bottom/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584482315508" />
     <state width="1638" height="216" key="GridCell.Tab.0.bottom/0.23.1680.940@0.23.1680.940" timestamp="1583923686485" />
-    <state width="2032" height="547" key="GridCell.Tab.0.center" timestamp="1584487464263">
+    <state width="2032" height="547" key="GridCell.Tab.0.center" timestamp="1584489167106">
       <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state width="2032" height="547" key="GridCell.Tab.0.center/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584487464263" />
+    <state width="2032" height="547" key="GridCell.Tab.0.center/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584489167106" />
     <state width="2032" height="547" key="GridCell.Tab.0.center/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584482315507" />
     <state width="1638" height="216" key="GridCell.Tab.0.center/0.23.1680.940@0.23.1680.940" timestamp="1583923686484" />
-    <state width="2032" height="547" key="GridCell.Tab.0.left" timestamp="1584487464262">
+    <state width="2032" height="547" key="GridCell.Tab.0.left" timestamp="1584489167105">
       <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state width="2032" height="547" key="GridCell.Tab.0.left/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584487464262" />
+    <state width="2032" height="547" key="GridCell.Tab.0.left/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584489167105" />
     <state width="2032" height="547" key="GridCell.Tab.0.left/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584482315507" />
     <state width="1638" height="216" key="GridCell.Tab.0.left/0.23.1680.940@0.23.1680.940" timestamp="1583923686484" />
-    <state width="2032" height="547" key="GridCell.Tab.0.right" timestamp="1584487464263">
+    <state width="2032" height="547" key="GridCell.Tab.0.right" timestamp="1584489167109">
       <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state width="2032" height="547" key="GridCell.Tab.0.right/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584487464263" />
+    <state width="2032" height="547" key="GridCell.Tab.0.right/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584489167109" />
     <state width="2032" height="547" key="GridCell.Tab.0.right/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584482315508" />
     <state width="1638" height="216" key="GridCell.Tab.0.right/0.23.1680.940@0.23.1680.940" timestamp="1583923686484" />
     <state x="516" y="-827" key="ReplaceDuplicatesPrompt" timestamp="1584266876966">
@@ -667,10 +668,10 @@
     </state>
     <state x="209" y="-1091" key="SettingsEditor/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584308208430" />
     <state x="209" y="-1070" key="SettingsEditor/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584467502933" />
-    <state x="300" y="-969" key="Vcs.Push.Dialog.v2" timestamp="1584485591874">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state x="300" y="-997" key="Vcs.Push.Dialog.v2" timestamp="1584487597955">
+      <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state x="300" y="-997" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584366144787" />
+    <state x="300" y="-997" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584487597955" />
     <state x="300" y="-969" key="Vcs.Push.Dialog.v2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584485591874" />
     <state x="578" y="320" key="Vcs.Push.Dialog.v2/0.23.1680.940@0.23.1680.940" timestamp="1583922679031" />
   </component>
@@ -697,7 +698,7 @@
     <SUITE FILE_PATH="coverage/CNN_Cert$setup_calTech_101_silhouettes.coverage" NAME="setup_calTech_101_silhouettes Coverage Results" MODIFIED="1584359795511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
     <SUITE FILE_PATH="coverage/CNN_Cert$setup_cifar.coverage" NAME="setup_cifar Coverage Results" MODIFIED="1584451064912" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
     <SUITE FILE_PATH="coverage/CNN_Cert$cnn_bounds_full.coverage" NAME="cnn_bounds_full Coverage Results" MODIFIED="1583877322246" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CNN_Cert$cnn_robustness_tester.coverage" NAME="cnn_robustness_tester Coverage Results" MODIFIED="1584487464237" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$cnn_robustness_tester.coverage" NAME="cnn_robustness_tester Coverage Results" MODIFIED="1584489167092" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CNN_Cert$statistics_old.coverage" NAME="statistics_old Coverage Results" MODIFIED="1584451486649" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/remote" />
   </component>
 </project>
