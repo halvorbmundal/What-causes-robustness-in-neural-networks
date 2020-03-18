@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d5cef5c9-828a-45b9-b66e-d5943f64af0c" name="Default" comment="exit process">
+    <list default="true" id="d5cef5c9-828a-45b9-b66e-d5943f64af0c" name="Default" comment="move session. Add gc collect">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cnn_robustness_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/cnn_robustness_tester.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train_cnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_cnn.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -218,14 +217,7 @@
       <workItem from="1583834925572" duration="11511000" />
       <workItem from="1583849968539" duration="5620000" />
       <workItem from="1583861194708" duration="63778000" />
-      <workItem from="1584452766812" duration="16868000" />
-    </task>
-    <task id="LOCAL-00045" summary="hmmm">
-      <created>1584036186723</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1584036186723</updated>
+      <workItem from="1584452766812" duration="17265000" />
     </task>
     <task id="LOCAL-00046" summary="Add">
       <created>1584042008300</created>
@@ -563,7 +555,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584487595410</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <task id="LOCAL-00094" summary="move session. Add gc collect">
+      <created>1584489618866</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1584489618867</updated>
+    </task>
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="TodoView">
@@ -579,7 +578,6 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="remove prints" />
     <MESSAGE value="squeueme" />
     <MESSAGE value="fjsdkahfkslaπ" />
     <MESSAGE value="squeuemefdasfasd" />
@@ -604,7 +602,8 @@
     <MESSAGE value="Remove tf from main thread" />
     <MESSAGE value="exit process" />
     <MESSAGE value="8 tasks" />
-    <option name="LAST_COMMIT_MESSAGE" value="8 tasks" />
+    <MESSAGE value="move session. Add gc collect" />
+    <option name="LAST_COMMIT_MESSAGE" value="move session. Add gc collect" />
   </component>
   <component name="WindowStateProjectService">
     <state x="300" y="-1043" key="#Inspections" timestamp="1583332314180">
@@ -621,10 +620,10 @@
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="427" y="-899" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583760228994" />
-    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2" timestamp="1584487595275">
+    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2" timestamp="1584489618085">
       <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584487595275" />
+    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584489618085" />
     <state x="-300" y="-1382" width="2013" height="1280" key="CommitChangelistDialog2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584485591148" />
     <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2/0.23.1680.940@0.23.1680.940" timestamp="1583922676651" />
     <state x="34" y="-1129" key="DiffContextDialog" timestamp="1583760372078">
@@ -668,10 +667,10 @@
     </state>
     <state x="209" y="-1091" key="SettingsEditor/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584308208430" />
     <state x="209" y="-1070" key="SettingsEditor/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584467502933" />
-    <state x="300" y="-997" key="Vcs.Push.Dialog.v2" timestamp="1584487597955">
+    <state x="300" y="-997" key="Vcs.Push.Dialog.v2" timestamp="1584489621088">
       <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state x="300" y="-997" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584487597955" />
+    <state x="300" y="-997" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584489621088" />
     <state x="300" y="-969" key="Vcs.Push.Dialog.v2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584485591874" />
     <state x="578" y="320" key="Vcs.Push.Dialog.v2/0.23.1680.940@0.23.1680.940" timestamp="1583922679031" />
   </component>
