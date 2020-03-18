@@ -280,8 +280,8 @@ def gpu_calculations(parameters, is_sub_process=False):
     finally:
         keras_lock.release()
         print("lock released", flush=True)
-        #if is_sub_process:
-        #    sys.exit(0)
+        if is_sub_process:
+            sys.exit(0)
 
 
 def get_accuracy_of_nn_from_csv(csv_file, file_name):
@@ -458,7 +458,7 @@ def main():
         print(f"gpu: {gpu}")
         print(f"path: {path}/")
 
-    max_processes = 8
+    max_processes = 24
     if multiprocessing.cpu_count() > max_processes:
         processes = max_processes
     else:
@@ -537,7 +537,7 @@ def main():
                                         gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters, True))
                                         gpu_process.start()
                                         print("gpu_prosess startet")
-                                        gpu_process.join(600)
+                                        gpu_process.join()
                                         gc.collect()
                                         print("gpu_prosess joinet", flush=True)
                                     if parameters.use_cpu:
