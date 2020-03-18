@@ -131,9 +131,12 @@ def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, b
               use_early_stopping=use_early_stopping)
 
 
-def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function, _dataset_data):
-    avg_lower_bound, total_time = run_cnn(file_name, num_image, l_norm, _dataset_data, core=use_cnnc_core,
-                                          activation=activation_function)
+def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function_string, _dataset_data):
+    avg_lower_bound, total_time = run_cnn(file_name,
+                                          num_image,
+                                          l_norm,
+                                          core=use_cnnc_core,
+                                          activation=activation_function_string)
     return avg_lower_bound
 
 
