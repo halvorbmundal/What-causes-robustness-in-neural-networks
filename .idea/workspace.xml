@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d5cef5c9-828a-45b9-b66e-d5943f64af0c" name="Default" comment="Reduce queuesize.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/idun/gpujob.slurm" beforeDir="false" afterPath="$PROJECT_DIR$/idun/gpujob.slurm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cnn_robustness_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/cnn_robustness_tester.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,21 +217,7 @@
       <workItem from="1583834925572" duration="11511000" />
       <workItem from="1583849968539" duration="5620000" />
       <workItem from="1583861194708" duration="63778000" />
-      <workItem from="1584452766812" duration="17779000" />
-    </task>
-    <task id="LOCAL-00047" summary="Add">
-      <created>1584045254235</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1584045254235</updated>
-    </task>
-    <task id="LOCAL-00048" summary="Add multi gpu support">
-      <created>1584047457733</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1584047457733</updated>
+      <workItem from="1584452766812" duration="18077000" />
     </task>
     <task id="LOCAL-00049" summary="Add print">
       <created>1584049332904</created>
@@ -562,7 +548,21 @@
       <option name="project" value="LOCAL" />
       <updated>1584490236847</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="Reduce queuesize.">
+      <created>1584490816885</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1584490816885</updated>
+    </task>
+    <task id="LOCAL-00097" summary="8 cpuer">
+      <created>1584491061348</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1584491061348</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="TodoView">
@@ -578,7 +578,6 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fjsdkahfkslaπ" />
     <MESSAGE value="squeuemefdasfasd" />
     <MESSAGE value="remove requiruments" />
     <MESSAGE value="ffs" />
@@ -603,7 +602,8 @@
     <MESSAGE value="8 tasks" />
     <MESSAGE value="move session. Add gc collect" />
     <MESSAGE value="Reduce queuesize." />
-    <option name="LAST_COMMIT_MESSAGE" value="Reduce queuesize." />
+    <MESSAGE value="8 cpuer" />
+    <option name="LAST_COMMIT_MESSAGE" value="8 cpuer" />
   </component>
   <component name="WindowStateProjectService">
     <state x="300" y="-1043" key="#Inspections" timestamp="1583332314180">
@@ -620,10 +620,10 @@
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="427" y="-899" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583760228994" />
-    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2" timestamp="1584490236686">
+    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2" timestamp="1584491061224">
       <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584490236686" />
+    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584491061224" />
     <state x="-300" y="-1382" width="2013" height="1280" key="CommitChangelistDialog2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584485591148" />
     <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2/0.23.1680.940@0.23.1680.940" timestamp="1583922676651" />
     <state x="34" y="-1129" key="DiffContextDialog" timestamp="1583760372078">
@@ -667,10 +667,10 @@
     </state>
     <state x="209" y="-1091" key="SettingsEditor/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584308208430" />
     <state x="209" y="-1070" key="SettingsEditor/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584467502933" />
-    <state x="300" y="-997" key="Vcs.Push.Dialog.v2" timestamp="1584490238805">
+    <state x="300" y="-997" key="Vcs.Push.Dialog.v2" timestamp="1584491061641">
       <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state x="300" y="-997" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584490238805" />
+    <state x="300" y="-997" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584491061641" />
     <state x="300" y="-969" key="Vcs.Push.Dialog.v2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584485591874" />
     <state x="578" y="320" key="Vcs.Push.Dialog.v2/0.23.1680.940@0.23.1680.940" timestamp="1583922679031" />
   </component>
