@@ -458,7 +458,7 @@ def main():
         print(f"gpu: {gpu}")
         print(f"path: {path}/")
 
-    max_processes = 24
+    max_processes = 8
     if multiprocessing.cpu_count() > max_processes:
         processes = max_processes
     else:
