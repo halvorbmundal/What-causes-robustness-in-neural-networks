@@ -10,9 +10,9 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
 from numba import njit, jit
 import numpy as np
 
-from setup_mnist import MNIST
-from setup_cifar import CIFAR
-from setup_tinyimagenet import tinyImagenet
+from datasets.setup_mnist import MNIST
+from datasets.setup_cifar import CIFAR
+from datasets.setup_tinyimagenet import TinyImagenet as tinyImagenet
 from cnn_bounds_full_core import pool, conv, conv_bound, conv_full, conv_bound_full, pool_linear_bounds
 
 from tensorflow.contrib.keras.api.keras.models import Sequential
