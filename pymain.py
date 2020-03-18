@@ -1,15 +1,13 @@
 """
 pymain.py
-
 Main CNN-Cert interfacing file
-
 Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
                     Lily Weng  <twweng@mit.edu>
                     Pin-Yu Chen <Pin-Yu.Chen@ibm.com>
                     Sijia Liu <Sijia.Liu@ibm.com>
                     Luca Daniel <dluca@mit.edu>
 """
-import subprocess 
+import subprocess
 import numpy as np
 from cnn_bounds_full import run as run_cnn_full
 from cnn_bounds_full_core import run as run_cnn_full_core
@@ -25,7 +23,7 @@ timestr = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d_%H%M%S')
 #Prints to log file
 def printlog(s):
     print(s, file=open("log_pymain_"+timestr+".txt", "a"))
-    
+
 #Runs command line command
 def command(cmd):
     return subprocess.run(cmd, stdout=subprocess.PIPE, shell=True).stdout.decode('utf-8')
@@ -66,9 +64,8 @@ def run(hidden, numlayer, numimage, norm, filename = '', layers = None, lp=False
     return float(LB), float(time)
 
 #Runs CNN-Cert with specified parameters
-def run_cnn(file_name, n_samples, norm, data_set_class, core=True, activation='relu', cifar=False, tinyimagenet=False):
+def run_cnn(file_name, n_samples, norm, core=True, activation='relu', cifar=False, tinyimagenet=False):
     if core:
-        raise ValueError("Using core")
         if norm == 'i':
             #run_cnn_full_core(file_name, n_samples, 105, 1, activation, cifar, tinyimagenet)
             return run_cnn_full_core(file_name, n_samples, 105, 1, activation, cifar, tinyimagenet)
@@ -78,11 +75,11 @@ def run_cnn(file_name, n_samples, norm, data_set_class, core=True, activation='r
             return run_cnn_full_core(file_name, n_samples, 1, 105, activation, cifar, tinyimagenet)
     else:
         if norm == 'i':
-            return run_cnn_full(file_name, n_samples, 105, 1, data_set_class, activation)
+            return run_cnn_full(file_name, n_samples, 105, 1, activation, cifar, tinyimagenet)
         elif norm == '2':
-            return run_cnn_full(file_name, n_samples, 2, 2, data_set_class, activation)
+            return run_cnn_full(file_name, n_samples, 2, 2, activation, cifar, tinyimagenet)
         if norm == '1':
-            return run_cnn_full(file_name, n_samples, 1, 105, data_set_class, activation)
+            return run_cnn_full(file_name, n_samples, 1, 105, activation, cifar, tinyimagenet)
 
 #Runs all Fast-Lin and CNN-Cert variations
 def run_all_relu(layers, file_name, mlp_file_name, cifar = False, num_image=10, flfull = False, nonada = False):
@@ -170,7 +167,7 @@ def run_all_general(file_name, num_image = 10, core=True, cifar=False, ada=True,
     for norm in ['i', '2', '1']:
         LBss = []
         timess = []
-        LB, time = run_cnn(file_name, num_image, norm, core=core, activation = 'relu', cifar= cifar)  
+        LB, time = run_cnn(file_name, num_image, norm, core=core, activation = 'relu', cifar= cifar)
         printlog("CNN-Cert-relu")
         if filters:
             printlog("model name = {0}, numlayer = {1}, numimage = {2}, norm = {3}, targettype = random, filters = {4}, kernel size = {5}".format(file_name,nlayer,num_image,norm,filters,kernel_size))
@@ -251,7 +248,7 @@ def run_LP(layers, mlp_file_name, num_image=10, core=True, cifar=False):
         times.append(timess)
     return LBs, times
 
-"""
+
 from CLEVER.collect_gradients import collect_gradients
 def run_CLEVER(file_name, num_image = 10, cifar=False, tinyimagenet=False):
     if len(file_name.split('_')) == 5:
@@ -260,7 +257,7 @@ def run_CLEVER(file_name, num_image = 10, cifar=False, tinyimagenet=False):
         kernel_size = file_name.split('_')[-1]
     else:
         filters = None
-    
+
     dataset = 'mnist'
     if cifar:
         dataset = 'cifar'
@@ -285,7 +282,7 @@ def run_CLEVER(file_name, num_image = 10, cifar=False, tinyimagenet=False):
         timess.append(time)
         LBs.append(LBss)
         times.append(timess)
-    return LBs, times"""
+    return LBs, times
 
 #Runs global Lips bound
 def run_global(file_name, num_layers, num_image=10, cifar=False, tinyimagenet=False):
@@ -364,7 +361,7 @@ if __name__ == '__main__':
         LBs, times = run_CLEVER('models/mnist_cnn_4layer_20_3')
         LB.append(LBs)
         time.append(times)
-    
+
     if table == 3 or table == 4:
         #Table 3+4
         LBs, times = run_all_relu([3380, 2880, 2420], 'models/mnist_cnn_4layer_5_3', 'models/mnist_cnn_as_mlp_4layer_5_3', flfull=True)
@@ -438,13 +435,13 @@ if __name__ == '__main__':
         time.append(times)
     if table == 8:
         #Table 8
-        LBs, times = run_all_relu([20], 'models/mnist_2layer_fc_20', 'models/mnist_2layer_fc_20', flfull=True)        
+        LBs, times = run_all_relu([20], 'models/mnist_2layer_fc_20', 'models/mnist_2layer_fc_20', flfull=True)
         LB.append(LBs)
         time.append(times)
         LBs, times = run_LP([20], 'models/mnist_2layer_fc_20')
         LB.append(LBs)
         time.append(times)
-        LBs, times = run_all_relu([20,20], 'models/mnist_3layer_fc_20', 'models/mnist_3layer_fc_20', flfull=True)  
+        LBs, times = run_all_relu([20,20], 'models/mnist_3layer_fc_20', 'models/mnist_3layer_fc_20', flfull=True)
         LB.append(LBs)
         time.append(times)
         LBs, times = run_LP([20,20], 'models/mnist_3layer_fc_20')
