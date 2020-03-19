@@ -47,21 +47,21 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     with sess.as_default():
         model = Sequential()
         if use_padding_same:
-            model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:], padding="same"))
+            model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:], padding="same", activation=activation))
         else:
-            model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:]))
+            model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:], activation=activation))
         if bn:
             apply_bn(data, model)
-        model.add(Activation(activation))
+        #model.add(Activation(activation))
         # model.add(Lambda(activation))
         for f, k in zip(filters[1:], kernels[1:]):
             if use_padding_same:
-                model.add(Conv2D(f, k, padding="same"))
+                model.add(Conv2D(f, k, padding="same", activation=activation))
             else:
-                model.add(Conv2D(f, k))
+                model.add(Conv2D(f, k, activation=activation))
             if bn:
                 apply_bn(data, model)
-            model.add(Activation(activation))
+            #model.add(Activation(activation))
             # ReLU activation
             # model.add(Lambda(activation))
         # the output layer, with 10 classes
@@ -79,11 +79,11 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
 
         patience = 30
         min_delta = 0
-        sgd = Adam()
+        optimizer = Adam()
         if data.dataset == "cifar100":
             patience = 50
         elif data.dataset == "GTSRB":
-            sgd = Adam(lr=0.0005)
+            optimizer = Adam(lr=0.0005)
         elif data.dataset == "caltech_siluettes":
             patience = 50
         elif data.dataset == "mnist":
@@ -99,7 +99,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
             model = tf.keras.utils.multi_gpu_model(model, gpus=len(devices))
 
         model.compile(loss=fn,
-                      optimizer=sgd,
+                      optimizer=optimizer,
                       metrics=['accuracy'])
 
         model.summary()
@@ -122,7 +122,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                                           max_queue_size=batch_size,
                                           workers=8,
                                           use_multiprocessing=True)
-            best_epoc = len(history.history['loss']) - 1 - early_stopping.wait
+            best_epoc = len(history.history['loss']) - early_stopping.wait
 
         else:
             history = model.fit(data.train_data, data.train_labels,
@@ -131,7 +131,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                                 epochs=num_epochs,
                                 shuffle=True,
                                 verbose=1)
-            best_epoc = len(history.history['loss']) - 1
+            best_epoc = len(history.history['loss'])
         time_taken = (time.time() - start_time)
 
         # run training with given dataset, and print progress
@@ -146,7 +146,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(
                 [num_ephocs_trained, best_epoc, round(time_taken, 1), round(float(time_taken) / float(num_ephocs_trained), 1),
-                 history.history["val_acc"][best_epoc], file_name])
+                 history.history["val_acc"][best_epoc - 1], file_name])
 
         print("saving - ", file_name)
         # save model to a file
