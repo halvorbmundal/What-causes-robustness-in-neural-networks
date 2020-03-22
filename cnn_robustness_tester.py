@@ -4,6 +4,8 @@ import traceback
 from datasets.setup_GTSRB import GTSRB
 from datasets.setup_calTech_101_silhouettes import CaltechSiluettes
 from datasets.setup_cifar100 import CIFAR100
+from datasets.setup_dogs_and_cats import DogsAndCats
+from datasets.setup_sign_language import SignLanguage
 
 _b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode('latin1'))
 
@@ -135,6 +137,7 @@ def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_func
     avg_lower_bound, total_time = run_cnn(file_name,
                                           num_image,
                                           l_norm,
+                                          _dataset_data,
                                           core=use_cnnc_core,
                                           activation=activation_function_string)
     return avg_lower_bound
@@ -427,6 +430,10 @@ def get_data(dataset):
         data = GTSRB()
     elif dataset == "cifar100":
         data = CIFAR100()
+    elif dataset == "dogs-and-cats":
+        data = DogsAndCats()
+    elif dataset == "sign-language":
+        data = SignLanguage()
     else:
         raise NameError(f"{dataset} is not a valid dataset")
     return data
@@ -455,6 +462,7 @@ def main():
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
     print("You have {} cores at your disposal.".format(multiprocessing.cpu_count()))
+    print(f"The path is {path}")
 
     if debugging:
         print(f"cpu: {cpu}")
@@ -495,19 +503,17 @@ def main():
     elif dataset == "tinyImagenet":
         bn_choices = [True]
     elif dataset == "mnist":
-        bn_choices = [True, False]
-        kernel_size_range = [5]
+        bn_choices = [False, True]
     else:
         bn_choices = [True, False]
 
-    for activation_function_string in ["ada"]:
-        for kernel_size in kernel_size_range:
-            for filter_size in filter_size_range:
+    for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
+        for use_padding_same in [False, True]:
+            for use_early_stopping in [True, False]:
                 for has_batch_normalization in bn_choices:
-                    for depth in depth_range:
-                        for use_early_stopping in [False]:
-                            for use_padding_same in [True]:
-
+                    for kernel_size in kernel_size_range:
+                        for depth in depth_range:
+                            for filter_size in filter_size_range:
                                 if dataset != "mnist" and not use_early_stopping:
                                     continue
 
