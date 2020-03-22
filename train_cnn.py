@@ -45,32 +45,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     # create a Keras sequential model
     sess = tf.Session(config=get_dynamic_keras_config(tf))
     with sess.as_default():
-        model = Sequential()
-        if use_padding_same:
-            model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:], padding="same", activation=activation))
-        else:
-            model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:], activation=activation))
-        if bn:
-            apply_bn(data, model)
-        #model.add(Activation(activation))
-        # model.add(Lambda(activation))
-        for f, k in zip(filters[1:], kernels[1:]):
-            if use_padding_same:
-                model.add(Conv2D(f, k, padding="same", activation=activation))
-            else:
-                model.add(Conv2D(f, k, activation=activation))
-            if bn:
-                apply_bn(data, model)
-            #model.add(Activation(activation))
-            # ReLU activation
-            # model.add(Lambda(activation))
-        # the output layer, with 10 classes
-        model.add(Flatten())
-        model.add(Dense(data.train_labels.shape[1]))
-
-        # load initial weights when given
-        if init != None:
-            model.load_weights(init)
+        model = create_model(activation, bn, data, filters, init, kernels, use_padding_same)
 
         # define the loss function which is the cross entropy between prediction and true label
         def fn(correct, predicted):
@@ -162,6 +137,35 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     sess.close()
     gc.collect()
     return history
+
+
+def create_model(activation, bn, data, filters, init, kernels, use_padding_same):
+    model = Sequential()
+    if use_padding_same:
+        model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:], padding="same"))
+    else:
+        model.add(Conv2D(filters[0], kernels[0], input_shape=data.train_data.shape[1:]))
+    if bn:
+        apply_bn(data, model)
+    # model.add(Activation(activation))
+    model.add(Lambda(activation))
+    for f, k in zip(filters[1:], kernels[1:]):
+        if use_padding_same:
+            model.add(Conv2D(f, k, padding="same"))
+        else:
+            model.add(Conv2D(f, k))
+        if bn:
+            apply_bn(data, model)
+        # model.add(Activation(activation))
+        # ReLU activation
+        model.add(Lambda(activation))
+    # the output layer, with 10 classes
+    model.add(Flatten())
+    model.add(Dense(data.train_labels.shape[1]))
+    # load initial weights when given
+    if init != None:
+        model.load_weights(init)
+    return model
 
 
 def get_data_augmenter(data):
