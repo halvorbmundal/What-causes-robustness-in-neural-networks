@@ -10,12 +10,8 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
 from numba import njit, jit
 import numpy as np
 
-from datasets.setup_mnist import MNIST
-from datasets.setup_cifar import CIFAR
-from datasets.setup_tinyimagenet import TinyImagenet as tinyImagenet
 from cnn_bounds_full_core import pool, conv, conv_bound, conv_full, conv_bound_full, pool_linear_bounds
 
-from tensorflow.contrib.keras.api.keras.models import Sequential
 from tensorflow.contrib.keras.api.keras.layers import Dense, Dropout, Activation, Flatten, GlobalAveragePooling2D, Lambda
 from tensorflow.contrib.keras.api.keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, InputLayer, BatchNormalization, Reshape
 from tensorflow.contrib.keras.api.keras.models import load_model
@@ -143,7 +139,7 @@ class Model:
                 std = np.sqrt(std**2+0.001) #Avoids zero division
                 a = gamma/std
                 b = -gamma*mean/std+beta
-                self.weights[-1] = a*self.weights[-1]
+                self.weights[-1] = a[:, None, None, None]*self.weights[-1]
                 self.biases[-1] = a*self.biases[-1]+b
             elif type(layer) == Dense:
                 print('FC')
@@ -563,7 +559,7 @@ def find_output_bounds(weights, biases, shapes, pads, strides, sizes, types, x0,
     LBs = [x0-eps]
     UBs = [x0+eps]
     for i in range(1,len(weights)+1):
-        print('Layer ' + str(i))
+        #print('Layer ' + str(i))
         LB, UB = compute_bounds(weights, biases, shapes[i], i, x0, eps, p_n, pads, strides, sizes, types, LBs, UBs)
         UBs.append(UB)
         LBs.append(LB)
@@ -583,17 +579,12 @@ def warmup(model, x, eps_0, p_n, func):
     func(weights, biases, shapes, model.pads, model.strides, model.sizes, model.types, x, eps_0, p_n)
 
 #Main function to compute CNN-Cert bound
-def run(file_name, n_samples, p_n, q_n, activation = 'relu', cifar=False, tinyimagenet=False):
+def run(file_name, n_samples, p_n, q_n, data_set_class, activation = 'relu'):
     np.random.seed(1215)
     tf.set_random_seed(1215)
     random.seed(1215)
-    keras_model = load_model(file_name, custom_objects={'fn':loss, 'ResidualStart':ResidualStart, 'ResidualStart2':ResidualStart2, 'tf':tf})
-    if tinyimagenet:
-        model = Model(keras_model, inp_shape = (64,64,3))
-    elif cifar:
-        model = Model(keras_model, inp_shape = (32,32,3))
-    else:
-        model = Model(keras_model)
+    keras_model = load_model(file_name, custom_objects={'fn':loss, 'ResidualStart':ResidualStart, 'ResidualStart2':ResidualStart2, 'tf':tf, 'atan': tf.math.atan})
+    model = Model(keras_model, inp_shape=data_set_class.inp_shape)
 
     #Set correct linear_bounds function
     global linear_bounds
@@ -608,12 +599,7 @@ def run(file_name, n_samples, p_n, q_n, activation = 'relu', cifar=False, tinyim
     elif activation == 'arctan':
         linear_bounds = atan_linear_bounds
 
-    if cifar:
-        inputs, targets, true_labels, true_ids, img_info = generate_data(CIFAR(), samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.model.predict, start=0)
-    elif tinyimagenet:
-        inputs, targets, true_labels, true_ids, img_info = generate_data(tinyImagenet(), samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.model.predict, start=0)
-    else:
-        inputs, targets, true_labels, true_ids, img_info = generate_data(MNIST(), samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.model.predict, start=0)
+    inputs, targets, true_labels, true_ids, img_info = generate_data(data_set_class, samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.model.predict, start=0)
 
     if len(inputs) == 0:
         return 0, 0
@@ -631,7 +617,7 @@ def run(file_name, n_samples, p_n, q_n, activation = 'relu', cifar=False, tinyim
 
     start_time = time.time()
     for i in range(len(inputs)):
-        print('--- CNN-Cert: Computing eps for input image ' + str(i)+ '---')
+        #print('--- CNN-Cert: Computing eps for input image ' + str(i)+ '---')
         predict_label = np.argmax(true_labels[i])
         target_label = np.argmax(targets[i])
         weights = model.weights[:-1]
@@ -651,7 +637,7 @@ def run(file_name, n_samples, p_n, q_n, activation = 'relu', cifar=False, tinyim
             #print('Step ' + str(j))
             LB, UB = find_output_bounds(weights, biases, shapes, model.pads, model.strides, model.sizes, model.types, inputs[i].astype(np.float32), np.exp(log_eps), p_n)
 
-            print("Step {}, eps = {:.5f}, {:.6s} <= f_c - f_t <= {:.6s}".format(j,np.exp(log_eps),str(np.squeeze(LB)),str(np.squeeze(UB))))
+            #print("Step {}, eps = {:.5f}, {:.6s} <= f_c - f_t <= {:.6s}".format(j,np.exp(log_eps),str(np.squeeze(LB)),str(np.squeeze(UB))))
             if LB > 0: #Increase eps
                 log_eps_min = log_eps
                 log_eps = np.minimum(log_eps+1, (log_eps_max+log_eps_min)/2)
@@ -664,7 +650,7 @@ def run(file_name, n_samples, p_n, q_n, activation = 'relu', cifar=False, tinyim
         else:
             str_p_n = str(p_n)
 
-        print("[L1] method = CNN-Cert-{}, model = {}, image no = {}, true_id = {}, target_label = {}, true_label = {}, norm = {}, robustness = {:.5f}".format(activation,file_name, i, true_ids[i],target_label,predict_label,str_p_n,np.exp(log_eps_min)))
+        #print("[L1] method = CNN-Cert-{}, model = {}, image no = {}, true_id = {}, target_label = {}, true_label = {}, norm = {}, robustness = {:.5f}".format(activation,file_name, i, true_ids[i],target_label,predict_label,str_p_n,np.exp(log_eps_min)))
         summation += np.exp(log_eps_min)
     K.clear_session()
 
