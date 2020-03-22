@@ -53,17 +53,14 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                                                            logits=predicted / train_temp)
 
         patience = 30
-        min_delta = 0
         optimizer = Adam()
+        min_delta = 0
         if data.dataset == "cifar100":
             patience = 50
         elif data.dataset == "GTSRB":
             optimizer = Adam(lr=0.0005)
         elif data.dataset == "caltech_siluettes":
             patience = 50
-        elif data.dataset == "mnist":
-            min_delta = 0.01
-            patience = 10
 
         # compile the Keras model, given the specified loss and optimizer
 
@@ -95,7 +92,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
                                           callbacks=[early_stopping],
                                           verbose=1,
                                           max_queue_size=batch_size,
-                                          workers=8,
+                                          workers=24,
                                           use_multiprocessing=True)
             best_epoc = len(history.history['loss']) - early_stopping.wait
 
