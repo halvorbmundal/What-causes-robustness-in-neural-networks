@@ -12,7 +12,7 @@ def show_progress(count, block_size, total_size):
     else:
         protgress_bar = '|' + '=' * progress + '|'
 
-    print(f"\r{count} of {blocks} blocks downloaded - {protgress_bar} - {100 * amount_finished:.2f}%", end='', flush=True)
+    print(f"\r{count} of {blocks} blocks - {protgress_bar} - {100 * amount_finished:.2f}%", end='', flush=True)
 
 def load_ndarrays(data_dict, path):
     for i in data_dict.keys():
