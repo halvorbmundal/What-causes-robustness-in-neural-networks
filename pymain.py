@@ -64,8 +64,9 @@ def run(hidden, numlayer, numimage, norm, filename = '', layers = None, lp=False
     return float(LB), float(time)
 
 #Runs CNN-Cert with specified parameters
-def run_cnn(file_name, n_samples, norm, core=True, activation='relu', cifar=False, tinyimagenet=False):
+def run_cnn(file_name, n_samples, norm, data_set_class, core=True, activation='relu', cifar=False, tinyimagenet=False):
     if core:
+        raise ValueError("Using core")
         if norm == 'i':
             #run_cnn_full_core(file_name, n_samples, 105, 1, activation, cifar, tinyimagenet)
             return run_cnn_full_core(file_name, n_samples, 105, 1, activation, cifar, tinyimagenet)
@@ -75,12 +76,11 @@ def run_cnn(file_name, n_samples, norm, core=True, activation='relu', cifar=Fals
             return run_cnn_full_core(file_name, n_samples, 1, 105, activation, cifar, tinyimagenet)
     else:
         if norm == 'i':
-            return run_cnn_full(file_name, n_samples, 105, 1, activation, cifar, tinyimagenet)
+            return run_cnn_full(file_name, n_samples, 105, 1, data_set_class, activation)
         elif norm == '2':
-            return run_cnn_full(file_name, n_samples, 2, 2, activation, cifar, tinyimagenet)
+            return run_cnn_full(file_name, n_samples, 2, 2, data_set_class, activation)
         if norm == '1':
-            return run_cnn_full(file_name, n_samples, 1, 105, activation, cifar, tinyimagenet)
-
+            return run_cnn_full(file_name, n_samples, 1, 105, data_set_class, activation)
 #Runs all Fast-Lin and CNN-Cert variations
 def run_all_relu(layers, file_name, mlp_file_name, cifar = False, num_image=10, flfull = False, nonada = False):
     if len(file_name.split('_')) == 5:
@@ -248,7 +248,7 @@ def run_LP(layers, mlp_file_name, num_image=10, core=True, cifar=False):
         times.append(timess)
     return LBs, times
 
-
+"""
 from CLEVER.collect_gradients import collect_gradients
 def run_CLEVER(file_name, num_image = 10, cifar=False, tinyimagenet=False):
     if len(file_name.split('_')) == 5:
@@ -283,6 +283,7 @@ def run_CLEVER(file_name, num_image = 10, cifar=False, tinyimagenet=False):
         LBs.append(LBss)
         times.append(timess)
     return LBs, times
+"""
 
 #Runs global Lips bound
 def run_global(file_name, num_layers, num_image=10, cifar=False, tinyimagenet=False):
