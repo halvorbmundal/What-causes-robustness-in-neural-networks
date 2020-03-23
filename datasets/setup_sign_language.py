@@ -26,7 +26,7 @@ def convert_from_csv(path):
                     y = df["label"].values
                     df.drop('label', axis=1, inplace=True)
                     images = df.values
-                    images = images.reshape(-1, 28, 28)
+                    images = images.reshape(-1, 28, 28, 1)
                     data.extend(images)
                     labels.extend(y)
     data = np.array(data)
