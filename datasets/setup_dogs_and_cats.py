@@ -34,7 +34,7 @@ def resize_images(path, imgs_path):
                             image = io.imread(f"{path}/{imgs_path}/{data_set}/{label}/{image_path}")
                             image = transform.resize(image, (64, 64))
                             data.append(image)
-                            labels.append(label)
+                            labels.append(index)
 
                     label_index += 1
 
@@ -87,6 +87,11 @@ class DogsAndCats():
         X_train, X_val, y_train, y_val = sklearn.model_selection.train_test_split(X_train, y_train, test_size=VAL_FRACTION,
                                                                                   random_state=1215, stratify=y_train)
 
+        num_classes = 2
+        y_test = np.eye(num_classes)[y_test]
+        y_val = np.eye(num_classes)[y_val]
+        y_train = np.eye(num_classes)[y_train]
+
         self.train_data = X_train
         self.train_labels = y_train
 
@@ -100,6 +105,7 @@ class DogsAndCats():
 
 if __name__ == "__main__":
     a = DogsAndCats()
+    print(a.train_labels.shape)
 
 
 
