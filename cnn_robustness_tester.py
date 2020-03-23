@@ -106,6 +106,29 @@ def write_to_file(parameters, lower_bound, accuracy, time_elapsed):
         write_lock.release()
 
 
+def make_upper_bound_file(file_name="upper_bound.csv"):
+    if not os.path.exists(file_name):
+        print("made new upper_bound_file")
+        with open(file_name, 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(["time_elapsed", "upper_bound", "file_name"])
+
+
+def write_to_upper_bound_file(parameters, upper_bound, time_elapsed, csv_file):
+    write_lock.acquire()  # from global variable
+    try:
+        with open(csv_file, 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(
+                [time_elapsed, upper_bound, parameters.file_name])
+    except Exception as e:
+        print("An exeption occured while writing to file")
+        logging.exception(str(traceback.format_exc()) + "\n\n")
+    finally:
+        write_lock.release()
+
+
 def fn(correct, predicted, tf):
     return tf.nn.softmax_cross_entropy_with_logits(labels=correct, logits=predicted)
 
@@ -143,12 +166,9 @@ def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_func
     return avg_lower_bound
 
 
-def get_upper_bound(file_name, l_norm, num_image, tf):
-    sess = tf.keras.backend.get_session()
-    tf.keras.backend.set_session(sess)
-    upper_bound, time_taken = cw_attack(file_name, l_norm, sess, num_image=num_image)
-    tf.keras.backend.clear_session()
-    return upper_bound
+def get_upper_bound_and_time(file_name, l_norm, num_image, sess, _dataset_data):
+    upper_bound, time_taken = cw_attack(file_name, l_norm, sess, num_image=num_image, data_set_class=_dataset_data)
+    return upper_bound, time_taken
 
 
 def csv_contains_file(csv_file, file_name, parameters):
@@ -173,6 +193,24 @@ def csv_contains_file(csv_file, file_name, parameters):
             if row[file_name_column] == file_name:  # and row[cnnc_column] == parameters.use_cnnc_core:
                 if str(row[cnnc_column]) == str(parameters.use_cnnc_core):
                     return True
+    return False
+
+
+def upper_bounds_csv_contains_file(csv_file, file_name):
+    with open(csv_file, "r") as f:
+        csvreader = csv.reader(f, delimiter=',', quotechar='|')
+
+        first_row = next(csvreader)
+
+        file_name_column = 0
+        for i in range(len(first_row)):
+            if first_row[i] == "file_name":
+                file_name_column = i
+                break
+
+        for row in csvreader:
+            if row[file_name_column] == file_name:
+                return True
     return False
 
 
@@ -224,7 +262,6 @@ def get_dynamic_keras_config(tf):
 
 def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
              use_early_stopping, batch_size, _dataset_data, tf):
-
     try:
         # reset_cuda()
         print(datetime.now())
@@ -381,6 +418,67 @@ def multithreadded_calculations(parameters):
         gc.collect()
 
 
+def upper_bound_calculations(parameters):
+    import tensorflow as tf
+    semaphore.acquire()
+    try:
+        print(f"\nCalculating upper bound of {parameter_string(parameters)}\n", flush=True)
+
+        parameters.tf_activation = get_tf_activation_function_from_string(
+            parameters.activation_function_string, tf)
+
+        if not file_exists(parameters.file_name, use_cache=False):
+            print("File does not exist {}".format(parameters.file_name), flush=True)
+            print_parameters(parameters)
+            logging.exception("\n =================\n\n"
+                              + str(datetime.now()) +
+                              "\nThe error was here: \n"
+                              + parameter_string(parameters) +
+                              "\n" + "File does not exist {}".format(parameters.file_name) +
+                              "\n\n")
+            return
+
+        csv_name = "upper_bound.csv"
+        make_upper_bound_file(csv_name)
+
+        debugprint(parameters.isDebugging, "reading results csv")
+        if upper_bounds_csv_contains_file(csv_name, parameters.file_name):
+            print("Upper bounds already calculated for {}".format(parameters.file_name), flush=True)
+            print_parameters(parameters)
+            return
+
+        config = tf.ConfigProto()
+        config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
+        config.log_device_placement = False
+        sess = tf.Session(config=config)
+        with sess.as_default():
+            upper_bound, time_spent = get_upper_bound_and_time(parameters.file_name,
+                                                               parameters.l_norm,
+                                                               parameters.num_image,
+                                                               sess,
+                                                               dataset_data)
+
+        debugprint(parameters.isDebugging, "writing to file")
+        write_to_upper_bound_file(parameters, upper_bound, time_spent, csv_name)
+
+        print("wrote upper bound to file", flush=True)
+        print_parameters(parameters)
+
+        return
+    except Exception as e:
+        print("Error: An exeption occured while calculating upper bound", e)
+        logging.exception("\n =================\n\n"
+                          + str(datetime.now()) +
+                          "\nThe error was here: \n"
+                          + parameter_string(parameters) +
+                          "\n" + str(traceback.format_exc()) +
+                          "\n\n")
+    finally:
+        semaphore.release()
+        # reset_cuda()
+        gc.collect()
+
+
 def pool_init(l1, l2, sema, data):
     global write_lock
     global keras_lock
@@ -440,12 +538,13 @@ def get_data(dataset):
 
 
 def main():
-    _, arg1, arg2, arg3, arg4, arg5 = sys.argv
+    _, arg1, arg2, arg3, arg4, arg5, arg6 = sys.argv
     cpu = arg1 == "cpu" or arg2 == "cpu"
     gpu = arg1 == "gpu" or arg2 == "gpu"
     debugging = arg3 == "debugging"
     path = arg4
     dataset = arg5
+    upper_bound = arg6 == "upper"
 
     set_path(path)
 
@@ -540,6 +639,7 @@ def main():
                                     keras_lock.acquire()
                                     gpu_calculations(parameters)
                                     multithreadded_calculations(parameters)
+                                    upper_bound_calculations(parameters)
                                 else:
                                     if parameters.use_gpu:
                                         keras_lock.acquire()
@@ -553,6 +653,10 @@ def main():
                                         keras_lock.acquire()
                                         keras_lock.release()
                                         cpu_pool.apply_async(multithreadded_calculations, (parameters,))
+                                    if upper_bound:
+                                        keras_lock.acquire()
+                                        keras_lock.release()
+                                        cpu_pool.apply_async(upper_bound_calculations, (parameters,))
 
     print("Waiting for processes to finish")
     # gpu_pool.close()

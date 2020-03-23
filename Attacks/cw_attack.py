@@ -17,7 +17,7 @@ def loss(correct, predicted):
                                                        logits=predicted)
 
 #Runs CW/EAD attack with specified norm
-def cw_attack(file_name, norm, sess, num_image=10, cifar = False, tinyimagenet = False):
+def cw_attack(file_name, norm, sess, num_image=10, data_set_class=MNIST()):
     np.random.seed(1215)
     tf.set_random_seed(1215)
     random.seed(1215)
@@ -31,30 +31,20 @@ def cw_attack(file_name, norm, sess, num_image=10, cifar = False, tinyimagenet =
         attack = CarliniLi
         norm_fn = lambda x: np.max(np.abs(x),axis=(1,2,3))
 
-    if cifar:
-        data = CIFAR()
-    elif tinyimagenet:
-        data = TinyImagenet()
-    else:
-        data = MNIST()
+    data = data_set_class
+
     model = load_model(file_name, custom_objects={'fn':loss,'tf':tf, 'ResidualStart' : ResidualStart, 'ResidualStart2' : ResidualStart2})
     inputs, targets, true_labels, true_ids, img_info = generate_data(data, samples=num_image, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.predict, start=0)
     model.predict = model
     model.num_labels = 10
-    if cifar:
-        model.image_size = 32
-        model.num_channels = 3
-    elif tinyimagenet:
-        model.image_size = 64
-        model.num_channels = 3
-        model.num_labels = 200
-    else:
-        model.image_size = 28
-        model.num_channels = 1
+
+    model.image_size = data.test_data.shape[1]
+    model.num_channels = data.test_data.shape[3]
+    model.num_labels = data.test_labels.shape[1]
         
     
     start_time = timer.time()
-    attack = attack(sess, model, max_iterations = 1000)
+    attack = attack(sess, model, max_iterations=1000)
     perturbed_input = attack.attack(inputs, targets)
     UB = np.average(norm_fn(perturbed_input-inputs))
     return UB, (timer.time()-start_time)/len(inputs)
