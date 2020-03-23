@@ -602,13 +602,16 @@ def main():
     elif dataset == "tinyImagenet":
         bn_choices = [True]
     elif dataset == "mnist":
-        bn_choices = [False, True]
+        bn_choices = [False]
+        kernel_size_range = [5]
+        depth_range = [3]
+        filter_size_range = [8, 16, 32, 48, 64]
     else:
         bn_choices = [True, False]
 
-    for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
-        for use_padding_same in [False, True]:
-            for use_early_stopping in [True, False]:
+    for activation_function_string in ["ada"]:
+        for use_padding_same in [False]:
+            for use_early_stopping in [False]:
                 for has_batch_normalization in bn_choices:
                     for kernel_size in kernel_size_range:
                         for depth in depth_range:
