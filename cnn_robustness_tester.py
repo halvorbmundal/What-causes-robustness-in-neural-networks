@@ -538,6 +538,7 @@ def get_data(dataset):
 
 
 def main():
+    print("args: ", sys.argv)
     _, arg1, arg2, arg3, arg4, arg5, arg6 = sys.argv
     cpu = arg1 == "cpu" or arg2 == "cpu"
     gpu = arg1 == "gpu" or arg2 == "gpu"
