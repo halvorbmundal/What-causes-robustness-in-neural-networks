@@ -549,7 +549,7 @@ def main():
     path = arg4
     dataset = arg5
     upper_bound = arg6 == "upper"
-    num_cpus = arg7
+    num_cpus = int(arg7)
     print("cpu:", cpu)
     print("gpu:", gpu)
     print("debugging:", debugging)
