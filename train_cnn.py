@@ -54,6 +54,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
 
         patience = 30
         optimizer = Adam()
+        monitor = 'val_loss'
         min_delta = 0
         if data.dataset == "cifar100":
             patience = 50
@@ -61,6 +62,9 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
             optimizer = Adam(lr=0.0005)
         elif data.dataset == "caltech_siluettes":
             patience = 50
+        elif data.dataset =="dogs-and-cats":
+            monitor = "loss"
+
 
         # compile the Keras model, given the specified loss and optimizer
 
@@ -167,6 +171,7 @@ def create_model(activation, bn, data, filters, init, kernels, use_padding_same)
 
 def get_data_augmenter(data):
     if data.dataset == "GTSRB":
+        print("datagen1")
         datagen = ImageDataGenerator(
             rotation_range=10,
             zoom_range=0.15,
@@ -176,7 +181,11 @@ def get_data_augmenter(data):
             horizontal_flip=False,
             vertical_flip=False,
             fill_mode="nearest")
-    elif data.dataset == "tiny-imagenet-200" or "cifar100" or "cifar" or "dogs-and-cats":
+    elif data.dataset == "tiny-imagenet-200" \
+            or data.dataset =="cifar100" \
+            or data.dataset =="cifar" \
+            or data.dataset =="dogs-and-cats":
+        print("datagen2")
         datagen = ImageDataGenerator(
             rotation_range=15,
             zoom_range=0.15,
@@ -186,7 +195,9 @@ def get_data_augmenter(data):
             horizontal_flip=True,
             vertical_flip=False,
             fill_mode="nearest")
-    elif data.dataset == "caltech_siluettes" or "sign-language":
+    elif data.dataset == "caltech_siluettes" \
+            or data.dataset == "sign-language":
+        print("datagen3")
         datagen = ImageDataGenerator(
             width_shift_range=0.1,
             height_shift_range=0.1,
