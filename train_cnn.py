@@ -173,11 +173,10 @@ def get_data_augmenter(data):
     if data.dataset == "GTSRB":
         print("datagen1")
         datagen = ImageDataGenerator(
-            rotation_range=10,
-            zoom_range=0.15,
+            rotation_range=5,
+            zoom_range=0.1,
             width_shift_range=0.1,
             height_shift_range=0.1,
-            shear_range=0.15,
             horizontal_flip=False,
             vertical_flip=False,
             fill_mode="nearest")
