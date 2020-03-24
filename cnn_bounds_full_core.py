@@ -501,11 +501,11 @@ def run(file_name, n_samples, p_n, q_n, activation = 'relu', cifar=False, tinyim
     print("spent {} sec compiling bounds".format(total_time))
 
     if cifar:
-        inputs, targets, true_labels, true_ids, img_info = generate_data(CIFAR(), samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.model.predict, start=0)
+        inputs, targets, true_labels, true_ids, img_info = generate_data(CIFAR(), samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0001, predictor=model.model.predict, start=0)
     elif tinyimagenet:
-        inputs, targets, true_labels, true_ids, img_info = generate_data(tinyImagenet(), samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.model.predict, start=0)
+        inputs, targets, true_labels, true_ids, img_info = generate_data(tinyImagenet(), samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0001, predictor=model.model.predict, start=0)
     else:
-        inputs, targets, true_labels, true_ids, img_info = generate_data(MNIST(), samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.model.predict, start=0)
+        inputs, targets, true_labels, true_ids, img_info = generate_data(MNIST(), samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0001, predictor=model.model.predict, start=0)
     #0b01111 <- all
     #0b0010 <- random
     #0b0001 <- top2

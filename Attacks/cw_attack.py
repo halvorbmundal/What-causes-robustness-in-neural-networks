@@ -34,7 +34,7 @@ def cw_attack(file_name, norm, sess, num_image=10, data_set_class=MNIST()):
     data = data_set_class
 
     model = load_model(file_name, custom_objects={'fn':loss,'tf':tf, 'ResidualStart' : ResidualStart, 'ResidualStart2' : ResidualStart2})
-    inputs, targets, true_labels, true_ids, img_info = generate_data(data, samples=num_image, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.predict, start=0)
+    inputs, targets, true_labels, true_ids, img_info = generate_data(data, samples=num_image, targeted=True, random_and_least_likely = True, target_type = 0b0001, predictor=model.predict, start=0)
     model.predict = model
     model.num_labels = 10
 
