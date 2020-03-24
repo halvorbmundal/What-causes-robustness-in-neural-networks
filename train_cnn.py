@@ -176,7 +176,7 @@ def get_data_augmenter(data):
             horizontal_flip=False,
             vertical_flip=False,
             fill_mode="nearest")
-    elif data.dataset == "tiny-imagenet-200" or "cifar100" or "cifar":
+    elif data.dataset == "tiny-imagenet-200" or "cifar100" or "cifar" or "dogs-and-cats":
         datagen = ImageDataGenerator(
             rotation_range=15,
             zoom_range=0.15,
@@ -186,7 +186,7 @@ def get_data_augmenter(data):
             horizontal_flip=True,
             vertical_flip=False,
             fill_mode="nearest")
-    elif data.dataset == "caltech_siluettes":
+    elif data.dataset == "caltech_siluettes" or "sign-language":
         datagen = ImageDataGenerator(
             width_shift_range=0.1,
             height_shift_range=0.1,
