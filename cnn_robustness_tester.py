@@ -618,7 +618,7 @@ def main():
 
     for activation_function_string in ["ada"]:
         for use_padding_same in [False]:
-            for use_early_stopping in [False]:
+            for use_early_stopping in [True, False]:
                 for has_batch_normalization in bn_choices:
                     for kernel_size in kernel_size_range:
                         for depth in depth_range:
