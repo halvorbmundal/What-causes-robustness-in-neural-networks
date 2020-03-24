@@ -546,6 +546,12 @@ def main():
     path = arg4
     dataset = arg5
     upper_bound = arg6 == "upper"
+    print("cpu:", cpu)
+    print("gpu:", gpu)
+    print("debugging:", debugging)
+    print("path:", path)
+    print("dataset:", dataset)
+    print("upper_bound:", upper_bound)
 
     set_path(path)
 
