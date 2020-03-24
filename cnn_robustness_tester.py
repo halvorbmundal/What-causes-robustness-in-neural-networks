@@ -662,8 +662,8 @@ def main():
                                         gpu_process.start()
                                         print("gpu_prosess startet")
                                         gpu_process.join()
-                                        gc.collect()
                                         print("gpu_prosess joined", flush=True)
+                                        gc.collect()
                                     if parameters.use_cpu:
                                         keras_lock.acquire()
                                         keras_lock.release()
