@@ -8,7 +8,7 @@
 #SBATCH --mem=111000
 # Memory per node specification is in MB. It is optional.
 # The default limit is 3000MB per core.
-#SBATCH --job-name="gpu-s8-CNN-Cert"
+#SBATCH --job-name="gpu-cs-CNN-Cert"
 #SBATCH --output=out/9caltechSilhouettes_output.out
 #SBATCH --mail-type=ALL
 
