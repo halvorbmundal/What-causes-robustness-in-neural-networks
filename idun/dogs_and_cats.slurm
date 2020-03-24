@@ -57,7 +57,7 @@ pip install -r requirements_gpu.txt
 nvidia-smi
 
 # Start training
-python cnn-cert-master/cnn_robustness_tester.py cpu gpu no_debugging v9 dogs-and-cats no_upper
+python cnn-cert-master/cnn_robustness_tester.py cpu gpu no_debugging v9 dogs-and-cats no_upper 12
 
 # Print information about the system
 uname -a

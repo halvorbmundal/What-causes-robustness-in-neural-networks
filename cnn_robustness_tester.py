@@ -542,19 +542,21 @@ def get_data(dataset):
 
 def main():
     print("args: ", sys.argv)
-    _, arg1, arg2, arg3, arg4, arg5, arg6 = sys.argv
+    _, arg1, arg2, arg3, arg4, arg5, arg6, arg7 = sys.argv
     cpu = arg1 == "cpu" or arg2 == "cpu"
     gpu = arg1 == "gpu" or arg2 == "gpu"
     debugging = arg3 == "debugging"
     path = arg4
     dataset = arg5
     upper_bound = arg6 == "upper"
+    num_cpus = arg7
     print("cpu:", cpu)
     print("gpu:", gpu)
     print("debugging:", debugging)
     print("path:", path)
     print("dataset:", dataset)
     print("upper_bound:", upper_bound)
+    print("arg7:", arg7)
 
     set_path(path)
 
@@ -578,7 +580,7 @@ def main():
         print(f"gpu: {gpu}")
         print(f"path: {path}/")
 
-    max_processes = 24
+    max_processes = num_cpus
     if multiprocessing.cpu_count() > max_processes:
         processes = max_processes
     else:
