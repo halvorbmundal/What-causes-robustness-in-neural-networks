@@ -323,7 +323,9 @@ def gpu_calculations(parameters, is_sub_process=False):
     finally:
         keras_lock.release()
         print("lock released", flush=True)
-        if is_sub_process:
+        print("is_sub_process:", is_sub_process)
+        print("is debugging:", parameters.isDebugging, flush=True)
+        if not parameters.isDebugging:
             print("exiting gpu process", flush=True)
             sys.exit(0)
 
