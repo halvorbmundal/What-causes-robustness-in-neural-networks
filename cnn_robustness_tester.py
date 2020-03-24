@@ -660,17 +660,15 @@ def main():
                                         keras_lock.acquire()
                                         gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters, True))
                                         gpu_process.start()
-                                        print("gpu_prosess startet")
-                                        gpu_process.join()
-                                        print("gpu_prosess joined", flush=True)
+
+                                        keras_lock.acquire()
+                                        gpu_process.terminate()
+                                        keras_lock.release()
+
                                         gc.collect()
                                     if parameters.use_cpu:
-                                        keras_lock.acquire()
-                                        keras_lock.release()
                                         cpu_pool.apply_async(multithreadded_calculations, (parameters,))
                                     if upper_bound:
-                                        keras_lock.acquire()
-                                        keras_lock.release()
                                         cpu_pool.apply_async(upper_bound_calculations, (parameters,))
 
     print("Waiting for processes to finish")
