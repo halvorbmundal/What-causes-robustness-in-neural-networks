@@ -53,7 +53,7 @@ class SignLanguage():
         X_train, y_train = load_data(self.dataset)
 
         TEST_FRACTION = 0.1
-        VAL_FRACTION = 0.1
+        VAL_FRACTION = 0.2
         num_classes = 25
         X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X_train, y_train,
                                                                                     test_size=TEST_FRACTION,
