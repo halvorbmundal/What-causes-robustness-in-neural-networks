@@ -324,6 +324,7 @@ def gpu_calculations(parameters, is_sub_process=False):
         keras_lock.release()
         print("lock released", flush=True)
         if is_sub_process:
+            print("exiting gpu process")
             sys.exit(0)
 
 
@@ -658,7 +659,7 @@ def main():
                                         print("gpu_prosess startet")
                                         gpu_process.join()
                                         gc.collect()
-                                        print("gpu_prosess joinet", flush=True)
+                                        print("gpu_prosess joined", flush=True)
                                     if parameters.use_cpu:
                                         keras_lock.acquire()
                                         keras_lock.release()
