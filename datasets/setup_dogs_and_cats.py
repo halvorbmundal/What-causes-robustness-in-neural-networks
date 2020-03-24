@@ -34,7 +34,7 @@ def resize_images(path, imgs_path):
                             image = io.imread(f"{path}/{imgs_path}/{data_set}/{label}/{image_path}")
                             image = transform.resize(image, (64, 64))
                             data.append(image)
-                            labels.append(index)
+                            labels.append(label_index)
 
                     label_index += 1
 
