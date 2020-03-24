@@ -599,31 +599,20 @@ def main():
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
-    if dataset == "tinyImagenet" or dataset == "cifar100":
-        reduction = 4
-        filter_size_range = range(4 * reduction, 128, 4 * reduction)
-        depth_range = range(1, 12, 1 * reduction)
-    else:
-        reduction = 2
-        filter_size_range = range(4 * reduction, 64, 4 * reduction)
-        depth_range = range(1, 6, 1 * reduction)
 
-    kernel_size_range = range(3, 8, 1 * reduction)
+    filter_size_range = range(8, 65, 8)
+    depth_range = range(1, 6, 1)
+    kernel_size_range = range(3, 8, 1)
     if dataset == "GTSRB":
         bn_choices = [False]
-    elif dataset == "tinyImagenet":
-        bn_choices = [True]
     elif dataset == "mnist":
         bn_choices = [False]
-        kernel_size_range = [5]
-        depth_range = [3]
-        filter_size_range = [8, 16, 32, 48, 64]
     else:
         bn_choices = [True, False]
 
     for activation_function_string in ["ada"]:
         for use_padding_same in [False]:
-            for use_early_stopping in [True, False]:
+            for use_early_stopping in [True]:
                 for has_batch_normalization in bn_choices:
                     for kernel_size in kernel_size_range:
                         for depth in depth_range:
