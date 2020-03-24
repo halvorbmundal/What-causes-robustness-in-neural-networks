@@ -180,21 +180,11 @@ def get_data_augmenter(data):
             horizontal_flip=False,
             vertical_flip=False,
             fill_mode="nearest")
-    elif data.dataset == "caltech_siluettes":
-        print("datagen2")
-        datagen = ImageDataGenerator(
-            rotation_range=10,
-            zoom_range=0.1,
-            width_shift_range=0.1,
-            height_shift_range=0.1,
-            shear_range=0.05,
-            horizontal_flip=False,
-            vertical_flip=False,
-            fill_mode="nearest")
     elif data.dataset == "tiny-imagenet-200" \
             or data.dataset =="cifar100" \
             or data.dataset =="cifar" \
-            or data.dataset =="dogs-and-cats":
+            or data.dataset =="dogs-and-cats"\
+            or data.dataset == "caltech_siluettes":
         print("datagen3")
         datagen = ImageDataGenerator(
             rotation_range=15,
@@ -219,9 +209,13 @@ def get_data_augmenter(data):
 
 
 def apply_bn(data, model):
-    if data.dataset == "cifar" or "caltech_siluettes" or "cifar100" or "tiny-imagenet-200":
+    if data.dataset == "cifar" \
+            or data.dataset == "caltech_siluettes" \
+            or data.dataset =="cifar100" \
+            or data.dataset =="tiny-imagenet-200":
         model.add(BatchNormalization(momentum=0.9))
-    elif data.dataset == "GTSRB":
+    elif data.dataset == "GTSRB"\
+            or data.dataset == "caltech_siluettes":
         model.add(BatchNormalization(momentum=0.8))
     else:
         model.add(BatchNormalization())
