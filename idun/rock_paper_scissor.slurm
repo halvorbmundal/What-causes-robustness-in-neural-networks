@@ -1,4 +1,4 @@
-    #!/bin/sh
+#!/bin/sh
 #SBATCH --partition=GPUQ,V100-IDI
 #SBATCH --account=share-ie-idi
 #SBATCH --gres=gpu:1
