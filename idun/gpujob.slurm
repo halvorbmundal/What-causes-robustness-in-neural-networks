@@ -57,7 +57,7 @@ pip install -r requirements_gpu.txt
 nvidia-smi
 
 # Start training
-python cnn-cert-master/cnn_robustness_tester.py cpu gpu no_debugging ubtest mnist upper 8
+python cnn-cert-master/cnn_robustness_tester.py cpu gpu no_debugging v9 mnist upper 8
 
 # Print information about the system
 uname -a
