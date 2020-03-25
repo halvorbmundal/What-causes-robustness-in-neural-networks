@@ -62,6 +62,8 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
             optimizer = Adam(lr=0.0005)
         elif data.dataset == "caltech_siluettes":
             patience = 50
+        elif data.dataset == "rockpaperscissors":
+            patience = 50
         elif data.dataset =="dogs-and-cats":
             monitor = "loss"
 
