@@ -11,7 +11,7 @@ import random
 import os
 from pathlib import Path
 
-# Downloaded from https://www.kaggle.com/chetankv/dogs-cats-images/
+# Downloaded from https://www.kaggle.com/drgfreeman/rockpaperscissors
 from datasets.setup_util import show_progress
 
 
