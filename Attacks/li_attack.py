@@ -186,7 +186,7 @@ class CarliniLi:
             if actualtau < tau:
                 tau = actualtau
     
-            print("Tau",tau)
+            #print("Tau",tau)
 
             prev = nimg
             tau *= self.DECREASE_FACTOR
