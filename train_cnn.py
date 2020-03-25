@@ -193,10 +193,11 @@ def get_data_augmenter(data):
     elif data.dataset == "rockpaperscissors":
         print("datagen3")
         datagen = ImageDataGenerator(
-            rotation_range=10,
-            zoom_range=0.1,
-            width_shift_range=0.1,
-            height_shift_range=0.1,
+            rotation_range=15,
+            zoom_range=0.15,
+            width_shift_range=0.15,
+            height_shift_range=0.15,
+            shear_range=0.15,
             horizontal_flip=True,
             vertical_flip=True,
             fill_mode="nearest")

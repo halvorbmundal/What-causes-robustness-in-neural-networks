@@ -61,7 +61,7 @@ def load_data(dataset_name):
         with open(path + "/np_y_data.pkl", 'rb') as f:
             Y = pickle.load(f)
 
-    X = X.astype("float32") / 255.0
+    #X = X.astype("float32") / 255.0
 
     # one-hot encode the training and testing labels
     #numLabels = len(np.unique(Y))
@@ -83,7 +83,7 @@ class RockPaperScissors():
         X_train, X_val, y_train, y_val = sklearn.model_selection.train_test_split(X_train, y_train, test_size=VAL_FRACTION,
                                                                                   random_state=1215, stratify=y_train)
 
-        print(X_test.shape)
+        print(np.max(X_test))
 
         num_classes = 3
         y_test = np.eye(num_classes)[y_test]
