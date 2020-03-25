@@ -6,6 +6,7 @@ from datasets.setup_calTech_101_silhouettes import CaltechSiluettes
 from datasets.setup_cifar100 import CIFAR100
 from datasets.setup_dogs_and_cats import DogsAndCats
 from datasets.setup_sign_language import SignLanguage
+from datasets.setup_rockpaperscissors import RockPaperScissors
 
 _b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode('latin1'))
 
@@ -535,6 +536,8 @@ def get_data(dataset):
         data = DogsAndCats()
     elif dataset == "sign-language":
         data = SignLanguage()
+    elif dataset == "rockpaperscissors":
+        data = RockPaperScissors()
     else:
         raise NameError(f"{dataset} is not a valid dataset")
     return data
