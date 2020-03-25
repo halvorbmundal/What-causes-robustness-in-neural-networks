@@ -180,11 +180,20 @@ def get_data_augmenter(data):
             horizontal_flip=False,
             vertical_flip=False,
             fill_mode="nearest")
+    elif data.dataset == "caltech_siluettes":
+        print("datagen3")
+        datagen = ImageDataGenerator(
+            rotation_range=10,
+            zoom_range=0.1,
+            width_shift_range=0.1,
+            height_shift_range=0.1,
+            horizontal_flip=True,
+            vertical_flip=False,
+            fill_mode="nearest")
     elif data.dataset == "tiny-imagenet-200" \
             or data.dataset =="cifar100" \
             or data.dataset =="cifar" \
-            or data.dataset =="dogs-and-cats"\
-            or data.dataset == "caltech_siluettes":
+            or data.dataset =="dogs-and-cats":
         print("datagen3")
         datagen = ImageDataGenerator(
             rotation_range=15,
