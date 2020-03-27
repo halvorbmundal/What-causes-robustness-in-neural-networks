@@ -603,18 +603,18 @@ def main():
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
 
-    filter_size_range = range(8, 65, 8)
-    depth_range = range(1, 6, 1)
+    filter_size_range = range(8, 81, 8)
+    depth_range = range(1, 8, 1)
     kernel_size_range = range(3, 8, 1)
     if dataset == "GTSRB":
-        bn_choices = [False]
+        bn_choices = [False, True]
     elif dataset == "mnist":
-        bn_choices = [False]
+        bn_choices = [False, False]
     else:
         bn_choices = [True, False]
 
     for activation_function_string in ["ada"]:
-        for use_padding_same in [False]:
+        for use_padding_same in [False, True]:
             for use_early_stopping in [True]:
                 for has_batch_normalization in bn_choices:
                     for kernel_size in kernel_size_range:
