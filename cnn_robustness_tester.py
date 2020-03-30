@@ -604,16 +604,16 @@ def main():
     logging.basicConfig(filename='log.log', level="ERROR")
 
     filter_size_range = range(8, 81, 8)
-    depth_range = range(1, 8, 1)
+    depth_range = range(1, 6, 1)
     kernel_size_range = range(3, 8, 1)
     if dataset == "GTSRB":
         bn_choices = [False, True]
     elif dataset == "mnist":
-        bn_choices = [False, False]
+        bn_choices = [False, True]
     else:
         bn_choices = [True, False]
 
-    for activation_function_string in ["ada"]:
+    for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
         for use_padding_same in [False, True]:
             for use_early_stopping in [True]:
                 for has_batch_normalization in bn_choices:
