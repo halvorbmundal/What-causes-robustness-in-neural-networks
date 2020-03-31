@@ -454,7 +454,7 @@ def upper_bound_calculations(parameters):
         config.log_device_placement = False
         sess = tf.Session(config=config)
 
-        print("after config")
+        print("after config", flush=True)
         with sess.as_default():
             upper_bound, time_spent = get_upper_bound_and_time(parameters.file_name,
                                                                parameters.l_norm,
