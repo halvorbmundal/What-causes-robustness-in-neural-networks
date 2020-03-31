@@ -9,7 +9,7 @@ import sys
 import tensorflow as tf
 import numpy as np
 
-DECREASE_FACTOR = 0.9   # 0<f<1, rate at which we shrink tau; larger is more accurate
+DECREASE_FACTOR = 0.95   # 0<f<1, rate at which we shrink tau; larger is more accurate
 MAX_ITERATIONS = 1000   # number of iterations to perform gradient descent
 ABORT_EARLY = True      # abort gradient descent upon first valid solution
 INITIAL_CONST = 1e-5    # the first value of c to start at
@@ -166,10 +166,10 @@ class CarliniLi:
 
         # the previous image
         prev = np.copy(img).reshape((1,self.model.image_size,self.model.image_size,self.model.num_channels))
-        tau = 1.0
+        tau = 1
         const = self.INITIAL_CONST
         
-        while tau > 1./256:
+        while tau > 1e-05:
             # try to solve given this tau value
             res = self.grad([np.copy(img)], [target], np.copy(prev), tau, const)
             if res == None:
