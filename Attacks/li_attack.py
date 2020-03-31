@@ -168,6 +168,8 @@ class CarliniLi:
         prev = np.copy(img).reshape((1,self.model.image_size,self.model.image_size,self.model.num_channels))
         tau = 1
         const = self.INITIAL_CONST
+
+        iterations = 0
         
         while tau > 1e-05:
             # try to solve given this tau value
@@ -185,6 +187,10 @@ class CarliniLi:
     
             if actualtau < tau:
                 tau = actualtau
+
+            if iterations % 10 == 0:
+                print(tau)
+            iterations += 1
     
             #print("Tau",tau)
 
