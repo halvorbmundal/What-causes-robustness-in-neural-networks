@@ -425,6 +425,7 @@ def upper_bound_calculations(parameters):
 
         parameters.tf_activation = get_tf_activation_function_from_string(
             parameters.activation_function_string, tf)
+        print("hmmmm", flush=True)
 
         debugprint(parameters.isDebugging, "checking if model file exists")
         if not file_exists(parameters.file_name, use_cache=False):
@@ -514,7 +515,7 @@ def print_parameters(parameters):
 
 def debugprint(isDebugging, text):
     if isDebugging:
-        print(text)
+        print(text, flush=True)
 
 
 def get_data(dataset):
