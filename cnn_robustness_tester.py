@@ -607,14 +607,14 @@ def main():
     depth_range = range(1, 6, 1)
     kernel_size_range = range(3, 8, 1)
     if dataset == "GTSRB":
-        bn_choices = [False, True]
+        bn_choices = [False]
     elif dataset == "mnist":
-        bn_choices = [False, True]
+        bn_choices = [False]
     else:
-        bn_choices = [True, False]
+        bn_choices = [False]
 
     for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
-        for use_padding_same in [False, True]:
+        for use_padding_same in [True]:
             for use_early_stopping in [True]:
                 for has_batch_normalization in bn_choices:
                     for kernel_size in kernel_size_range:
