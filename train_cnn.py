@@ -196,8 +196,6 @@ def get_data_augmenter(data):
             shear_range=0.1,
             zoom_range=0.15,
             horizontal_flip=True,
-            featurewise_center=True,
-            featurewise_std_normalization=True,
             fill_mode="nearest")
     elif data.dataset == "rockpaperscissors":
         print("datagen3")
