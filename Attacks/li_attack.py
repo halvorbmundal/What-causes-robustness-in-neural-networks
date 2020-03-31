@@ -170,6 +170,8 @@ class CarliniLi:
         const = self.INITIAL_CONST
 
         iterations = 0
+
+        print("calculating upper bound now")
         
         while tau > 1e-05:
             # try to solve given this tau value
