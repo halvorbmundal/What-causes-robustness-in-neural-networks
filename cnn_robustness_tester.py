@@ -614,7 +614,7 @@ def main():
         bn_choices = [False]
 
     for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
-        for use_padding_same in [True]:
+        for use_padding_same in [False]:
             for use_early_stopping in [True]:
                 for has_batch_normalization in bn_choices:
                     for kernel_size in kernel_size_range:
