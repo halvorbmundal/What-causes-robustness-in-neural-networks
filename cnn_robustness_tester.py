@@ -426,6 +426,7 @@ def upper_bound_calculations(parameters):
         parameters.tf_activation = get_tf_activation_function_from_string(
             parameters.activation_function_string, tf)
 
+        debugprint(parameters.isDebugging, "checking if model file exists")
         if not file_exists(parameters.file_name, use_cache=False):
             print("File does not exist {}".format(parameters.file_name), flush=True)
             print_parameters(parameters)
@@ -446,10 +447,13 @@ def upper_bound_calculations(parameters):
             print_parameters(parameters)
             return
 
+        print("before config")
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
         config.log_device_placement = False
         sess = tf.Session(config=config)
+
+        print("after config")
         with sess.as_default():
             upper_bound, time_spent = get_upper_bound_and_time(parameters.file_name,
                                                                parameters.l_norm,
