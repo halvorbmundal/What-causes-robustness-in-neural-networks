@@ -31,11 +31,13 @@ def get_available_gpus():
     local_device_protos = device_lib.list_local_devices()
     return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
+
 def get_dynamic_keras_config(tf):
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
     config.log_device_placement = False  # to log device placement (on which device the operation ran)
     return config
+
 
 def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, train_temp=1, init=None, activation=tf.nn.relu, bn=False, use_padding_same=False,
           use_early_stopping=True):
@@ -60,13 +62,15 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
             patience = 50
         elif data.dataset == "GTSRB":
             optimizer = Adam(lr=0.0005)
+            #  Senkes?
+            # optimizer = Adam(lr=0.0003)
+            patience = 50
         elif data.dataset == "caltech_siluettes":
             patience = 50
         elif data.dataset == "rockpaperscissors":
             patience = 50
-        elif data.dataset =="dogs-and-cats":
+        elif data.dataset == "dogs-and-cats":
             monitor = "loss"
-
 
         # compile the Keras model, given the specified loss and optimizer
 
@@ -83,6 +87,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
         model.summary()
 
         datagen = get_data_augmenter(data)
+        datagen.fit(data.train_data)
 
         print("Traing a {} layer model, saving to {}".format(len(filters) + 1, file_name), flush=True)
 
@@ -185,12 +190,14 @@ def get_data_augmenter(data):
     elif data.dataset == "caltech_siluettes":
         print("datagen3")
         datagen = ImageDataGenerator(
-            rotation_range=10,
-            zoom_range=0.1,
-            width_shift_range=0.1,
-            height_shift_range=0.1,
+            rotation_range=15,
+            width_shift_range=0.15,
+            height_shift_range=0.15,
+            shear_range=0.1,
+            zoom_range=0.15,
             horizontal_flip=True,
-            vertical_flip=False,
+            featurewise_center=True,
+            featurewise_std_normalization=True,
             fill_mode="nearest")
     elif data.dataset == "rockpaperscissors":
         print("datagen3")
@@ -233,10 +240,10 @@ def get_data_augmenter(data):
 def apply_bn(data, model):
     if data.dataset == "cifar" \
             or data.dataset == "caltech_siluettes" \
-            or data.dataset =="cifar100" \
-            or data.dataset =="tiny-imagenet-200":
+            or data.dataset == "cifar100" \
+            or data.dataset == "tiny-imagenet-200":
         model.add(BatchNormalization(momentum=0.9))
-    elif data.dataset == "GTSRB"\
+    elif data.dataset == "GTSRB" \
             or data.dataset == "caltech_siluettes":
         model.add(BatchNormalization(momentum=0.8))
     else:
