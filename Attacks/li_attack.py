@@ -171,7 +171,7 @@ class CarliniLi:
 
         iterations = 0
 
-        print("calculating upper bound now")
+        print("calculating upper bound now", flush=True)
         
         while tau > 1e-05:
             # try to solve given this tau value
@@ -191,7 +191,7 @@ class CarliniLi:
                 tau = actualtau
 
             if iterations % 10 == 0:
-                print(tau)
+                print(tau, flush=True)
             iterations += 1
     
             #print("Tau",tau)

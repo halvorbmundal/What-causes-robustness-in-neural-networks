@@ -18,6 +18,7 @@ def loss(correct, predicted):
 
 #Runs CW/EAD attack with specified norm
 def cw_attack(file_name, norm, sess, num_image=10, data_set_class=MNIST()):
+    print("cw attack", flush=True)
     np.random.seed(1215)
     tf.set_random_seed(1215)
     random.seed(1215)
