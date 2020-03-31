@@ -420,7 +420,6 @@ def multithreadded_calculations(parameters):
 
 def upper_bound_calculations(parameters):
     import tensorflow as tf
-    semaphore.acquire()
     try:
         print(f"\nCalculating upper bound of {parameter_string(parameters)}\n", flush=True)
 
@@ -474,7 +473,7 @@ def upper_bound_calculations(parameters):
                           "\n" + str(traceback.format_exc()) +
                           "\n\n")
     finally:
-        semaphore.release()
+        keras_lock.release()
         # reset_cuda()
         gc.collect()
 
@@ -660,6 +659,7 @@ def main():
                                         if parameters.use_cpu:
                                             cpu_pool.apply_async(multithreadded_calculations, (parameters,))
                                         if upper_bound:
+                                            keras_lock.acquire()
                                             cpu_pool.apply_async(upper_bound_calculations, (parameters,))
 
     print("Waiting for processes to finish")
