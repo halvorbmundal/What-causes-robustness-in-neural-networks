@@ -448,7 +448,7 @@ def upper_bound_calculations(parameters):
             print_parameters(parameters)
             return
 
-        print("before config")
+        print("before config", flush=True)
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
         config.log_device_placement = False
