@@ -42,6 +42,9 @@ def load_data(dataset_name):
 
     X = X.astype("float32") / 255.0
 
+    #shift around 0
+    X = X - 0.5
+
     return X, Y
 
 class SignLanguage():

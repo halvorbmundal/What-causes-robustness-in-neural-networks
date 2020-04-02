@@ -117,7 +117,8 @@ def load_gt_sign(path, basePath="", is_resize=False):
         with open(path + "/np_y_data.pkl", 'rb') as f:
             Y = pickle.load(f)
 
-    X = X.astype("float32") / 255.0
+    #shift around 0.
+    X = X - 0.5
 
     return X, Y
 

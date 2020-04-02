@@ -18,6 +18,10 @@ def load_images(dataset_name, download_url, file_name):
     X, Y = extract_dataset(from_path=path, file_name=file_name)
     X = X.reshape((-1, 28, 28, 1))
     Y = Y.reshape((-1))
+
+    #shift around 0
+    X = X - 0.5
+
     return preprocess_to_ndarray(X, Y)
 
 
@@ -30,7 +34,7 @@ def preprocess_to_ndarray(X, Y):
     np.random.seed(1215)
 
     VAL_FRACTION = 0.2
-    TEST_FRACTION = 0.012
+    TEST_FRACTION = 0.05
     num_classes = 101
 
     X_train = X
@@ -42,7 +46,6 @@ def preprocess_to_ndarray(X, Y):
                                                                                 random_state=1215, stratify=y_train)
     X_train, X_val, y_train, y_val = sklearn.model_selection.train_test_split(X_train, y_train, test_size=VAL_FRACTION,
                                                                               random_state=1215, stratify=y_train)
-    print(X_test.shape)
     y_test = np.eye(num_classes)[y_test - 1]
     y_val = np.eye(num_classes)[y_val - 1]
     y_train = np.eye(num_classes)[y_train - 1]

@@ -66,6 +66,10 @@ def load_data(dataset_name):
     # one-hot encode the training and testing labels
     #numLabels = len(np.unique(Y))
     #Y = to_categorical(Y, numLabels)
+
+    #shift around 0
+    X = X - 0.5
+
     return X, Y
 
 class RockPaperScissors():
@@ -82,8 +86,6 @@ class RockPaperScissors():
                                                                                     random_state=1215, stratify=y_train)
         X_train, X_val, y_train, y_val = sklearn.model_selection.train_test_split(X_train, y_train, test_size=VAL_FRACTION,
                                                                                   random_state=1215, stratify=y_train)
-
-        print(np.max(X_test))
 
         num_classes = 3
         y_test = np.eye(num_classes)[y_test]
