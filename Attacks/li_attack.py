@@ -131,7 +131,7 @@ class CarliniLi:
 
                     # perform the update step
                     _, works = sess.run([train, loss], feed_dict=feed_dict)
-    
+
                     # it worked
                     if works < .0001*CONST and (self.ABORT_EARLY or step == CONST-1):
                         get = sess.run(output, feed_dict=feed_dict)
@@ -182,7 +182,6 @@ class CarliniLi:
                 return prev
     
             scores, origscores, nimg, const = res
-            print(nimg)
             if self.REDUCE_CONST: const /= 2
 
             # the attack succeeded, reduce tau and try again

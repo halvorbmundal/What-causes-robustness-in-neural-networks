@@ -34,7 +34,7 @@ def cw_attack(file_name, norm, sess, num_image=10, data_set_class=MNIST()):
 
     data = data_set_class
 
-    model = load_model(file_name, custom_objects={'fn':loss,'tf':tf, 'ResidualStart' : ResidualStart, 'ResidualStart2' : ResidualStart2})
+    model = load_model(file_name, custom_objects={'fn':loss,'tf':tf, 'ResidualStart' : ResidualStart, 'ResidualStart2' : ResidualStart2, 'tf':tf, 'atan': tf.math.atan})
     inputs, targets, true_labels, true_ids, img_info = generate_data(data, samples=num_image, targeted=True, random_and_least_likely = True, target_type = 0b0001, predictor=model.predict, start=0)
     model.predict = model
     model.num_labels = 10
@@ -43,11 +43,9 @@ def cw_attack(file_name, norm, sess, num_image=10, data_set_class=MNIST()):
     model.num_channels = data.test_data.shape[3]
     model.num_labels = data.test_labels.shape[1]
 
-    print(f"There are {len(inputs)} images and {len(targets)} targets", flush=True)
     start_time = timer.time()
     attack = attack(sess, model, max_iterations=10000)
     perturbed_input = attack.attack(inputs, targets)
-    print(f"There are {len(perturbed_input)} perturbed_inputs and {len(inputs)} inputs", flush=True)
     UB = np.average(norm_fn(perturbed_input-inputs))
     return UB, (timer.time()-start_time)/len(inputs)
     
