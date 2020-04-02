@@ -155,6 +155,7 @@ class CarliniLi:
         If self.targeted is false, then targets are the original class labels.
         """
         r = []
+        print(f"{len(imgs)} images and {len(targets)} targets")
         for img,target in zip(imgs, targets):
             print(f"calclulating robustness for image {len(r)+1}", flush=True)
             r.extend(self.attack_single(img, target))
