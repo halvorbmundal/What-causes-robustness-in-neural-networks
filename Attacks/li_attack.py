@@ -182,6 +182,7 @@ class CarliniLi:
                 return prev
     
             scores, origscores, nimg, const = res
+            print(nimg)
             if self.REDUCE_CONST: const /= 2
 
             # the attack succeeded, reduce tau and try again
