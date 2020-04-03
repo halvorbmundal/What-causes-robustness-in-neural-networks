@@ -447,13 +447,11 @@ def upper_bound_calculations(parameters):
             print_parameters(parameters)
             return
 
-        print("before config", flush=True)
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
         config.log_device_placement = False
         sess = tf.Session(config=config)
 
-        print("after config", flush=True)
         with sess.as_default():
             upper_bound, time_spent = get_upper_bound_and_time(parameters.file_name,
                                                                parameters.l_norm,
@@ -461,7 +459,7 @@ def upper_bound_calculations(parameters):
                                                                sess,
                                                                dataset_data)
 
-        debugprint(parameters.isDebugging, "writing to file")
+        debugprint(parameters.isDebugging, "writing upper bound to file")
         write_to_upper_bound_file(parameters, upper_bound, time_spent, csv_name)
 
         print("wrote upper bound to file", flush=True)
@@ -594,7 +592,7 @@ def main():
     sema = multiprocessing.Semaphore(processes)
 
     cpu_pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
-    gpu_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
+    gpu_pool = multiprocessing.get_context('spawn').Pool(1, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
 
     pool_init(l1, l2, sema, data)
 
@@ -665,9 +663,9 @@ def main():
                                             gpu_pool.apply_async(upper_bound_calculations, (parameters,))
 
     print("Waiting for processes to finish")
-    # gpu_pool.close()
+    gpu_pool.close()
     cpu_pool.close()
-    # gpu_pool.join()
+    gpu_pool.join()
     cpu_pool.join()
     print("program finished")
 
