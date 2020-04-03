@@ -77,15 +77,6 @@ def generate_data(data, samples, targeted=True, random_and_least_likely = False,
             if random_and_least_likely:
                 # if there is no user specified target classes
                 if target_classes is None:
-                    print("=========================")
-                    print("")
-                    print("shape")
-                    print(data.test_data[start+i].shape, flush=True)
-                    print("shape")
-                    print(np.array([data.test_data[start+i]]).shape, flush=True)
-                    print("shape")
-                    print(predictor(np.array([data.test_data[start+i]])).shape, flush=True)
-                    print(np.squeeze(predictor(np.array([data.test_data[start+i]]))), flush=True)
                     original_predict = np.squeeze(predictor(np.array([data.test_data[start+i]])))
                     num_classes = len(original_predict)
                     predicted_label = np.argmax(original_predict)
