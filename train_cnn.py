@@ -167,12 +167,13 @@ def create_model(activation, bn, data, filters, init, kernels, use_padding_same)
         # model.add(Activation(activation))
         # ReLU activation
         model.add(Lambda(activation))
-    # the output layer, with 10 classes
+    # the output layer
     model.add(Flatten())
     model.add(Dense(data.train_labels.shape[1]))
     # load initial weights when given
     if init != None:
         model.load_weights(init)
+    print(model.layers)
     return model
 
 
