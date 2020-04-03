@@ -44,7 +44,7 @@ def cw_attack(file_name, norm, sess, num_image=10, data_set_class=MNIST()):
     model.num_labels = data.test_labels.shape[1]
 
     start_time = timer.time()
-    attack = attack(sess, model, max_iterations=10000)
+    attack = attack(sess, model, max_iterations=1000)
     perturbed_input = attack.attack(inputs, targets)
     UB = np.average(norm_fn(perturbed_input-inputs))
     return UB, (timer.time()-start_time)/len(inputs)
