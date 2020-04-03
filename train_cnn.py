@@ -76,10 +76,6 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
 
         devices = get_available_gpus()
 
-        if len(devices) >= 2:
-            print(f"using {len(devices)} gpus")
-            model = tf.keras.utils.multi_gpu_model(model, gpus=len(devices))
-
         model.compile(loss=fn,
                       optimizer=optimizer,
                       metrics=['accuracy'])
