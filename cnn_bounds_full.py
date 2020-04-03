@@ -319,8 +319,8 @@ class Model:
                 self.weights.append((W1, W2))
                 self.biases.append((bias1, bias2))
             else:
-                print(str(type(layer)))
-                raise ValueError('Invalid Layer Type')
+                print(str(type(layer)), flush=True)
+                raise ValueError('Invalid Layer Type - ' + str(type(layer)))
         print(cur_shape)
 
     def predict(self, data):
