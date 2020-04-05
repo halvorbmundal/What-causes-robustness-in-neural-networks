@@ -1,5 +1,5 @@
 {
-  "path": "test",
+  "path": "v9",
   "dataset": "mnist",
 
   "print_scatter": false,

@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d5cef5c9-828a-45b9-b66e-d5943f64af0c" name="Default" comment="Reduce queuesize.">
+    <list default="true" id="d5cef5c9-828a-45b9-b66e-d5943f64af0c" name="Default" comment="Reduce iterations">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cnn_robustness_tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/cnn_robustness_tester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/remote/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/remote/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/remote/statistics.py" beforeDir="false" afterPath="$PROJECT_DIR$/remote/statistics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,24 +58,25 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/idun" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/remote/v9/GTSRB/results" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/idun" />
-      <recent name="$PROJECT_DIR$/datasets/data" />
-      <recent name="$PROJECT_DIR$/../idun" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/datasets" />
       <recent name="$PROJECT_DIR$/idun" />
       <recent name="$PROJECT_DIR$/datasets/data" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/remote/v9/GTSRB/results" />
+      <recent name="$PROJECT_DIR$/idun" />
+      <recent name="$PROJECT_DIR$/datasets/data" />
+      <recent name="$PROJECT_DIR$/../idun" />
+    </key>
   </component>
-  <component name="RunManager" selected="Python.cnn_robustness_tester">
+  <component name="RunManager" selected="Python.setup_rockpaperscissors">
     <configuration name="cnn_robustness_tester" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CNN-Cert" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -86,7 +91,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cnn_robustness_tester.py" />
-      <option name="PARAMETERS" value="cpu gpu no_debugging test mnist" />
+      <option name="PARAMETERS" value="cpu gpu debugging v11 caltechSilhouettes upper 8" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -94,7 +99,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="setup_tinyimagenet" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="setup_GTSRB" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CNN-Cert" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -107,7 +112,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/datasets/setup_tinyimagenet.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/datasets/setup_GTSRB.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -116,7 +121,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="statistics" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="setup_rockpaperscissors" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CNN-Cert" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -124,12 +129,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/remote" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/datasets" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/remote/statistics.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/datasets/setup_rockpaperscissors.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -138,7 +143,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="statistics_old" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="setup_sign_language" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CNN-Cert" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -146,12 +151,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/remote" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/datasets" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/remote/statistics_old.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/datasets/setup_sign_language.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -160,7 +165,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="train_cnn" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="utils" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CNN-Cert" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -173,7 +178,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/train_cnn.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -183,21 +188,33 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.statistics" />
-      <item itemvalue="Python.statistics_old" />
+      <item itemvalue="Python.setup_GTSRB" />
+      <item itemvalue="Python.setup_rockpaperscissors" />
+      <item itemvalue="Python.setup_sign_language" />
       <item itemvalue="Python.cnn_robustness_tester" />
-      <item itemvalue="Python.setup_tinyimagenet" />
-      <item itemvalue="Python.train_cnn" />
+      <item itemvalue="Python.utils" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.setup_rockpaperscissors" />
         <item itemvalue="Python.cnn_robustness_tester" />
-        <item itemvalue="Python.train_cnn" />
-        <item itemvalue="Python.statistics" />
-        <item itemvalue="Python.setup_tinyimagenet" />
-        <item itemvalue="Python.statistics_old" />
+        <item itemvalue="Python.utils" />
+        <item itemvalue="Python.setup_sign_language" />
+        <item itemvalue="Python.setup_GTSRB" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -217,352 +234,359 @@
       <workItem from="1583834925572" duration="11511000" />
       <workItem from="1583849968539" duration="5620000" />
       <workItem from="1583861194708" duration="63778000" />
-      <workItem from="1584452766812" duration="18077000" />
+      <workItem from="1584452766812" duration="40664000" />
+      <workItem from="1584872348361" duration="35575000" />
+      <workItem from="1585137210221" duration="3944000" />
+      <workItem from="1585157280139" duration="88000" />
+      <workItem from="1585167456890" duration="4315000" />
+      <workItem from="1585567204738" duration="27319000" />
+      <workItem from="1585745671916" duration="127000" />
+      <workItem from="1585839874009" duration="17876000" />
     </task>
-    <task id="LOCAL-00049" summary="Add print">
-      <created>1584049332904</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
+    <task id="LOCAL-00151" summary="Add upper bounds calculations">
+      <created>1585139413487</created>
+      <option name="number" value="00151" />
+      <option name="presentableId" value="LOCAL-00151" />
       <option name="project" value="LOCAL" />
-      <updated>1584049332904</updated>
+      <updated>1585139413487</updated>
     </task>
-    <task id="LOCAL-00050" summary="more gpus">
-      <created>1584049452711</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
+    <task id="LOCAL-00152" summary="Less prints">
+      <created>1585139431636</created>
+      <option name="number" value="00152" />
+      <option name="presentableId" value="LOCAL-00152" />
       <option name="project" value="LOCAL" />
-      <updated>1584049452714</updated>
+      <updated>1585139431636</updated>
     </task>
-    <task id="LOCAL-00051" summary="Increase max_queue_size">
-      <created>1584050718441</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
+    <task id="LOCAL-00153" summary="Add rock paper scissor data set">
+      <created>1585143704889</created>
+      <option name="number" value="00153" />
+      <option name="presentableId" value="LOCAL-00153" />
       <option name="project" value="LOCAL" />
-      <updated>1584050718441</updated>
+      <updated>1585143704889</updated>
     </task>
-    <task id="LOCAL-00052" summary="Add">
-      <created>1584052793569</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
+    <task id="LOCAL-00154" summary="remove accidental indent">
+      <created>1585143787002</created>
+      <option name="number" value="00154" />
+      <option name="presentableId" value="LOCAL-00154" />
       <option name="project" value="LOCAL" />
-      <updated>1584052793570</updated>
+      <updated>1585143787002</updated>
     </task>
-    <task id="LOCAL-00053" summary="Add">
-      <created>1584053471135</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
+    <task id="LOCAL-00155" summary="Add download link">
+      <created>1585144001019</created>
+      <option name="number" value="00155" />
+      <option name="presentableId" value="LOCAL-00155" />
       <option name="project" value="LOCAL" />
-      <updated>1584053471135</updated>
+      <updated>1585144001019</updated>
     </task>
-    <task id="LOCAL-00054" summary="Add">
-      <created>1584055939030</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
+    <task id="LOCAL-00156" summary="increase agumentation of rockpaperscissor. Remove divison by 255">
+      <created>1585168821106</created>
+      <option name="number" value="00156" />
+      <option name="presentableId" value="LOCAL-00156" />
       <option name="project" value="LOCAL" />
-      <updated>1584055939030</updated>
+      <updated>1585168821106</updated>
     </task>
-    <task id="LOCAL-00055" summary="Add">
-      <created>1584056282130</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
+    <task id="LOCAL-00157" summary="Increase patience for rockpaperscissor">
+      <created>1585169163191</created>
+      <option name="number" value="00157" />
+      <option name="presentableId" value="LOCAL-00157" />
       <option name="project" value="LOCAL" />
-      <updated>1584056282130</updated>
+      <updated>1585169163192</updated>
     </task>
-    <task id="LOCAL-00056" summary="Add">
-      <created>1584093176539</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
+    <task id="LOCAL-00158" summary="More hyperparameters">
+      <created>1585353195955</created>
+      <option name="number" value="00158" />
+      <option name="presentableId" value="LOCAL-00158" />
       <option name="project" value="LOCAL" />
-      <updated>1584093176541</updated>
+      <updated>1585353195955</updated>
     </task>
-    <task id="LOCAL-00057" summary="Add">
-      <created>1584093736716</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
+    <task id="LOCAL-00159" summary="Add all activation functions, reduce max depth">
+      <created>1585568661715</created>
+      <option name="number" value="00159" />
+      <option name="presentableId" value="LOCAL-00159" />
       <option name="project" value="LOCAL" />
-      <updated>1584093736716</updated>
+      <updated>1585568661715</updated>
     </task>
-    <task id="LOCAL-00058" summary="Add">
-      <created>1584225582485</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
+    <task id="LOCAL-00160" summary="Increse max iterations before failure.">
+      <created>1585667542474</created>
+      <option name="number" value="00160" />
+      <option name="presentableId" value="LOCAL-00160" />
       <option name="project" value="LOCAL" />
-      <updated>1584225582485</updated>
+      <updated>1585667542474</updated>
     </task>
-    <task id="LOCAL-00059" summary="Add">
-      <created>1584225933986</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
+    <task id="LOCAL-00161" summary="Increase iterations, decrease minimum tau">
+      <created>1585671091389</created>
+      <option name="number" value="00161" />
+      <option name="presentableId" value="LOCAL-00161" />
       <option name="project" value="LOCAL" />
-      <updated>1584225933987</updated>
+      <updated>1585671091390</updated>
     </task>
-    <task id="LOCAL-00060" summary="Add">
-      <created>1584271219588</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
+    <task id="LOCAL-00162" summary="Reduce hyperparameters">
+      <created>1585671397733</created>
+      <option name="number" value="00162" />
+      <option name="presentableId" value="LOCAL-00162" />
       <option name="project" value="LOCAL" />
-      <updated>1584271219588</updated>
+      <updated>1585671397734</updated>
     </task>
-    <task id="LOCAL-00061" summary="Add">
-      <created>1584273460407</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
+    <task id="LOCAL-00163" summary="Padding same false">
+      <created>1585671448501</created>
+      <option name="number" value="00163" />
+      <option name="presentableId" value="LOCAL-00163" />
       <option name="project" value="LOCAL" />
-      <updated>1584273460407</updated>
+      <updated>1585671448502</updated>
     </task>
-    <task id="LOCAL-00062" summary="Add">
-      <created>1584273799028</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
+    <task id="LOCAL-00164" summary="More augmentation on caltech silhouettes">
+      <created>1585671490731</created>
+      <option name="number" value="00164" />
+      <option name="presentableId" value="LOCAL-00164" />
       <option name="project" value="LOCAL" />
-      <updated>1584273799030</updated>
+      <updated>1585671490731</updated>
     </task>
-    <task id="LOCAL-00063" summary="Add">
-      <created>1584290577358</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
+    <task id="LOCAL-00165" summary="Add prints">
+      <created>1585672837386</created>
+      <option name="number" value="00165" />
+      <option name="presentableId" value="LOCAL-00165" />
       <option name="project" value="LOCAL" />
-      <updated>1584290577358</updated>
+      <updated>1585672837386</updated>
     </task>
-    <task id="LOCAL-00064" summary="Add SGD optimizer to caltech silhouettes">
-      <created>1584290988622</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
+    <task id="LOCAL-00166" summary="Add cnnc to mnist">
+      <created>1585673584238</created>
+      <option name="number" value="00166" />
+      <option name="presentableId" value="LOCAL-00166" />
       <option name="project" value="LOCAL" />
-      <updated>1584290988622</updated>
+      <updated>1585673584238</updated>
     </task>
-    <task id="LOCAL-00065" summary="Add">
-      <created>1584291191164</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
+    <task id="LOCAL-00167" summary="Put the upper bounds calculations on the keras lock">
+      <created>1585673922952</created>
+      <option name="number" value="00167" />
+      <option name="presentableId" value="LOCAL-00167" />
       <option name="project" value="LOCAL" />
-      <updated>1584291191164</updated>
+      <updated>1585673922952</updated>
     </task>
-    <task id="LOCAL-00066" summary="Add">
-      <created>1584291359551</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
+    <task id="LOCAL-00168" summary="Try 2 gpus">
+      <created>1585674535343</created>
+      <option name="number" value="00168" />
+      <option name="presentableId" value="LOCAL-00168" />
       <option name="project" value="LOCAL" />
-      <updated>1584291359551</updated>
+      <updated>1585674535343</updated>
     </task>
-    <task id="LOCAL-00067" summary="Add">
-      <created>1584306389092</created>
-      <option name="number" value="00067" />
-      <option name="presentableId" value="LOCAL-00067" />
+    <task id="LOCAL-00169" summary="Add print">
+      <created>1585675037315</created>
+      <option name="number" value="00169" />
+      <option name="presentableId" value="LOCAL-00169" />
       <option name="project" value="LOCAL" />
-      <updated>1584306389092</updated>
+      <updated>1585675037316</updated>
     </task>
-    <task id="LOCAL-00068" summary="Add">
-      <created>1584306661867</created>
-      <option name="number" value="00068" />
-      <option name="presentableId" value="LOCAL-00068" />
+    <task id="LOCAL-00170" summary="debugging">
+      <created>1585675849252</created>
+      <option name="number" value="00170" />
+      <option name="presentableId" value="LOCAL-00170" />
       <option name="project" value="LOCAL" />
-      <updated>1584306661867</updated>
+      <updated>1585675849252</updated>
     </task>
-    <task id="LOCAL-00069" summary="Add">
-      <created>1584306796094</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
+    <task id="LOCAL-00171" summary="Add prints for debugging">
+      <created>1585676191289</created>
+      <option name="number" value="00171" />
+      <option name="presentableId" value="LOCAL-00171" />
       <option name="project" value="LOCAL" />
-      <updated>1584306796094</updated>
+      <updated>1585676191289</updated>
     </task>
-    <task id="LOCAL-00070" summary="Add">
-      <created>1584307094917</created>
-      <option name="number" value="00070" />
-      <option name="presentableId" value="LOCAL-00070" />
+    <task id="LOCAL-00172" summary="Add prints for debugging">
+      <created>1585676411235</created>
+      <option name="number" value="00172" />
+      <option name="presentableId" value="LOCAL-00172" />
       <option name="project" value="LOCAL" />
-      <updated>1584307094917</updated>
+      <updated>1585676411236</updated>
     </task>
-    <task id="LOCAL-00071" summary="    Add">
-      <created>1584309142579</created>
-      <option name="number" value="00071" />
-      <option name="presentableId" value="LOCAL-00071" />
+    <task id="LOCAL-00173" summary="Add debug prints">
+      <created>1585680061665</created>
+      <option name="number" value="00173" />
+      <option name="presentableId" value="LOCAL-00173" />
       <option name="project" value="LOCAL" />
-      <updated>1584309142580</updated>
+      <updated>1585680061666</updated>
     </task>
-    <task id="LOCAL-00072" summary="    Add">
-      <created>1584363082944</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
+    <task id="LOCAL-00174" summary="Add debugprints">
+      <created>1585680141853</created>
+      <option name="number" value="00174" />
+      <option name="presentableId" value="LOCAL-00174" />
       <option name="project" value="LOCAL" />
-      <updated>1584363082945</updated>
+      <updated>1585680141854</updated>
     </task>
-    <task id="LOCAL-00073" summary="    Add">
-      <created>1584363483396</created>
-      <option name="number" value="00073" />
-      <option name="presentableId" value="LOCAL-00073" />
+    <task id="LOCAL-00175" summary="Give prints flush=True">
+      <created>1585680361450</created>
+      <option name="number" value="00175" />
+      <option name="presentableId" value="LOCAL-00175" />
       <option name="project" value="LOCAL" />
-      <updated>1584363483397</updated>
+      <updated>1585680361450</updated>
     </task>
-    <task id="LOCAL-00074" summary="    Add">
-      <created>1584366032919</created>
-      <option name="number" value="00074" />
-      <option name="presentableId" value="LOCAL-00074" />
+    <task id="LOCAL-00176" summary="Remove featurewise shift">
+      <created>1585680609769</created>
+      <option name="number" value="00176" />
+      <option name="presentableId" value="LOCAL-00176" />
       <option name="project" value="LOCAL" />
-      <updated>1584366032920</updated>
+      <updated>1585680609770</updated>
     </task>
-    <task id="LOCAL-00075" summary="    Add">
-      <created>1584366143070</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
+    <task id="LOCAL-00177" summary="Edit printing">
+      <created>1585681636741</created>
+      <option name="number" value="00177" />
+      <option name="presentableId" value="LOCAL-00177" />
       <option name="project" value="LOCAL" />
-      <updated>1584366143070</updated>
+      <updated>1585681636743</updated>
     </task>
-    <task id="LOCAL-00076" summary="Debug - Add a no-es step for mnist">
-      <created>1584452457121</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
+    <task id="LOCAL-00178" summary="add no debugging. 9 cpus">
+      <created>1585681671890</created>
+      <option name="number" value="00178" />
+      <option name="presentableId" value="LOCAL-00178" />
       <option name="project" value="LOCAL" />
-      <updated>1584452457122</updated>
+      <updated>1585681671890</updated>
     </task>
-    <task id="LOCAL-00077" summary=".">
-      <created>1584452840140</created>
-      <option name="number" value="00077" />
-      <option name="presentableId" value="LOCAL-00077" />
+    <task id="LOCAL-00179" summary="8 cpus">
+      <created>1585684169746</created>
+      <option name="number" value="00179" />
+      <option name="presentableId" value="LOCAL-00179" />
       <option name="project" value="LOCAL" />
-      <updated>1584452840140</updated>
+      <updated>1585684169746</updated>
     </task>
-    <task id="LOCAL-00078" summary="    Add">
-      <created>1584453250637</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
+    <task id="LOCAL-00180" summary="Debug prints">
+      <created>1585854160494</created>
+      <option name="number" value="00180" />
+      <option name="presentableId" value="LOCAL-00180" />
       <option name="project" value="LOCAL" />
-      <updated>1584453250637</updated>
+      <updated>1585854160495</updated>
     </task>
-    <task id="LOCAL-00079" summary="    Add">
-      <created>1584458149113</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
+    <task id="LOCAL-00181" summary="Add print">
+      <created>1585860889768</created>
+      <option name="number" value="00181" />
+      <option name="presentableId" value="LOCAL-00181" />
       <option name="project" value="LOCAL" />
-      <updated>1584458149113</updated>
+      <updated>1585860889769</updated>
     </task>
-    <task id="LOCAL-00080" summary="    Add">
-      <created>1584475715993</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
+    <task id="LOCAL-00182" summary="Shif data around 0">
+      <created>1585865928592</created>
+      <option name="number" value="00182" />
+      <option name="presentableId" value="LOCAL-00182" />
       <option name="project" value="LOCAL" />
-      <updated>1584475715993</updated>
+      <updated>1585865928592</updated>
     </task>
-    <task id="LOCAL-00081" summary="    Add">
-      <created>1584476174002</created>
-      <option name="number" value="00081" />
-      <option name="presentableId" value="LOCAL-00081" />
+    <task id="LOCAL-00183" summary="Bump version number as dataset is changed">
+      <created>1585866114294</created>
+      <option name="number" value="00183" />
+      <option name="presentableId" value="LOCAL-00183" />
       <option name="project" value="LOCAL" />
-      <updated>1584476174002</updated>
+      <updated>1585866114294</updated>
     </task>
-    <task id="LOCAL-00082" summary="    Add">
-      <created>1584476251527</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
+    <task id="LOCAL-00184" summary="Remove a debug print">
+      <created>1585866302109</created>
+      <option name="number" value="00184" />
+      <option name="presentableId" value="LOCAL-00184" />
       <option name="project" value="LOCAL" />
-      <updated>1584476251527</updated>
+      <updated>1585866302109</updated>
     </task>
-    <task id="LOCAL-00083" summary="    Add">
-      <created>1584476879731</created>
-      <option name="number" value="00083" />
-      <option name="presentableId" value="LOCAL-00083" />
+    <task id="LOCAL-00185" summary="Remove prints">
+      <created>1585866537460</created>
+      <option name="number" value="00185" />
+      <option name="presentableId" value="LOCAL-00185" />
       <option name="project" value="LOCAL" />
-      <updated>1584476879731</updated>
+      <updated>1585866537460</updated>
     </task>
-    <task id="LOCAL-00084" summary="    Add">
-      <created>1584477028416</created>
-      <option name="number" value="00084" />
-      <option name="presentableId" value="LOCAL-00084" />
+    <task id="LOCAL-00186" summary="Reduce iterations">
+      <created>1585914275853</created>
+      <option name="number" value="00186" />
+      <option name="presentableId" value="LOCAL-00186" />
       <option name="project" value="LOCAL" />
-      <updated>1584477028416</updated>
+      <updated>1585914275854</updated>
     </task>
-    <task id="LOCAL-00085" summary="    Add">
-      <created>1584478504491</created>
-      <option name="number" value="00085" />
-      <option name="presentableId" value="LOCAL-00085" />
+    <task id="LOCAL-00187" summary="Use multiprocessing spawn">
+      <created>1585914676155</created>
+      <option name="number" value="00187" />
+      <option name="presentableId" value="LOCAL-00187" />
       <option name="project" value="LOCAL" />
-      <updated>1584478504491</updated>
+      <updated>1585914676155</updated>
     </task>
-    <task id="LOCAL-00086" summary="    Add">
-      <created>1584478769059</created>
-      <option name="number" value="00086" />
-      <option name="presentableId" value="LOCAL-00086" />
+    <task id="LOCAL-00188" summary="test in new directory">
+      <created>1585915814153</created>
+      <option name="number" value="00188" />
+      <option name="presentableId" value="LOCAL-00188" />
       <option name="project" value="LOCAL" />
-      <updated>1584478769059</updated>
+      <updated>1585915814153</updated>
     </task>
-    <task id="LOCAL-00087" summary="    Add">
-      <created>1584480459181</created>
-      <option name="number" value="00087" />
-      <option name="presentableId" value="LOCAL-00087" />
+    <task id="LOCAL-00189" summary="Add debug prints">
+      <created>1585917377794</created>
+      <option name="number" value="00189" />
+      <option name="presentableId" value="LOCAL-00189" />
       <option name="project" value="LOCAL" />
-      <updated>1584480459181</updated>
+      <updated>1585917377794</updated>
     </task>
-    <task id="LOCAL-00088" summary="Set workers to 24π">
-      <created>1584482365581</created>
-      <option name="number" value="00088" />
-      <option name="presentableId" value="LOCAL-00088" />
+    <task id="LOCAL-00190" summary="Add flush to prints">
+      <created>1585918717722</created>
+      <option name="number" value="00190" />
+      <option name="presentableId" value="LOCAL-00190" />
       <option name="project" value="LOCAL" />
-      <updated>1584482365581</updated>
+      <updated>1585918717722</updated>
     </task>
-    <task id="LOCAL-00089" summary="Remove tf from main thread">
-      <created>1584482398910</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
+    <task id="LOCAL-00191" summary="Debug">
+      <created>1585920958691</created>
+      <option name="number" value="00191" />
+      <option name="presentableId" value="LOCAL-00191" />
       <option name="project" value="LOCAL" />
-      <updated>1584482398910</updated>
+      <updated>1585920958692</updated>
     </task>
-    <task id="LOCAL-00090" summary="fjkdsalj">
-      <created>1584484924949</created>
-      <option name="number" value="00090" />
-      <option name="presentableId" value="LOCAL-00090" />
+    <task id="LOCAL-00192" summary="Print debug">
+      <created>1585922037277</created>
+      <option name="number" value="00192" />
+      <option name="presentableId" value="LOCAL-00192" />
       <option name="project" value="LOCAL" />
-      <updated>1584484924949</updated>
+      <updated>1585922037278</updated>
     </task>
-    <task id="LOCAL-00091" summary="Remove tf from main thread">
-      <created>1584485591277</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
+    <task id="LOCAL-00193" summary="Remove multi gpu model">
+      <created>1585922146906</created>
+      <option name="number" value="00193" />
+      <option name="presentableId" value="LOCAL-00193" />
       <option name="project" value="LOCAL" />
-      <updated>1584485591277</updated>
+      <updated>1585922146906</updated>
     </task>
-    <task id="LOCAL-00092" summary="exit process">
-      <created>1584487524787</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
+    <task id="LOCAL-00194" summary="v10">
+      <created>1585923660338</created>
+      <option name="number" value="00194" />
+      <option name="presentableId" value="LOCAL-00194" />
       <option name="project" value="LOCAL" />
-      <updated>1584487524787</updated>
+      <updated>1585923660338</updated>
     </task>
-    <task id="LOCAL-00093" summary="8 tasks">
-      <created>1584487595409</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
+    <task id="LOCAL-00195" summary="Remove prints">
+      <created>1585923690756</created>
+      <option name="number" value="00195" />
+      <option name="presentableId" value="LOCAL-00195" />
       <option name="project" value="LOCAL" />
-      <updated>1584487595410</updated>
+      <updated>1585923690756</updated>
     </task>
-    <task id="LOCAL-00094" summary="move session. Add gc collect">
-      <created>1584489618866</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
+    <task id="LOCAL-00196" summary="Only relu lock for upper bound">
+      <created>1586081353106</created>
+      <option name="number" value="00196" />
+      <option name="presentableId" value="LOCAL-00196" />
       <option name="project" value="LOCAL" />
-      <updated>1584489618867</updated>
+      <updated>1586081353106</updated>
     </task>
-    <task id="LOCAL-00095" summary="Reduce queuesize.">
-      <created>1584490236847</created>
-      <option name="number" value="00095" />
-      <option name="presentableId" value="LOCAL-00095" />
+    <task id="LOCAL-00197" summary="Add missing parameter">
+      <created>1586082048726</created>
+      <option name="number" value="00197" />
+      <option name="presentableId" value="LOCAL-00197" />
       <option name="project" value="LOCAL" />
-      <updated>1584490236847</updated>
+      <updated>1586082048726</updated>
     </task>
-    <task id="LOCAL-00096" summary="Reduce queuesize.">
-      <created>1584490816885</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
+    <task id="LOCAL-00198" summary="print">
+      <created>1586083762079</created>
+      <option name="number" value="00198" />
+      <option name="presentableId" value="LOCAL-00198" />
       <option name="project" value="LOCAL" />
-      <updated>1584490816885</updated>
+      <updated>1586083762079</updated>
     </task>
-    <task id="LOCAL-00097" summary="8 cpuer">
-      <created>1584491061348</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
+    <task id="LOCAL-00199" summary="Move tf import after lock">
+      <created>1586083884163</created>
+      <option name="number" value="00199" />
+      <option name="presentableId" value="LOCAL-00199" />
       <option name="project" value="LOCAL" />
-      <updated>1584491061348</updated>
+      <updated>1586083884163</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <option name="localTasksCounter" value="200" />
     <servers />
   </component>
   <component name="TodoView">
@@ -577,102 +601,151 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="squeuemefdasfasd" />
-    <MESSAGE value="remove requiruments" />
-    <MESSAGE value="ffs" />
-    <MESSAGE value="add bn" />
-    <MESSAGE value="Changed dimentions of a from (num_filters[?],) to (num_filters[?],1, 1, 1)" />
-    <MESSAGE value="hmmmmm" />
-    <MESSAGE value="Datagen" />
-    <MESSAGE value="hmmm" />
-    <MESSAGE value="Add multi gpu support" />
+    <MESSAGE value="Add debugprints" />
+    <MESSAGE value="Give prints flush=True" />
+    <MESSAGE value="Remove featurewise shift" />
+    <MESSAGE value="Edit printing" />
+    <MESSAGE value="add no debugging. 9 cpus" />
+    <MESSAGE value="8 cpus" />
+    <MESSAGE value="Debug prints" />
     <MESSAGE value="Add print" />
-    <MESSAGE value="more gpus" />
-    <MESSAGE value="Increase max_queue_size" />
-    <MESSAGE value="Add SGD optimizer to caltech silhouettes" />
-    <MESSAGE value="Add" />
-    <MESSAGE value="Debug - Add a no-es step for mnist" />
-    <MESSAGE value="." />
-    <MESSAGE value="    Add" />
-    <MESSAGE value="Set workers to 24π" />
-    <MESSAGE value="fjkdsalj" />
-    <MESSAGE value="Remove tf from main thread" />
-    <MESSAGE value="exit process" />
-    <MESSAGE value="8 tasks" />
-    <MESSAGE value="move session. Add gc collect" />
-    <MESSAGE value="Reduce queuesize." />
-    <MESSAGE value="8 cpuer" />
-    <option name="LAST_COMMIT_MESSAGE" value="8 cpuer" />
+    <MESSAGE value="Shif data around 0" />
+    <MESSAGE value="Bump version number as dataset is changed" />
+    <MESSAGE value="Remove a debug print" />
+    <MESSAGE value="Reduce iterations" />
+    <MESSAGE value="Use multiprocessing spawn" />
+    <MESSAGE value="test in new directory" />
+    <MESSAGE value="Add debug prints" />
+    <MESSAGE value="Add flush to prints" />
+    <MESSAGE value="Debug" />
+    <MESSAGE value="Print debug" />
+    <MESSAGE value="Remove multi gpu model" />
+    <MESSAGE value="v10" />
+    <MESSAGE value="Remove prints" />
+    <MESSAGE value="Only relu lock for upper bound" />
+    <MESSAGE value="Add missing parameter" />
+    <MESSAGE value="print" />
+    <MESSAGE value="Move tf import after lock" />
+    <option name="LAST_COMMIT_MESSAGE" value="Move tf import after lock" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="300" y="-1043" key="#Inspections" timestamp="1583332314180">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state x="436" y="-1043" key="#Inspections" timestamp="1585681382170">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
     </state>
+    <state x="436" y="-1043" key="#Inspections/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1585681382170" />
     <state x="300" y="-1043" key="#Inspections/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583332314180" />
-    <state x="164" y="-1047" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584453040437">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state x="436" y="-1043" width="800" height="717" key="#Intentions" timestamp="1585681334162">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="164" y="-1070" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584307319908" />
+    <state x="436" y="-1043" width="800" height="717" key="#Intentions/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1585681334162" />
+    <state x="436" y="-1087" key="#Log_Highlighting_(ideolog)" timestamp="1585912564675">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
+    </state>
+    <state x="436" y="-1087" key="#Log_Highlighting_(ideolog)/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1585912564675" />
+    <state x="300" y="-1048" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585920449195">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
+    </state>
+    <state x="164" y="-1070" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584619770132" />
+    <state x="300" y="-1048" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1585920449195" />
     <state x="164" y="-1047" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584453040437" />
-    <state x="488" y="268" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.940@0.23.1680.940" timestamp="1583876270299" />
+    <state x="488" y="268" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.940@0.23.1680.940" timestamp="1585087246445" />
     <state x="427" y="-899" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1583760228994">
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="427" y="-899" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583760228994" />
-    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2" timestamp="1584491061224">
+    <state x="682" y="-792" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1584524419348">
       <screen x="-580" y="-1417" width="2560" height="1330" />
     </state>
-    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584491061224" />
-    <state x="-300" y="-1382" width="2013" height="1280" key="CommitChangelistDialog2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584485591148" />
-    <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2/0.23.1680.940@0.23.1680.940" timestamp="1583922676651" />
-    <state x="34" y="-1129" key="DiffContextDialog" timestamp="1583760372078">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state x="682" y="-792" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584524419348" />
+    <state x="-438" y="-1417" width="2554" height="1417" key="CommitChangelistDialog2" timestamp="1586083883948">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="34" y="-1129" key="DiffContextDialog/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1583760372078" />
-    <state width="2032" height="547" key="GridCell.Tab.0.bottom" timestamp="1584489167109">
-      <screen x="-580" y="-1417" width="2560" height="1330" />
+    <state x="-300" y="-1384" width="1676" height="1029" key="CommitChangelistDialog2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1585169162950" />
+    <state x="-438" y="-1417" width="2554" height="1417" key="CommitChangelistDialog2/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1586083883948" />
+    <state x="-300" y="-1382" width="2013" height="1280" key="CommitChangelistDialog2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1585144000842" />
+    <state x="184" y="46" width="1146" height="770" key="CommitChangelistDialog2/0.23.1680.940@0.23.1680.940" timestamp="1585091767512" />
+    <state x="184" y="46" key="CommitChangelistDialog2/0.23.1680.944@0.23.1680.944" timestamp="1585353195291" />
+    <state x="170" y="-1129" key="DiffContextDialog" timestamp="1585865908193">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
     </state>
-    <state width="2032" height="547" key="GridCell.Tab.0.bottom/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584489167109" />
-    <state width="2032" height="547" key="GridCell.Tab.0.bottom/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584482315508" />
-    <state width="1638" height="216" key="GridCell.Tab.0.bottom/0.23.1680.940@0.23.1680.940" timestamp="1583923686485" />
-    <state width="2032" height="547" key="GridCell.Tab.0.center" timestamp="1584489167106">
-      <screen x="-580" y="-1417" width="2560" height="1330" />
+    <state x="170" y="-1129" key="DiffContextDialog/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1585865908193" />
+    <state x="34" y="-1129" key="DiffContextDialog/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1585143680869" />
+    <state x="336" y="189" key="DiffContextDialog/0.23.1680.940@0.23.1680.940" timestamp="1584915729386" />
+    <state width="2518" height="476" key="GridCell.Tab.0.bottom" timestamp="1586083428541">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
     </state>
-    <state width="2032" height="547" key="GridCell.Tab.0.center/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584489167106" />
-    <state width="2032" height="547" key="GridCell.Tab.0.center/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584482315507" />
-    <state width="1638" height="216" key="GridCell.Tab.0.center/0.23.1680.940@0.23.1680.940" timestamp="1583923686484" />
-    <state width="2032" height="547" key="GridCell.Tab.0.left" timestamp="1584489167105">
-      <screen x="-580" y="-1417" width="2560" height="1330" />
+    <state width="1638" height="190" key="GridCell.Tab.0.bottom/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1585220890846" />
+    <state width="2518" height="476" key="GridCell.Tab.0.bottom/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1586083428541" />
+    <state width="1638" height="190" key="GridCell.Tab.0.bottom/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1585481742572" />
+    <state width="1638" height="190" key="GridCell.Tab.0.bottom/0.23.1680.940@0.23.1680.940" timestamp="1585090659704" />
+    <state width="2518" height="476" key="GridCell.Tab.0.center" timestamp="1586083428540">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
     </state>
-    <state width="2032" height="547" key="GridCell.Tab.0.left/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584489167105" />
-    <state width="2032" height="547" key="GridCell.Tab.0.left/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584482315507" />
-    <state width="1638" height="216" key="GridCell.Tab.0.left/0.23.1680.940@0.23.1680.940" timestamp="1583923686484" />
-    <state width="2032" height="547" key="GridCell.Tab.0.right" timestamp="1584489167109">
-      <screen x="-580" y="-1417" width="2560" height="1330" />
+    <state width="1638" height="190" key="GridCell.Tab.0.center/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1585220890845" />
+    <state width="2518" height="476" key="GridCell.Tab.0.center/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1586083428540" />
+    <state width="1638" height="190" key="GridCell.Tab.0.center/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1585481742571" />
+    <state width="1638" height="190" key="GridCell.Tab.0.center/0.23.1680.940@0.23.1680.940" timestamp="1585090659704" />
+    <state width="2518" height="476" key="GridCell.Tab.0.left" timestamp="1586083428539">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
     </state>
-    <state width="2032" height="547" key="GridCell.Tab.0.right/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584489167109" />
-    <state width="2032" height="547" key="GridCell.Tab.0.right/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584482315508" />
-    <state width="1638" height="216" key="GridCell.Tab.0.right/0.23.1680.940@0.23.1680.940" timestamp="1583923686484" />
+    <state width="1638" height="190" key="GridCell.Tab.0.left/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1585220890844" />
+    <state width="2518" height="476" key="GridCell.Tab.0.left/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1586083428539" />
+    <state width="1638" height="190" key="GridCell.Tab.0.left/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1585481742570" />
+    <state width="1638" height="190" key="GridCell.Tab.0.left/0.23.1680.940@0.23.1680.940" timestamp="1585090659703" />
+    <state width="2518" height="476" key="GridCell.Tab.0.right" timestamp="1586083428540">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
+    </state>
+    <state width="1638" height="190" key="GridCell.Tab.0.right/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1585220890845" />
+    <state width="2518" height="476" key="GridCell.Tab.0.right/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1586083428540" />
+    <state width="1638" height="190" key="GridCell.Tab.0.right/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1585481742572" />
+    <state width="1638" height="190" key="GridCell.Tab.0.right/0.23.1680.940@0.23.1680.940" timestamp="1585090659704" />
     <state x="516" y="-827" key="ReplaceDuplicatesPrompt" timestamp="1584266876966">
       <screen x="-580" y="-1417" width="2560" height="1417" />
     </state>
     <state x="516" y="-827" key="ReplaceDuplicatesPrompt/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584266876966" />
-    <state x="500" y="-1024" key="RollbackChangesDialog" timestamp="1584480451184">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state x="636" y="-1024" key="RollbackChangesDialog" timestamp="1585921967974">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
     </state>
+    <state x="636" y="-1024" key="RollbackChangesDialog/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1585921967974" />
     <state x="500" y="-1024" key="RollbackChangesDialog/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584480451184" />
-    <state x="209" y="-1070" key="SettingsEditor" timestamp="1584467502933">
-      <screen x="-580" y="-1417" width="2560" height="1417" />
+    <state x="709" y="284" key="RollbackChangesDialog/0.23.1680.940@0.23.1680.940" timestamp="1585062845534" />
+    <state x="709" y="285" key="RollbackChangesDialog/0.23.1680.944@0.23.1680.944" timestamp="1585353201973" />
+    <state x="41" y="-1188" key="SettingsEditor" timestamp="1585916534611">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
     </state>
     <state x="209" y="-1091" key="SettingsEditor/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584308208430" />
+    <state x="41" y="-1188" key="SettingsEditor/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1585916534611" />
     <state x="209" y="-1070" key="SettingsEditor/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584467502933" />
-    <state x="300" y="-997" key="Vcs.Push.Dialog.v2" timestamp="1584491061641">
-      <screen x="-580" y="-1417" width="2560" height="1330" />
+    <state x="318" y="175" key="SettingsEditor/0.23.1680.940@0.23.1680.940" timestamp="1584568732473" />
+    <state x="437" y="-970" key="Vcs.Push.Dialog.v2" timestamp="1586083886305">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="300" y="-997" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1584491061641" />
-    <state x="300" y="-969" key="Vcs.Push.Dialog.v2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584485591874" />
-    <state x="578" y="320" key="Vcs.Push.Dialog.v2/0.23.1680.940@0.23.1680.940" timestamp="1583922679031" />
+    <state x="300" y="-997" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-580.-1417.2560.1330@-580.-1417.2560.1330" timestamp="1585169164428" />
+    <state x="437" y="-970" key="Vcs.Push.Dialog.v2/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1586083886305" />
+    <state x="300" y="-969" key="Vcs.Push.Dialog.v2/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1585144003009" />
+    <state x="578" y="320" key="Vcs.Push.Dialog.v2/0.23.1680.940@0.23.1680.940" timestamp="1585091769259" />
+    <state x="578" y="321" key="Vcs.Push.Dialog.v2/0.23.1680.944@0.23.1680.944" timestamp="1585353248434" />
+    <state x="517" y="-909" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1585567778225">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
+    </state>
+    <state x="517" y="-909" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1585567778225" />
+    <state x="681" y="-1002" width="782" height="825" key="find.popup" timestamp="1585660449293">
+      <screen x="-444" y="-1417" width="2560" height="1417" />
+    </state>
+    <state x="681" y="-1002" width="782" height="825" key="find.popup/0.23.1680.940/-444.-1417.2560.1417@-444.-1417.2560.1417" timestamp="1585660449293" />
+    <state x="545" y="-1002" width="782" height="550" key="find.popup/0.23.1680.940/-580.-1417.2560.1417@-580.-1417.2560.1417" timestamp="1584719983571" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -686,18 +759,23 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/CNN_Cert$utils.coverage" NAME="utils Coverage Results" MODIFIED="1585916993360" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CNN_Cert$setup_cifar100.coverage" NAME="setup_cifar100 Coverage Results" MODIFIED="1584093073045" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
-    <SUITE FILE_PATH="coverage/CNN_Cert$setup_tinyimagenet.coverage" NAME="setup_tinyimagenet Coverage Results" MODIFIED="1584453041967" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
-    <SUITE FILE_PATH="coverage/CNN_Cert$statistics.coverage" NAME="statistics Coverage Results" MODIFIED="1584476461674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/remote" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$setup_rockpaperscissors.coverage" NAME="setup_rockpaperscissors Coverage Results" MODIFIED="1586083428520" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$li_attack.coverage" NAME="li_attack Coverage Results" MODIFIED="1585670416084" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Attacks" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$statistics.coverage" NAME="statistics Coverage Results" MODIFIED="1585672203103" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/remote" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$setup_tinyimagenet.coverage" NAME="setup_tinyimagenet Coverage Results" MODIFIED="1585864882111" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
     <SUITE FILE_PATH="coverage/CNN_Cert$setup_caltech101.coverage" NAME="setup_caltech101 Coverage Results" MODIFIED="1583241038923" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
-    <SUITE FILE_PATH="coverage/CNN_Cert$setup_mnist.coverage" NAME="setup_mnist Coverage Results" MODIFIED="1584451028806" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
-    <SUITE FILE_PATH="coverage/CNN_Cert$test.coverage" NAME="test Coverage Results" MODIFIED="1584366659553" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CNN_Cert$train_cnn.coverage" NAME="train_cnn Coverage Results" MODIFIED="1584479709211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CNN_Cert$setup_GTSRB.coverage" NAME="setup_GTSRB Coverage Results" MODIFIED="1584359505485" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
-    <SUITE FILE_PATH="coverage/CNN_Cert$setup_calTech_101_silhouettes.coverage" NAME="setup_calTech_101_silhouettes Coverage Results" MODIFIED="1584359795511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
-    <SUITE FILE_PATH="coverage/CNN_Cert$setup_cifar.coverage" NAME="setup_cifar Coverage Results" MODIFIED="1584451064912" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$setup_dogs_and_cats.coverage" NAME="setup_dogs_and_cats Coverage Results" MODIFIED="1585049105373" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$setup_mnist.coverage" NAME="setup_mnist Coverage Results" MODIFIED="1585864841865" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$train_cnn.coverage" NAME="train_cnn Coverage Results" MODIFIED="1584703917945" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$test.coverage" NAME="test Coverage Results" MODIFIED="1585851021879" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$setup_GTSRB.coverage" NAME="setup_GTSRB Coverage Results" MODIFIED="1585865729686" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$setup_sign_language.coverage" NAME="setup_sign_language Coverage Results" MODIFIED="1585865764944" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$setup_calTech_101_silhouettes.coverage" NAME="setup_calTech_101_silhouettes Coverage Results" MODIFIED="1585865714712" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$setup_cifar.coverage" NAME="setup_cifar Coverage Results" MODIFIED="1585865722667" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/datasets" />
     <SUITE FILE_PATH="coverage/CNN_Cert$cnn_bounds_full.coverage" NAME="cnn_bounds_full Coverage Results" MODIFIED="1583877322246" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CNN_Cert$cnn_robustness_tester.coverage" NAME="cnn_robustness_tester Coverage Results" MODIFIED="1584489167092" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CNN_Cert$statistics_old.coverage" NAME="statistics_old Coverage Results" MODIFIED="1584451486649" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/remote" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$cnn_robustness_tester.coverage" NAME="cnn_robustness_tester Coverage Results" MODIFIED="1585920861394" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CNN_Cert$statistics_old.coverage" NAME="statistics_old Coverage Results" MODIFIED="1585575924554" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/remote" />
   </component>
 </project>

@@ -420,6 +420,7 @@ def multithreadded_calculations(parameters):
 
 def upper_bound_calculations(parameters):
     keras_lock2.acquire()
+    print("Lock aquired", flush=True)
     try:
         import tensorflow as tf
         print(f"\nCalculating upper bound of {parameter_string(parameters)}\n", flush=True)
@@ -665,7 +666,6 @@ def main():
                                         if parameters.use_cpu:
                                             cpu_pool.apply_async(multithreadded_calculations, (parameters,))
                                         if upper_bound:
-                                            print("upper bound", flush=True)
                                             gpu_pool.apply_async(upper_bound_calculations, (parameters,))
 
     print("Waiting for processes to finish")
