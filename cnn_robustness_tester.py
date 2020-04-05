@@ -596,8 +596,8 @@ def main():
     l3 = multiprocessing.Lock()
     sema = multiprocessing.Semaphore(processes)
 
-    cpu_pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
-    gpu_pool = multiprocessing.get_context('spawn').Pool(1, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
+    cpu_pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, l3, sema, data), maxtasksperchild=1)
+    gpu_pool = multiprocessing.get_context('spawn').Pool(1, initializer=pool_init, initargs=(l1, l2, l3, sema, data), maxtasksperchild=1)
 
     pool_init(l1, l2, l3,  sema, data)
 
