@@ -420,6 +420,7 @@ def multithreadded_calculations(parameters):
 
 def upper_bound_calculations(parameters):
     import tensorflow as tf
+    keras_lock2.acquire()
     try:
         print(f"\nCalculating upper bound of {parameter_string(parameters)}\n", flush=True)
 
@@ -476,17 +477,20 @@ def upper_bound_calculations(parameters):
                           "\n\n")
     finally:
         # reset_cuda()
+        keras_lock2.release()
         gc.collect()
 
 
-def pool_init(l1, l2, sema, data):
+def pool_init(l1, l2, l3, sema, data):
     global write_lock
     global keras_lock
+    global keras_lock2
     global semaphore
     global dataset_data
     semaphore = sema
     write_lock = l1
     keras_lock = l2
+    keras_lock2 = l3
     dataset_data = data
 
 
@@ -589,12 +593,13 @@ def main():
 
     l1 = multiprocessing.Lock()
     l2 = multiprocessing.Lock()
+    l3 = multiprocessing.Lock()
     sema = multiprocessing.Semaphore(processes)
 
     cpu_pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
     gpu_pool = multiprocessing.get_context('spawn').Pool(1, initializer=pool_init, initargs=(l1, l2, sema, data), maxtasksperchild=1)
 
-    pool_init(l1, l2, sema, data)
+    pool_init(l1, l2, l3,  sema, data)
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
@@ -611,7 +616,7 @@ def main():
     else:
         bn_choices = [False]
 
-    for activation_function_string in ["ada", "sigmoid", "arctan", "tanh"]:
+    for activation_function_string in ["ada"]:
         for use_cnnc_core in cnnc_choices:
             for use_padding_same in [False]:
                 for use_early_stopping in [True]:
