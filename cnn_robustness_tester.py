@@ -419,7 +419,8 @@ def multithreadded_calculations(parameters):
 
 
 def upper_bound_calculations(parameters):
-    keras_lock2.acquire()
+    print("Lock not yet aquired", flush=True)
+    print(keras_lock2.acquire(), flush=True)
     print("Lock aquired", flush=True)
     try:
         import tensorflow as tf
