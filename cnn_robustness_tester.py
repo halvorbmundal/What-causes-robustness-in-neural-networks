@@ -419,9 +419,9 @@ def multithreadded_calculations(parameters):
 
 
 def upper_bound_calculations(parameters):
-    import tensorflow as tf
     keras_lock2.acquire()
     try:
+        import tensorflow as tf
         print(f"\nCalculating upper bound of {parameter_string(parameters)}\n", flush=True)
 
         parameters.tf_activation = get_tf_activation_function_from_string(
