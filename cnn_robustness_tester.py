@@ -665,6 +665,7 @@ def main():
                                         if parameters.use_cpu:
                                             cpu_pool.apply_async(multithreadded_calculations, (parameters,))
                                         if upper_bound:
+                                            print("upper bound", flush=True)
                                             gpu_pool.apply_async(upper_bound_calculations, (parameters,))
 
     print("Waiting for processes to finish")
