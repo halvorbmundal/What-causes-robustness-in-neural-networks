@@ -215,7 +215,7 @@ def upper_bounds_csv_contains_file(csv_file, file_name):
     return False
 
 
-def file_exists(file, use_cache=True):
+def file_exists(file, model_files=[], use_cache=True):
     if use_cache:
         start = time.time()
         if file[14:] in model_files:
@@ -298,13 +298,13 @@ def reset_cuda():
         print("Could not reset cuda: ", traceback.format_exc())
 
 
-def gpu_calculations(parameters, is_sub_process=False):
+def gpu_calculations(parameters):
     import tensorflow as tf
     try:
         parameters.tf_activation = get_tf_activation_function_from_string(
             parameters.activation_function_string, tf)
 
-        if not file_exists(parameters.file_name):
+        if not file_exists(parameters.file_name, parameters.model_files):
             train_nn(parameters,
                      parameters.file_name,
                      parameters.filters,
@@ -419,9 +419,7 @@ def multithreadded_calculations(parameters):
 
 
 def upper_bound_calculations(parameters):
-    print("Lock not yet aquired", flush=True)
-    print(keras_lock2.acquire(), flush=True)
-    print("Lock aquired", flush=True)
+    keras_lock2.acquire()
     try:
         import tensorflow as tf
         print(f"\nCalculating upper bound of {parameter_string(parameters)}\n", flush=True)
@@ -568,7 +566,6 @@ def main():
     if dataset != "mnist":
         set_path(dataset)
 
-    global model_files
     try:
         model_files = os.listdir("output/models")
     except:
@@ -642,6 +639,7 @@ def main():
                                     parameters.use_padding_same = use_padding_same
                                     parameters.use_cnnc_core = use_cnnc_core
                                     parameters.dataset = dataset
+                                    parameters.model_files = model_files
 
                                     parameters.use_gpu = gpu
                                     parameters.use_cpu = cpu
@@ -656,7 +654,7 @@ def main():
                                     else:
                                         if parameters.use_gpu:
                                             keras_lock.acquire()
-                                            gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters, True))
+                                            gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters))
                                             gpu_process.start()
 
                                             keras_lock.acquire()
