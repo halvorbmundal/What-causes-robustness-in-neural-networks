@@ -681,7 +681,7 @@ def main():
                                         else:
                                             if parameters.use_gpu:
                                                 keras_lock.acquire()
-                                                gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters))
+                                                gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters,))
                                                 gpu_process.start()
 
                                                 keras_lock.acquire()
