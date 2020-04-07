@@ -10,5 +10,7 @@ Nicholas Carlini and David Wagner, "Towards Evaluating the Robustness of Neural 
 which can be found at
 https://github.com/carlini/nn_robust_attacks
 
-## 
+## Pre-requisites
+This repository was used on 
 Python version 3.7.2
+with the libraries found in /idun/requirements.txt
