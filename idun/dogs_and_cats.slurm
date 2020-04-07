@@ -51,7 +51,7 @@ fi
 
 # Activate enviroment and install required dependencies
 source gpu_env/bin/activate
-pip install -r requirements_gpu.txt
+pip install -r requirements.txt
 
 # List information about available GPUs
 nvidia-smi
