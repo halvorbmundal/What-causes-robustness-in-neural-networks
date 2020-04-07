@@ -169,7 +169,6 @@ def create_model(activation, bn, data, filters, init, kernels, use_padding_same)
     # load initial weights when given
     if init != None:
         model.load_weights(init)
-    print(model.layers)
     return model
 
 
