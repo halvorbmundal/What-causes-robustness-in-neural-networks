@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/CNN-Cert.iml" filepath="$PROJECT_DIR$/.idea/CNN-Cert.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../idun/.idea/idun.iml" filepath="$PROJECT_DIR$/../idun/.idea/idun.iml" />
-    </modules>
-  </component>
-</project>
