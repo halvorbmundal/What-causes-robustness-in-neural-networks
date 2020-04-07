@@ -27,6 +27,7 @@ import gc
 import time
 import os
 from numba import cuda
+import pandas as pd
 
 
 class NnArchitecture(Enum):
@@ -113,8 +114,18 @@ def make_upper_bound_file(file_name="upper_bound.csv"):
         with open(file_name, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(["time_elapsed", "upper_bound", "file_name"])
+            writer.writerow(["time_elapsed", "upper_bound", "file_name", "l_norm"])
 
+def add_l_norm_to_upper_bound_file(file_name="upper_bound.csv"):
+    write_lock.acquire()
+    try:
+        csv_input = pd.read_csv(file_name)
+        if "l_norm" in csv_input.keys():
+            return
+        csv_input['l_norm'] = "i"
+        csv_input.to_csv(file_name, index=False)
+    finally:
+        write_lock.release()
 
 def write_to_upper_bound_file(parameters, upper_bound, time_elapsed, csv_file):
     write_lock.acquire()  # from global variable
@@ -122,7 +133,7 @@ def write_to_upper_bound_file(parameters, upper_bound, time_elapsed, csv_file):
         with open(csv_file, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(
-                [time_elapsed, upper_bound, parameters.file_name])
+                [time_elapsed, upper_bound, parameters.file_name, parameters.l_norm])
     except Exception as e:
         print("An exeption occured while writing to file")
         logging.exception(str(traceback.format_exc()) + "\n\n")
@@ -190,14 +201,21 @@ def csv_contains_file(csv_file, file_name, parameters):
                 cnnc_column = i
                 break
 
+        norm_column = 0
+        for i in range(len(first_row)):
+            if first_row[i] == "l_norm":
+                norm_column = i
+                break
+
         for row in csvreader:
             if row[file_name_column] == file_name:  # and row[cnnc_column] == parameters.use_cnnc_core:
                 if str(row[cnnc_column]) == str(parameters.use_cnnc_core):
-                    return True
+                    if str(row[norm_column]) == str(parameters.l_norm):
+                        return True
     return False
 
 
-def upper_bounds_csv_contains_file(csv_file, file_name):
+def upper_bounds_csv_contains_file(csv_file, file_name, parameters):
     with open(csv_file, "r") as f:
         csvreader = csv.reader(f, delimiter=',', quotechar='|')
 
@@ -209,9 +227,16 @@ def upper_bounds_csv_contains_file(csv_file, file_name):
                 file_name_column = i
                 break
 
+        norm_column = 0
+        for i in range(len(first_row)):
+            if first_row[i] == "l_norm":
+                norm_column = i
+                break
+
         for row in csvreader:
             if row[file_name_column] == file_name:
-                return True
+                if str(row[norm_column]) == str(parameters.l_norm):
+                    return True
     return False
 
 
@@ -442,8 +467,9 @@ def upper_bound_calculations(parameters):
         csv_name = "upper_bound.csv"
         make_upper_bound_file(csv_name)
 
+        add_l_norm_to_upper_bound_file()
         debugprint(parameters.isDebugging, "reading results csv")
-        if upper_bounds_csv_contains_file(csv_name, parameters.file_name):
+        if upper_bounds_csv_contains_file(csv_name, parameters.file_name, parameters):
             print("Upper bounds already calculated for {}".format(parameters.file_name), flush=True)
             print_parameters(parameters)
             return
@@ -614,58 +640,59 @@ def main():
         cnnc_choices = [True, False]
     else:
         bn_choices = [False]
+    for l_norm in ["i", "2", "1"]:
+        for activation_function_string in ["ada"]:
+            for use_cnnc_core in cnnc_choices:
+                for use_padding_same in [False]:
+                    for use_early_stopping in [True]:
+                        for has_batch_normalization in bn_choices:
+                            for kernel_size in kernel_size_range:
+                                for depth in depth_range:
+                                    for filter_size in filter_size_range:
+                                        if dataset != "mnist" and not use_early_stopping:
+                                            continue
 
-    for activation_function_string in ["ada"]:
-        for use_cnnc_core in cnnc_choices:
-            for use_padding_same in [False]:
-                for use_early_stopping in [True]:
-                    for has_batch_normalization in bn_choices:
-                        for kernel_size in kernel_size_range:
-                            for depth in depth_range:
-                                for filter_size in filter_size_range:
-                                    if dataset != "mnist" and not use_early_stopping:
-                                        continue
+                                        parameters = CnnTestParameters()
+                                        parameters.activation_function_string = activation_function_string
+                                        parameters.depth = depth
+                                        parameters.kernel_size = kernel_size
+                                        parameters.filter_size = filter_size
+                                        parameters.filters = [filter_size for i in range(depth)]
+                                        parameters.kernels = [kernel_size for i in range(depth)]
+                                        parameters.has_batch_normalization = has_batch_normalization
+                                        parameters.isDebugging = debugging
+                                        parameters.use_early_stopping = use_early_stopping
+                                        parameters.use_padding_same = use_padding_same
+                                        parameters.use_cnnc_core = use_cnnc_core
+                                        parameters.dataset = dataset
+                                        parameters.model_files = model_files
+                                        parameters.l_norm = l_norm
 
-                                    parameters = CnnTestParameters()
-                                    parameters.activation_function_string = activation_function_string
-                                    parameters.depth = depth
-                                    parameters.kernel_size = kernel_size
-                                    parameters.filter_size = filter_size
-                                    parameters.filters = [filter_size for i in range(depth)]
-                                    parameters.kernels = [kernel_size for i in range(depth)]
-                                    parameters.has_batch_normalization = has_batch_normalization
-                                    parameters.isDebugging = debugging
-                                    parameters.use_early_stopping = use_early_stopping
-                                    parameters.use_padding_same = use_padding_same
-                                    parameters.use_cnnc_core = use_cnnc_core
-                                    parameters.dataset = dataset
-                                    parameters.model_files = model_files
+                                        parameters.use_gpu = gpu
+                                        parameters.use_cpu = cpu
 
-                                    parameters.use_gpu = gpu
-                                    parameters.use_cpu = cpu
+                                        parameters.file_name = get_name_new_convention(parameters)
 
-                                    parameters.file_name = get_name_new_convention(parameters)
-
-                                    if debugging:
-                                        keras_lock.acquire()
-                                        gpu_calculations(parameters)
-                                        multithreadded_calculations(parameters)
-                                        upper_bound_calculations(parameters)
-                                    else:
-                                        if parameters.use_gpu:
+                                        if debugging:
                                             keras_lock.acquire()
-                                            gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters))
-                                            gpu_process.start()
+                                            gpu_calculations(parameters)
+                                            multithreadded_calculations(parameters)
+                                            upper_bound_calculations(parameters)
+                                        else:
+                                            if parameters.use_gpu:
+                                                keras_lock.acquire()
+                                                gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters))
+                                                gpu_process.start()
 
-                                            keras_lock.acquire()
-                                            gpu_process.terminate()
-                                            keras_lock.release()
+                                                keras_lock.acquire()
+                                                gpu_process.terminate()
+                                                keras_lock.release()
 
-                                            gc.collect()
-                                        if parameters.use_cpu:
-                                            cpu_pool.apply_async(multithreadded_calculations, (parameters,))
-                                        if upper_bound:
-                                            gpu_pool.apply_async(upper_bound_calculations, (parameters,))
+                                                gc.collect()
+                                            if parameters.use_cpu:
+                                                cpu_pool.apply_async(multithreadded_calculations, (parameters,))
+                                            if upper_bound:
+                                                gpu_pool.apply_async(upper_bound_calculations, (parameters,))
 
     print("Waiting for processes to finish")
     gpu_pool.close()
@@ -712,7 +739,6 @@ class CnnTestParameters:
     temperature = 1
     batch_size = 128
     num_image = 10
-    l_norm = "i"
     width = "null"
     upper_bound = None
     result_folder = 'output/results/'
