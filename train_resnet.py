@@ -153,11 +153,12 @@ def train(data, file_name, nlayer, num_epochs=10, batch_size=128, train_temp=1, 
     
     return {'model':model, 'history':history}
 
-if not os.path.isdir('models'):
-    os.makedirs('models')
 
 
 if __name__ == '__main__':
+    if not os.path.isdir('models'):
+        os.makedirs('models')
+
     train(MNIST(), file_name="models/mnist_resnet_2", nlayer=2, activation = tf.nn.relu)
     train(MNIST(), file_name="models/mnist_resnet_3", nlayer=3, activation = tf.nn.relu)
     train(MNIST(), file_name="models/mnist_resnet_4", nlayer=4, activation = tf.nn.relu)
