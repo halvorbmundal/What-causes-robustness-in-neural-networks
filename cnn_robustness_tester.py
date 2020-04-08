@@ -589,8 +589,7 @@ def main():
 
     set_path(path)
 
-    if dataset != "mnist":
-        set_path(dataset)
+    set_path(dataset)
 
     try:
         model_files = os.listdir("output/models")
