@@ -218,7 +218,8 @@ def get_data_augmenter(data):
             horizontal_flip=True,
             vertical_flip=False,
             fill_mode="nearest")
-    elif data.dataset == "sign-language":
+    elif data.dataset == "sign-language"\
+            or data.dataset == "mnist":
         print("datagen4")
         datagen = ImageDataGenerator(
             width_shift_range=0.1,
