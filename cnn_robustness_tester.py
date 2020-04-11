@@ -116,6 +116,7 @@ def make_upper_bound_file(file_name="upper_bound.csv"):
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(["time_elapsed", "upper_bound", "file_name", "l_norm"])
 
+
 def add_l_norm_to_upper_bound_file(file_name="upper_bound.csv"):
     write_lock.acquire()
     try:
@@ -126,6 +127,7 @@ def add_l_norm_to_upper_bound_file(file_name="upper_bound.csv"):
         csv_input.to_csv(file_name, index=False)
     finally:
         write_lock.release()
+
 
 def write_to_upper_bound_file(parameters, upper_bound, time_elapsed, csv_file):
     write_lock.acquire()  # from global variable
@@ -623,7 +625,7 @@ def main():
     cpu_pool = multiprocessing.Pool(processes, initializer=pool_init, initargs=(l1, l2, l3, sema, data), maxtasksperchild=1)
     gpu_pool = multiprocessing.Pool(1, initializer=pool_init, initargs=(l1, l2, l3, sema, data), maxtasksperchild=1)
 
-    pool_init(l1, l2, l3,  sema, data)
+    pool_init(l1, l2, l3, sema, data)
 
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
@@ -640,7 +642,7 @@ def main():
     else:
         bn_choices = [False]
     for l_norm in ["i", "2", "1"]:
-        for activation_function_string in ["ada"]:
+        for activation_function_string in ["ada", "sigmoid"]:
             for use_cnnc_core in cnnc_choices:
                 for use_padding_same in [False]:
                     for use_early_stopping in [True]:
