@@ -466,7 +466,7 @@ def upper_bound_calculations(parameters):
                               "\n\n")
             return
 
-        csv_name = "upper_bound.csv"
+        csv_name = parameters.upper_bound_result_file
         make_upper_bound_file(csv_name)
 
         add_l_norm_to_upper_bound_file()
@@ -740,7 +740,8 @@ class CnnTestParameters:
     width = "null"
     upper_bound = None
     result_folder = 'output/results/'
-    result_file = 'results.csv'
+    result_file = 'results_test.csv'
+    upper_bound_result_file = 'upper_bound_test.csv'
 
 
 if __name__ == "__main__":
