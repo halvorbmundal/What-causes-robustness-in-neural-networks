@@ -51,7 +51,7 @@ fi
 
 # Activate enviroment and install required dependencies
 source gpu_env/bin/activate
-pip install -r requirements.txt
+pip install -r cnn-cert-master/idun/requirements.txt
 
 # List information about available GPUs
 nvidia-smi
