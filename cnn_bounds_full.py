@@ -602,7 +602,7 @@ def run(file_name, n_samples, p_n, q_n, data_set_class, activation = 'relu'):
     elif activation == 'arctan':
         linear_bounds = atan_linear_bounds
 
-    inputs, targets, true_labels, true_ids, img_info = generate_data(data_set_class, samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0001, predictor=model.model.predict, start=0)
+    inputs, targets, true_labels, true_ids, img_info = generate_data(data_set_class, samples=n_samples, targeted=True, random_and_least_likely = True, target_type = 0b0010, predictor=model.model.predict, start=0)
 
     if len(inputs) == 0:
         return 0, 0
