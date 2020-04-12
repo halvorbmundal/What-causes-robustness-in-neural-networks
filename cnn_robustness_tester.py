@@ -630,19 +630,16 @@ def main():
     make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
 
-    filter_size_range = range(8, 81, 8)
-    depth_range = range(1, 6, 1)
-    kernel_size_range = range(3, 8, 1)
+    filter_size_range = range(8, 81, 16)
+    depth_range = range(1, 6, 2)
+    kernel_size_range = [5]#range(3, 8, 1)
     cnnc_choices = [False]
-    if dataset == "GTSRB":
-        bn_choices = [False]
-    elif dataset == "mnist":
-        bn_choices = [False]
+    bn_choices = [False]
+    if dataset == "mnist":
         cnnc_choices = [True, False]
-    else:
-        bn_choices = [False]
-    for l_norm in ["i", "2", "1"]:
-        for activation_function_string in ["ada", "sigmoid"]:
+
+    for l_norm in ["i"]:
+        for activation_function_string in ["ada"]:
             for use_cnnc_core in cnnc_choices:
                 for use_padding_same in [False]:
                     for use_early_stopping in [True]:
