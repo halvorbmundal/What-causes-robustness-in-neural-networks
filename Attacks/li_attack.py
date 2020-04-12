@@ -168,7 +168,7 @@ class CarliniLi:
 
         # the previous image
         prev = np.copy(img).reshape((1,self.model.image_size,self.model.image_size,self.model.num_channels))
-        tau = 1
+        tau = 1.0
         const = self.INITIAL_CONST
 
         iterations = 0
