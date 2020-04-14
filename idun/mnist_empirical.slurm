@@ -4,12 +4,12 @@
 #SBATCH --gres=gpu:1
 #SBATCH --time=7-00:00:00
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=8
-#SBATCH --mem=150000
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=3000
 # Memory per node specification is in MB. It is optional. 
 # The default limit is 3000MB per core.
-#SBATCH --job-name="gpu-m-CNN-Cert"
-#SBATCH --output=out/mnist_output.out
+#SBATCH --job-name="gpu-em-CNN-Cert"
+#SBATCH --output=eout/mnist_output.out
 #SBATCH --mail-type=ALL
 
 WORKDIR=${SLURM_SUBMIT_DIR}
@@ -57,7 +57,7 @@ pip install -r cnn-cert-master/idun/requirements.txt
 nvidia-smi
 
 # Start training
-python cnn-cert-master/cnn_robustness_tester.py cpu gpu no_debugging v10 mnist upper 8
+python cnn-cert-master/empirical_robustness.py v10 mnist
 
 # Print information about the system
 uname -a
