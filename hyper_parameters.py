@@ -1,17 +1,60 @@
+import os
+from enum import Enum
 
 
-def hyper_parameters(cnnc_choices,
-                     bn_choices,
-                     kernel_size_range,
-                     depth_range,
-                     filter_size_range,
-                     dataset,
-                     debugging,
+class NnArchitecture(Enum):
+    ONLY_CNN = "only_cnn"
+
+class CnnTestParameters:
+    dataset = "mnist"
+    nn_architecture = NnArchitecture.ONLY_CNN.value
+    pooling = "None"
+    epochs = 10
+    stride = 1
+    bias = True
+    initializer = "glorot_uniform"
+    regulizer = "None"
+    temperature = 1
+    batch_size = 128
+    num_image = 10
+    width = "null"
+    upper_bound = None
+    result_folder = 'output/results/'
+    result_file = 'results.csv'
+    upper_bound_result_file = 'upper_bound.csv'
+
+def boolToString(b):
+    if b:
+        return "T"
+    else:
+        return "F"
+
+def get_name_new_convention(parameter_class):
+    directory = "output/models"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    return directory + "/{}_type={}_pool={}_d={}_w={}_f{}_k={}_ep={}_ac={}_" \
+                       "strid={}_bias={}_init={}_reg={}_bn={}_temp={}_bS={}_es={}_pad={}" \
+        .format(parameter_class.dataset, parameter_class.nn_architecture, parameter_class.pooling,
+                parameter_class.depth,
+                parameter_class.width, parameter_class.filter_size, parameter_class.kernel_size, parameter_class.epochs,
+                parameter_class.activation_function_string, parameter_class.stride, parameter_class.bias,
+                parameter_class.initializer[:7], parameter_class.regulizer, parameter_class.has_batch_normalization,
+                parameter_class.temperature, parameter_class.batch_size,
+                boolToString(parameter_class.use_early_stopping),
+                boolToString(parameter_class.use_padding_same))
+
+def hyper_parameters(dataset,
                      model_files,
-                     gpu,
-                     cpu,
-                     get_name_new_convention,
-                     CnnTestParameters):
+                     debugging=False,
+                     gpu=False,
+                     cpu=False):
+    filter_size_range = range(8, 81, 8)
+    depth_range = range(1, 6, 1)
+    kernel_size_range = range(3, 8, 1)
+    cnnc_choices = [False]
+    bn_choices = [False]
+
     parameter_list = []
     for l_norm in ["2", "1"]:
         for activation_function_string in ["ada", "sigmoid"]:

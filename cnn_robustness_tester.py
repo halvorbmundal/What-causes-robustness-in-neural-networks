@@ -7,7 +7,7 @@ from datasets.setup_cifar100 import CIFAR100
 from datasets.setup_dogs_and_cats import DogsAndCats
 from datasets.setup_sign_language import SignLanguage
 from datasets.setup_rockpaperscissors import RockPaperScissors
-from hyper_parameters import hyper_parameters
+from hyper_parameters import hyper_parameters, CnnTestParameters
 
 _b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode('latin1'))
 
@@ -47,29 +47,6 @@ def get_name(parameter_class):
                 parameter_class.activation_function_string, parameter_class.stride, parameter_class.bias,
                 parameter_class.initializer, parameter_class.regulizer, parameter_class.has_batch_normalization,
                 parameter_class.temperature, parameter_class.batch_size)
-
-
-def boolToString(b):
-    if b:
-        return "T"
-    else:
-        return "F"
-
-
-def get_name_new_convention(parameter_class):
-    directory = "output/models"
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    return directory + "/{}_type={}_pool={}_d={}_w={}_f{}_k={}_ep={}_ac={}_" \
-                       "strid={}_bias={}_init={}_reg={}_bn={}_temp={}_bS={}_es={}_pad={}" \
-        .format(parameter_class.dataset, parameter_class.nn_architecture, parameter_class.pooling,
-                parameter_class.depth,
-                parameter_class.width, parameter_class.filter_size, parameter_class.kernel_size, parameter_class.epochs,
-                parameter_class.activation_function_string, parameter_class.stride, parameter_class.bias,
-                parameter_class.initializer[:7], parameter_class.regulizer, parameter_class.has_batch_normalization,
-                parameter_class.temperature, parameter_class.batch_size,
-                boolToString(parameter_class.use_early_stopping),
-                boolToString(parameter_class.use_padding_same))
 
 
 def make_result_file(directory, file):
@@ -395,6 +372,8 @@ def multithreadded_calculations(parameters):
 
         start_time = timer.time()
 
+        make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
+
         debugprint(parameters.isDebugging, "reading results csv")
         if csv_contains_file(parameters.result_folder + parameters.result_file, parameters.file_name, parameters):
             print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
@@ -628,29 +607,14 @@ def main():
 
     pool_init(l1, l2, l3, sema, data)
 
-    make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
     logging.basicConfig(filename='log.log', level="ERROR")
 
-    filter_size_range = range(8, 81, 8)
-    depth_range = range(1, 6, 1)
-    kernel_size_range = range(3, 8, 1)
-    cnnc_choices = [False]
-    bn_choices = [False]
-    if dataset == "mnist":
-        cnnc_choices = [True, False]
 
-    for parameters in hyper_parameters(cnnc_choices,
-                                       bn_choices,
-                                       kernel_size_range,
-                                       depth_range,
-                                       filter_size_range,
-                                       dataset,
-                                       debugging,
-                                       model_files,
-                                       gpu,
-                                       cpu,
-                                       get_name_new_convention,
-                                       CnnTestParameters):
+    for parameters in hyper_parameters(dataset=dataset,
+                     model_files=model_files,
+                     debugging=debugging,
+                     gpu=gpu,
+                     cpu=cpu):
 
         if debugging:
             if parameters.use_gpu:
@@ -708,25 +672,6 @@ def set_path(path):
 # Batch_normalization
 # Temperature
 # Batch size
-
-
-class CnnTestParameters:
-    dataset = "mnist"
-    nn_architecture = NnArchitecture.ONLY_CNN.value
-    pooling = "None"
-    epochs = 10
-    stride = 1
-    bias = True
-    initializer = "glorot_uniform"
-    regulizer = "None"
-    temperature = 1
-    batch_size = 128
-    num_image = 10
-    width = "null"
-    upper_bound = None
-    result_folder = 'output/results/'
-    result_file = 'results.csv'
-    upper_bound_result_file = 'upper_bound.csv'
 
 
 if __name__ == "__main__":
