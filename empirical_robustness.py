@@ -7,7 +7,7 @@ from datetime import datetime
 import tensorflow as tf
 
 from Attacks.PGD_wrapper import get_accuracy as get_PGD_accuracy
-from cnn_robustness_tester import get_tf_activation_function_from_string, debugprint, file_exists, print_parameters, parameter_string, set_path
+from cnn_robustness_tester import get_tf_activation_function_from_string, debugprint, file_exists, print_parameters, parameter_string, set_path, get_data
 from hyper_parameters import hyper_parameters
 
 
@@ -51,10 +51,6 @@ def csv_contains_file(csv_file, file_name, parameters):
                     return True
     return False
 
-def init_globals(data):
-    global dataset_data
-    dataset_data = data
-
 def empirical_robustness_calculations(parameters):
     parameters.tf_activation = get_tf_activation_function_from_string(
         parameters.activation_function_string, tf)
@@ -86,7 +82,7 @@ def empirical_robustness_calculations(parameters):
     sess = tf.Session(config=config)
 
     with sess.as_default():
-        upper_bound, time_spent = get_PGD_accuracy(parameters.file_name,
+        accuracy, time_spent = get_PGD_accuracy(parameters.file_name,
                                                    sess,
                                                    parameters.epsilon,
                                                    parameters.steps,
@@ -94,26 +90,38 @@ def empirical_robustness_calculations(parameters):
                                                    dataset_data)
 
     debugprint(parameters.isDebugging, "writing to file")
-    write_to_file(parameters, upper_bound, time_spent, csv_name)
+    write_to_file(parameters, accuracy, time_spent, csv_name)
 
     print("wrote to file", flush=True)
     print_parameters(parameters)
 
     return
 
+
+def init_globals(data):
+    global dataset_data
+    dataset_data = data
+
 def main():
     _, path, dataset = sys.argv
     set_path(path)
     set_path(dataset)
 
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
     try:
         model_files = os.listdir("output/models")
     except:
         model_files = []
-    epsilons = [3]
 
+    data = get_data(dataset)
+    init_globals(data)
+
+    epsilons = [0.03, 0.01, 0.005]
     for parameters in hyper_parameters(dataset=dataset,
                                        model_files=model_files):
+        parameters.steps = 1000
+        parameters.step_size = 0.001
         for epsilon in epsilons:
             parameters.epsilon = epsilon
             empirical_robustness_calculations(parameters)

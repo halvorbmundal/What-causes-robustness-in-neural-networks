@@ -27,6 +27,8 @@ class LinfPGDAttack:
             x = x_nat.astype(np.float)
 
         for i in range(self.num_steps):
+            if i % 100 == 0:
+                print(f"Step {i} of {self.num_steps} steps")
             grad = sess.run(self.grad, feed_dict={self.model.x_input: x,
                                                   self.model.y_input: y})
 
