@@ -54,27 +54,7 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
             return tf.nn.softmax_cross_entropy_with_logits(labels=correct,
                                                            logits=predicted / train_temp)
 
-        patience = 30
-        optimizer = Adam()
-        monitor = 'val_loss'
-        min_delta = 0
-        if data.dataset == "cifar100":
-            patience = 50
-        elif data.dataset == "GTSRB":
-            optimizer = Adam(lr=0.0005)
-            #  Senkes?
-            # optimizer = Adam(lr=0.0003)
-            patience = 50
-        elif data.dataset == "caltech_siluettes":
-            patience = 50
-        elif data.dataset == "rockpaperscissors":
-            patience = 50
-        elif data.dataset == "dogs-and-cats":
-            monitor = "loss"
-
-        # compile the Keras model, given the specified loss and optimizer
-
-        devices = get_available_gpus()
+        min_delta, optimizer, patience = get_training_parameters(data)
 
         model.compile(loss=fn,
                       optimizer=optimizer,
@@ -141,6 +121,24 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
     sess.close()
     gc.collect()
     return history
+
+
+def get_training_parameters(data):
+    patience = 30
+    optimizer = Adam()
+    min_delta = 0
+    if data.dataset == "cifar100":
+        patience = 50
+    elif data.dataset == "GTSRB":
+        optimizer = Adam(lr=0.0005)
+        #  Senkes?
+        # optimizer = Adam(lr=0.0003)
+        patience = 50
+    elif data.dataset == "caltech_siluettes":
+        patience = 50
+    elif data.dataset == "rockpaperscissors":
+        patience = 50
+    return min_delta, optimizer, patience
 
 
 def create_model(activation, bn, data, filters, init, kernels, use_padding_same):

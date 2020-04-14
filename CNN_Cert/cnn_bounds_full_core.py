@@ -14,16 +14,15 @@ import numpy as np
 
 from datasets.setup_mnist import MNIST
 from datasets.setup_cifar import CIFAR
-from datasets.setup_tinyimagenet import TinyImagenet
 
 from tensorflow.contrib.keras.api.keras.layers import Dense, Dropout, Activation, Flatten, GlobalAveragePooling2D, Lambda
 from tensorflow.contrib.keras.api.keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, InputLayer, BatchNormalization, Reshape
 from tensorflow.contrib.keras.api.keras.models import load_model
 from tensorflow.contrib.keras.api.keras import backend as K
 import tensorflow as tf
-from utils import generate_data
+from CNN_Cert.utils import generate_data
 import time
-from activations import relu_linear_bounds, ada_linear_bounds, atan_linear_bounds, sigmoid_linear_bounds, tanh_linear_bounds
+from CNN_Cert.activations import relu_linear_bounds, ada_linear_bounds, atan_linear_bounds, sigmoid_linear_bounds, tanh_linear_bounds
 linear_bounds = None
 
 import random

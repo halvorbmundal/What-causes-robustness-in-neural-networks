@@ -22,11 +22,7 @@ import random
 import time
 import sys
 import os
-from functools import partial
 from multiprocessing import Pool
-import scipy
-from scipy.stats import weibull_min
-import scipy.optimize
 
 from CLEVER.estimate_gradient_norm import EstimateLipschitz
 from CLEVER.clever import get_lipschitz_estimate, parse_filename

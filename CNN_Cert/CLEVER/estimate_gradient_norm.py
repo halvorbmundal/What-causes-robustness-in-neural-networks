@@ -22,7 +22,7 @@ import os
 import tensorflow as tf
 
 from multiprocessing import Pool, current_process, cpu_count
-from CLEVER.shmemarray import ShmemRawArray, NpShmemArray
+from CLEVER.shmemarray import NpShmemArray
 from functools import partial
 from CLEVER.randsphere import randsphere
 from tensorflow.python.ops import gradients_impl
@@ -63,7 +63,6 @@ class EstimateLipschitz(object):
         dataset: mnist, cifar and imagenet. recommend to use mnist and cifar as a starting point.
         model_name: possible options are 2-layer, distilled, and normal
         """
-        from setup_tinyimagenet import tinyImagenet
 
         # if set this to true, we will use the logit layer output instead of probability
         # the logit layer's gradients are usually larger and more stable

@@ -8,9 +8,8 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
                     Luca Daniel <dluca@mit.edu>
 """
 import subprocess
-import numpy as np
-from cnn_bounds_full import run as run_cnn_full
-from cnn_bounds_full_core import run as run_cnn_full_core
+from CNN_Cert.cnn_bounds_full import run as run_cnn_full
+from CNN_Cert.cnn_bounds_full_core import run as run_cnn_full_core
 from Attacks.cw_attack import cw_attack
 from tensorflow.contrib.keras.api.keras import backend as K
 

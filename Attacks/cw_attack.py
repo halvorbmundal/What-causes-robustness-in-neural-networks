@@ -7,10 +7,10 @@ from Attacks.l1_attack import EADL1
 from datasets.setup_cifar import CIFAR
 from datasets.setup_tinyimagenet import TinyImagenet
 from tensorflow.contrib.keras.api.keras.models import load_model
-from utils import generate_data
+from CNN_Cert.utils import generate_data
 import time as timer
 import random
-from train_resnet import *
+from CNN_Cert.train_resnet import *
 
 def loss(correct, predicted):
         return tf.nn.softmax_cross_entropy_with_logits(labels=correct,
@@ -28,7 +28,6 @@ def cw_attack(file_name, norm, sess, num_image=10, data_set_class=MNIST()):
     model = load_model(file_name, custom_objects={'fn':loss,'tf':tf, 'ResidualStart' : ResidualStart, 'ResidualStart2' : ResidualStart2, 'tf':tf, 'atan': tf.math.atan})
     inputs, targets, true_labels, true_ids, img_info = generate_data(data, samples=num_image, targeted=True, random_and_least_likely = True, target_type = 0b0001, predictor=model.predict, start=0)
     model.predict = model
-    model.num_labels = 10
 
     model.image_size = data.test_data.shape[1]
     model.num_channels = data.test_data.shape[3]

@@ -7,20 +7,20 @@ Copyright (C) 2018, Akhilan Boopathy <akhilan@mit.edu>
                     Sijia Liu <Sijia.Liu@ibm.com>
                     Luca Daniel <dluca@mit.edu>
 """
-from numba import njit, jit
+from numba import njit
 import numpy as np
 
-from cnn_bounds_full_core import pool, conv, conv_bound, conv_full, conv_bound_full, pool_linear_bounds
+from CNN_Cert.cnn_bounds_full_core import conv_full, conv_bound_full, pool_linear_bounds
 
 from tensorflow.contrib.keras.api.keras.layers import Dense, Dropout, Activation, Flatten, GlobalAveragePooling2D, Lambda
 from tensorflow.contrib.keras.api.keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, InputLayer, BatchNormalization, Reshape
 from tensorflow.contrib.keras.api.keras.models import load_model
 from tensorflow.contrib.keras.api.keras import backend as K
-from train_resnet import ResidualStart, ResidualStart2
+from CNN_Cert.train_resnet import ResidualStart, ResidualStart2
 import tensorflow as tf
-from utils import generate_data
+from CNN_Cert.utils import generate_data
 import time
-from activations import relu_linear_bounds, ada_linear_bounds, atan_linear_bounds, sigmoid_linear_bounds, tanh_linear_bounds
+from CNN_Cert.activations import relu_linear_bounds, ada_linear_bounds, atan_linear_bounds, sigmoid_linear_bounds, tanh_linear_bounds
 linear_bounds = None
 
 import random

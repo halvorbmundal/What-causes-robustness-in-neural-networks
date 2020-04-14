@@ -4,7 +4,6 @@ import numpy as np
 import time
 from CLEVER.shmemarray import ShmemRawArray, NpShmemArray
 from scipy.special import gammainc
-from CLEVER.defense import defend_reduce, defend_jpeg, defend_tv, defend_none, defend_png
 from functools import partial
 
 """

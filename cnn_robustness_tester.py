@@ -11,8 +11,8 @@ from hyper_parameters import hyper_parameters
 
 _b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode('latin1'))
 
-from train_cnn import train as train_cnn
-from pymain import run_cnn
+from CNN_Cert.train_cnn import train as train_cnn
+from CNN_Cert.pymain import run_cnn
 from datasets.setup_cifar import CIFAR
 from datasets.setup_tinyimagenet import TinyImagenet
 import csv
