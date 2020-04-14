@@ -22,15 +22,6 @@ def cw_attack(file_name, norm, sess, num_image=10, data_set_class=MNIST()):
     np.random.seed(1215)
     tf.set_random_seed(1215)
     random.seed(1215)
-    if norm == '1':
-        attack = EADL1
-        norm_fn = lambda x: np.sum(np.abs(x),axis=(1,2,3))
-    elif norm == '2':
-        attack = CarliniL2
-        norm_fn = lambda x: np.sum(x**2,axis=(1,2,3))
-    elif norm == 'i':
-        attack = CarliniLi
-        norm_fn = lambda x: np.max(np.abs(x),axis=(1,2,3))
 
     data = data_set_class
 
@@ -43,8 +34,17 @@ def cw_attack(file_name, norm, sess, num_image=10, data_set_class=MNIST()):
     model.num_channels = data.test_data.shape[3]
     model.num_labels = data.test_labels.shape[1]
 
+    if norm == '1':
+        attack = EADL1(sess, model, max_iterations=10000)
+        norm_fn = lambda x: np.sum(np.abs(x),axis=(1,2,3))
+    elif norm == '2':
+        attack = CarliniL2(sess, model, max_iterations=10000)
+        norm_fn = lambda x: np.sum(x**2,axis=(1,2,3))
+    elif norm == 'i':
+        attack = CarliniLi(sess, model, max_iterations=1000)
+        norm_fn = lambda x: np.max(np.abs(x),axis=(1,2,3))
+
     start_time = timer.time()
-    attack = attack(sess, model, max_iterations=1000)
     perturbed_input = attack.attack(inputs, targets)
     UB = np.average(norm_fn(perturbed_input-inputs))
     return UB, (timer.time()-start_time)/len(inputs)
