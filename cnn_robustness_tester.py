@@ -7,6 +7,7 @@ from datasets.setup_cifar100 import CIFAR100
 from datasets.setup_dogs_and_cats import DogsAndCats
 from datasets.setup_sign_language import SignLanguage
 from datasets.setup_rockpaperscissors import RockPaperScissors
+from hyper_parameters import hyper_parameters
 
 _b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode('latin1'))
 
@@ -638,59 +639,43 @@ def main():
     if dataset == "mnist":
         cnnc_choices = [True, False]
 
-    for l_norm in ["i", "2", "1"]:
-        for activation_function_string in ["ada", "sigmoid"]:
-            for use_cnnc_core in cnnc_choices:
-                for use_padding_same in [False]:
-                    for use_early_stopping in [True]:
-                        for has_batch_normalization in bn_choices:
-                            for kernel_size in kernel_size_range:
-                                for depth in depth_range:
-                                    for filter_size in filter_size_range:
-                                        if dataset != "mnist" and not use_early_stopping:
-                                            continue
+    for parameters in hyper_parameters(cnnc_choices,
+                                       bn_choices,
+                                       kernel_size_range,
+                                       depth_range,
+                                       filter_size_range,
+                                       dataset,
+                                       debugging,
+                                       model_files,
+                                       gpu,
+                                       cpu,
+                                       get_name_new_convention,
+                                       CnnTestParameters):
 
-                                        parameters = CnnTestParameters()
-                                        parameters.activation_function_string = activation_function_string
-                                        parameters.depth = depth
-                                        parameters.kernel_size = kernel_size
-                                        parameters.filter_size = filter_size
-                                        parameters.filters = [filter_size for i in range(depth)]
-                                        parameters.kernels = [kernel_size for i in range(depth)]
-                                        parameters.has_batch_normalization = has_batch_normalization
-                                        parameters.isDebugging = debugging
-                                        parameters.use_early_stopping = use_early_stopping
-                                        parameters.use_padding_same = use_padding_same
-                                        parameters.use_cnnc_core = use_cnnc_core
-                                        parameters.dataset = dataset
-                                        parameters.model_files = model_files
-                                        parameters.l_norm = l_norm
+        if debugging:
+            if parameters.use_gpu:
+                keras_lock.acquire()
+                gpu_calculations(parameters)
+            if parameters.use_cpu:
+                multithreadded_calculations(parameters)
+            if upper_bound:
+                upper_bound_calculations(parameters)
 
-                                        parameters.use_gpu = gpu
-                                        parameters.use_cpu = cpu
+        else:
+            if parameters.use_gpu:
+                keras_lock.acquire()
+                gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters,))
+                gpu_process.start()
 
-                                        parameters.file_name = get_name_new_convention(parameters)
+                keras_lock.acquire()
+                gpu_process.terminate()
+                keras_lock.release()
 
-                                        if debugging:
-                                            keras_lock.acquire()
-                                            gpu_calculations(parameters)
-                                            multithreadded_calculations(parameters)
-                                            upper_bound_calculations(parameters)
-                                        else:
-                                            if parameters.use_gpu:
-                                                keras_lock.acquire()
-                                                gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters,))
-                                                gpu_process.start()
-
-                                                keras_lock.acquire()
-                                                gpu_process.terminate()
-                                                keras_lock.release()
-
-                                                gc.collect()
-                                            if parameters.use_cpu:
-                                                cpu_pool.apply_async(multithreadded_calculations, (parameters,))
-                                            if upper_bound:
-                                                gpu_pool.apply_async(upper_bound_calculations, (parameters,))
+                gc.collect()
+            if parameters.use_cpu:
+                cpu_pool.apply_async(multithreadded_calculations, (parameters,))
+            if upper_bound:
+                gpu_pool.apply_async(upper_bound_calculations, (parameters,))
 
     print("Waiting for processes to finish")
     gpu_pool.close()
