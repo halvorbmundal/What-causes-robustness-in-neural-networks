@@ -118,13 +118,15 @@ def main():
     data = get_data(dataset)
     init_globals(data)
 
+    params = hyper_parameters(dataset=dataset, model_files=model_files)
+
     epsilons = [0.03, 0.01, 0.005]
-    for parameters in hyper_parameters(dataset=dataset,
-                                       model_files=model_files):
-        parameters.steps = 1000
-        parameters.step_size = 0.001
-        for epsilon in epsilons:
+    for epsilon in epsilons:
+        for parameters in params:
+            parameters.steps = 1000
+            parameters.step_size = 0.001
             parameters.epsilon = epsilon
+
             empirical_robustness_calculations(parameters)
 
 
