@@ -106,6 +106,7 @@ def main():
     _, path, dataset = sys.argv
     set_path(path)
     set_path(dataset)
+    print(path, dataset, flush=True)
 
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 

@@ -36,7 +36,7 @@ def get_accuracy(file_name, sess, epsilon, num_steps, step_size, data=MNIST()):
     adversaries = PGD(model, sess, epsilon, num_steps, step_size, data)
     predictions = model.predict(adversaries)
     accuracy = np.mean(np.equal(np.argmax(predictions, 1), np.argmax(data.test_labels, 1)))
-    print(f"The accuracy was {accuracy}")
+    print(f"The accuracy was {accuracy}", flush=True)
     time_used = time.time() - start_time
 
     return accuracy, time_used
