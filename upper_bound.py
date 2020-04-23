@@ -65,6 +65,8 @@ def upper_bound_calculations(parameters):
                                                            parameters.num_image,
                                                            sess,
                                                            dataset_data)
+    if time_spent == 0:
+        return
 
     debugprint(parameters.isDebugging, "writing upper bound to file")
     write_to_upper_bound_file(parameters, upper_bound, time_spent, csv_name)
