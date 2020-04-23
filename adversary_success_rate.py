@@ -7,7 +7,7 @@ from datetime import datetime
 
 import tensorflow as tf
 
-from Attacks.PGD_wrapper import get_accuracy as get_PGD_accuracy
+from Attacks.MIM_wrapper import get_accuracy as get_MIM_accuracy
 from cnn_robustness_tester import get_tf_activation_function_from_string, debugprint, file_exists, print_parameters, parameter_string, set_path, get_data
 from hyper_parameters import hyper_parameters
 
@@ -68,7 +68,7 @@ def empirical_robustness_calculations(parameters):
                           "\n\n")
         return
 
-    csv_name = "emprirical_robustness.csv"
+    csv_name = "success_rate.csv"
     make_result_file(csv_name)
 
     debugprint(parameters.isDebugging, "reading results csv")
@@ -83,7 +83,7 @@ def empirical_robustness_calculations(parameters):
     sess = tf.Session(config=config)
 
     with sess.as_default():
-        accuracy, time_spent = get_PGD_accuracy(parameters.file_name,
+        accuracy, time_spent = get_MIM_accuracy(parameters.file_name,
                                                    sess,
                                                    parameters.epsilon,
                                                    parameters.steps,
