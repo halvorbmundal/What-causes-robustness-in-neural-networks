@@ -33,7 +33,7 @@ def MIM(model, sess, epsilon, num_steps, data=MNIST()):
 def get_accuracy(file_name, sess, epsilon, num_steps, step_size, data=MNIST()):
     model = load_model(file_name, custom_objects={'fn': loss, 'tf': tf, 'atan': tf.math.atan})
     start_time = time.time()
-    adversaries = MIM(model, sess, epsilon, num_steps, step_size, data)
+    adversaries = MIM(model, sess, epsilon, num_steps, data)
     predictions = model.predict(adversaries)
     accuracy = np.mean(np.equal(np.argmax(predictions, 1), np.argmax(data.test_labels, 1)))
     print(f"The accuracy was {accuracy}", flush=True)
