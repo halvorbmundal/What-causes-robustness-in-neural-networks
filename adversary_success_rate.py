@@ -1,4 +1,5 @@
 import csv
+import gc
 import logging
 import os
 import sys
@@ -120,7 +121,8 @@ def main():
 
     params = hyper_parameters(dataset=dataset, model_files=model_files)
 
-    epsilons = [0.03, 0.01, 0.005]
+    epsilons = get_epsilon(dataset)
+
     for epsilon in epsilons:
         for parameters in params:
             parameters.steps = 1000
@@ -128,6 +130,24 @@ def main():
             parameters.epsilon = epsilon
 
             empirical_robustness_calculations(parameters)
+
+            gc.collect()
+
+
+def get_epsilon(dataset):
+    if dataset == "mnist":
+        epsilons = [0.05]
+    elif dataset == "cifar":
+        epsilons = [0.004]
+    elif dataset == "caltechSilhouettes":
+        epsilons = [0.04]
+    elif dataset == "GTSRB":
+        epsilons = [0.015]
+    elif dataset == "sign-language":
+        epsilons = [0.013]
+    elif dataset == "rockpaperscissors":
+        epsilons = [0.02]
+    return epsilons
 
 
 if __name__ == "__main__":
