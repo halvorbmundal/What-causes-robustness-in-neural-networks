@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 
+
 class MimAttack:
     def __init__(self, model, epsilon, num_steps, random_start=False, momentum=1):
         """Attack parameter initialization. The attack performs k steps of
@@ -32,7 +33,8 @@ class MimAttack:
                 print(f"Step {i} of {self.num_steps} steps", flush=True)
             grad = sess.run(self.grad, feed_dict={self.model.x_input: x,
                                                   self.model.y_input: y})
-            normalized_gradients = grad / tf.reduce_mean(tf.abs(grad), [1,2,3], keep_dims=True)
+
+            normalized_gradients = grad / np.mean(np.abs(grad), (1, 2, 3), keepdims=True)
             g = self.momentum * g + normalized_gradients
 
             x = np.add(x, self.alpha * np.sign(g), out=x, casting='unsafe')
