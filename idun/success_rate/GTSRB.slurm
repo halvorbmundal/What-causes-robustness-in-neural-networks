@@ -8,8 +8,8 @@
 #SBATCH --mem=10000
 # Memory per node specification is in MB. It is optional.
 # The default limit is 3000MB per core.
-#SBATCH --job-name="ecs"
-#SBATCH --output=eout/caltechSilhouettes_output.out
+#SBATCH --job-name="sr-g"
+#SBATCH --output=srout/GTSRB_output.out
 #SBATCH --mail-type=ALL
 
 WORKDIR=${SLURM_SUBMIT_DIR}
@@ -57,7 +57,7 @@ pip install -r cnn-cert-master/idun/requirements.txt
 nvidia-smi
 
 # Start training
-python cnn-cert-master/adversary_success_rate.py v10 caltechSilhouettes
+python cnn-cert-master/adversary_success_rate.py v10 GTSRB
 
 # Print information about the system
 uname -a

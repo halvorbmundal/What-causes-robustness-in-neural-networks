@@ -8,8 +8,8 @@
 #SBATCH --mem=10000
 # Memory per node specification is in MB. It is optional.
 # The default limit is 3000MB per core.
-#SBATCH --job-name="gpu-esl-CNN-Cert"
-#SBATCH --output=eout/sign_language_output.out
+#SBATCH --job-name="sr-c"
+#SBATCH --output=srout/cifar_output.out
 #SBATCH --mail-type=ALL
 
 WORKDIR=${SLURM_SUBMIT_DIR}
@@ -57,7 +57,7 @@ pip install -r cnn-cert-master/idun/requirements.txt
 nvidia-smi
 
 # Start training
-python cnn-cert-master/adversary_success_rate.py v10 sign-language
+python cnn-cert-master/adversary_success_rate.py v10 cifar
 
 # Print information about the system
 uname -a
