@@ -9,13 +9,13 @@
 # Memory per node specification is in MB. It is optional. 
 # The default limit is 3000MB per core.
 #SBATCH --job-name="u-m"
-#SBATCH --output=uout/mnist_output.out
+#SBATCH --output=upper_out/mnist_output.out
 #SBATCH --mail-type=ALL
 
 WORKDIR=${SLURM_SUBMIT_DIR}
 cd ${WORKDIR}
 echo "we are running from this directory: $SLURM_SUBMIT_DIR"
-echo " the name of the job is: $SLURM_JOB_NAME" 
+echo " the name of the job is: $SLURM_JOB_NAME"
 echo "Th job ID is $SLURM_JOB_ID"
 echo "The job was run on these nodes: $SLURM_JOB_NODELIST"
 echo "Number of nodes: $SLURM_JOB_NUM_NODES"
