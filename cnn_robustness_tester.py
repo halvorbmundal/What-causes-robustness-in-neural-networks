@@ -95,32 +95,6 @@ def make_upper_bound_file(file_name="upper_bound.csv"):
             writer.writerow(["time_elapsed", "upper_bound", "file_name", "l_norm"])
 
 
-def add_l_norm_to_upper_bound_file(file_name="upper_bound.csv"):
-    write_lock.acquire()
-    try:
-        csv_input = pd.read_csv(file_name)
-        if "l_norm" in csv_input.keys():
-            return
-        csv_input['l_norm'] = "i"
-        csv_input.to_csv(file_name, index=False)
-    finally:
-        write_lock.release()
-
-
-def write_to_upper_bound_file(parameters, upper_bound, time_elapsed, csv_file):
-    write_lock.acquire()  # from global variable
-    try:
-        with open(csv_file, 'a', newline='') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(
-                [time_elapsed, upper_bound, parameters.file_name, parameters.l_norm])
-    except Exception as e:
-        print("An exeption occured while writing to file")
-        logging.exception(str(traceback.format_exc()) + "\n\n")
-    finally:
-        write_lock.release()
-
-
 def fn(correct, predicted, tf):
     return tf.nn.softmax_cross_entropy_with_logits(labels=correct, logits=predicted)
 

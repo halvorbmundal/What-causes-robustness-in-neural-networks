@@ -9,8 +9,23 @@ import tensorflow as tf
 
 from Attacks.PGD_wrapper import get_accuracy as get_PGD_accuracy
 from cnn_robustness_tester import get_tf_activation_function_from_string, debugprint, file_exists, print_parameters, parameter_string, set_path, get_data, \
-    make_upper_bound_file, add_l_norm_to_upper_bound_file, upper_bounds_csv_contains_file, get_upper_bound_and_time, write_to_upper_bound_file
+    make_upper_bound_file, upper_bounds_csv_contains_file, get_upper_bound_and_time
 from hyper_parameters import hyper_parameters
+
+"""
+def add_l_norm_to_upper_bound_file(file_name="upper_bound.csv"):
+    csv_input = pd.read_csv(file_name)
+    if "l_norm" in csv_input.keys():
+        return
+    csv_input['l_norm'] = "i"
+    csv_input.to_csv(file_name, index=False)"""
+
+
+def write_to_upper_bound_file(parameters, upper_bound, time_elapsed, csv_file):
+    with open(csv_file, 'a', newline='') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        writer.writerow(
+            [time_elapsed, upper_bound, parameters.file_name, parameters.l_norm])
 
 def upper_bound_calculations(parameters):
     print(f"\nCalculating upper bound of {parameter_string(parameters)}\n", flush=True)
@@ -33,7 +48,6 @@ def upper_bound_calculations(parameters):
     csv_name = parameters.upper_bound_result_file
     make_upper_bound_file(csv_name)
 
-    add_l_norm_to_upper_bound_file()
     debugprint(parameters.isDebugging, "reading results csv")
     if upper_bounds_csv_contains_file(csv_name, parameters.file_name, parameters):
         print("Upper bounds already calculated for {}".format(parameters.file_name), flush=True)
