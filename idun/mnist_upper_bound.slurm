@@ -8,8 +8,8 @@
 #SBATCH --mem=10000
 # Memory per node specification is in MB. It is optional.
 # The default limit is 3000MB per core.
-#SBATCH --job-name="ecs"
-#SBATCH --output=eout/caltechSilhouettes_output.out
+#SBATCH --job-name="ubm"
+#SBATCH --output=uout/mnist.out
 #SBATCH --mail-type=ALL
 
 WORKDIR=${SLURM_SUBMIT_DIR}
