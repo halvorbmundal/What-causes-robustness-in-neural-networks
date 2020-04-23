@@ -57,7 +57,7 @@ pip install -r cnn-cert-master/idun/requirements.txt
 nvidia-smi
 
 # Start training
-python cnn-cert-master/empirical_robustness.py v10 mnist
+python cnn-cert-master/adversary_success_rate.py v10 mnist
 
 # Print information about the system
 uname -a
