@@ -56,8 +56,8 @@ def hyper_parameters(dataset,
     bn_choices = [False]
 
     parameter_list = []
-    for l_norm in ["2", "1"]:
-        for activation_function_string in ["ada", "sigmoid"]:
+    for l_norm in ["i", "2", "1"]:
+        for activation_function_string in ["ada", "sigmoid", "tanh", "arctan"]:
             for use_cnnc_core in cnnc_choices:
                 for use_padding_same in [False]:
                     for use_early_stopping in [True]:
