@@ -83,10 +83,10 @@ def empirical_robustness_calculations(parameters):
         print_parameters(parameters)
         return
 
-    config = tf.ConfigProto()
-    config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
-    config.log_device_placement = False
-    sess = tf.Session(config=config)
+    #config = tf.ConfigProto()
+    #config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
+    #config.log_device_placement = False
+    sess = tf.Session()#(config=config)
 
     with sess.as_default():
         accuracy, time_spent = attack(parameters.file_name,
