@@ -28,6 +28,14 @@ def PGD(model, sess, epsilon, num_steps, step_size, data=MNIST()):
     model.xent = tf.reduce_sum(y_loss)
 
     attack = LinfPGDAttack(model, epsilon, num_steps, step_size, random_start=True)
+    if data.dataset == "cifar":
+        sets = np.split(data.test_data, 2)
+        label_sets = np.split(data.test_labels, 2)
+
+        p1 = attack.perturb(sets[0], label_sets[0], sess)
+        p2 = attack.perturb(sets[1], label_sets[1], sess)
+        return np.concatenate((p1, p2), axis=0)
+
     return attack.perturb(np.array(data.test_data), np.array(data.test_labels), sess)
 
 def get_accuracy(file_name, sess, epsilon, num_steps, step_size, data=MNIST()):
