@@ -584,9 +584,6 @@ def run(file_name, n_samples, p_n, q_n, data_set_class, activation = 'relu'):
     tf.set_random_seed(1215)
     random.seed(1215)
     keras_model = load_model(file_name, custom_objects={'fn':loss, 'ResidualStart':ResidualStart, 'ResidualStart2':ResidualStart2, 'tf':tf, 'atan': tf.math.atan})
-    print("layers")
-    for i in keras_model.layers:
-        print(i)
     model = Model(keras_model, inp_shape=data_set_class.inp_shape)
 
     #Set correct linear_bounds function
