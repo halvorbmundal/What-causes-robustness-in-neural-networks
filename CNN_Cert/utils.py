@@ -85,9 +85,10 @@ def generate_data(data, samples, targeted=True, random_and_least_likely = False,
                     start_class = 1 if (imagenet and not remove_background_class) else 0
                     random_class = predicted_label
                     new_seq = [least_likely_label, top2_label, predicted_label]
-                    while random_class in new_seq:
-                        random_class = random.randint(start_class, start_class + num_classes - 1)
-                    new_seq[2] = random_class
+                    if target_type & 0b0010:
+                        while random_class in new_seq:
+                            random_class = random.randint(start_class, start_class + num_classes - 1)
+                        new_seq[2] = random_class
                     true_label = np.argmax(data.test_labels[start+i])
                     seq = []
                     if true_label != predicted_label and skip_wrong_label:
