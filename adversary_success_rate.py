@@ -137,8 +137,7 @@ def main():
                 parameters.success_rate_attack = success_rate_attack
 
                 empirical_robustness_calculations(parameters)
-
-            gc.collect()
+                gc.collect()
 
 
 def get_epsilon(dataset):
