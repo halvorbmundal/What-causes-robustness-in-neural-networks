@@ -38,7 +38,6 @@ def hsja(model,
     """
     # Set parameters
     original_label = np.argmax(model.predict(np.array([sample, ])))
-    print("o label", original_label)
     params = {'clip_max': clip_max, 'clip_min': clip_min,
               'shape': sample.shape,
               'original_label': original_label,

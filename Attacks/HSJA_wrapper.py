@@ -95,7 +95,7 @@ def attack_multiple(imgs, targets, target_examples, constraint, model):
                       stepsize_search='geometric_progression',
                       max_num_evals=1e4,
                       init_num_evals=100,
-                      verbose=True))
+                      verbose=False))
     return np.array(r)
 
 
