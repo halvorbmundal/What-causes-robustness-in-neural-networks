@@ -8,8 +8,8 @@
 #SBATCH --mem=15000
 # Memory per node specification is in MB. It is optional.
 # The default limit is 3000MB per core.
-#SBATCH --job-name="hu-bm"
-#SBATCH --output=huout/mnist.out
+#SBATCH --job-name="u-rps"
+#SBATCH --output=uout/rockpaperscissors.out
 #SBATCH --mail-type=ALL
 
 WORKDIR=${SLURM_SUBMIT_DIR}
@@ -57,7 +57,7 @@ pip install -r cnn-cert-master/idun/requirements.txt
 nvidia-smi
 
 # Start training
-python cnn-cert-master/upper_bound_HSJA.py v10 mnist
+python cnn-cert-master/upper_bound.py v10 rockpaperscissors
 
 # Print information about the system
 uname -a
