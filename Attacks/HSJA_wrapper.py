@@ -88,7 +88,7 @@ def attack_multiple(imgs, targets, target_examples, constraint, model):
                       clip_max=0.5,
                       clip_min=-0.5,
                       constraint=constraint,
-                      num_iterations=1000,
+                      num_iterations=150,
                       gamma=1.0,
                       target_label=target,
                       target_image=target_example,
