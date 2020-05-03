@@ -591,11 +591,7 @@ def main():
         print(f"gpu: {gpu}")
         print(f"path: {path}/")
 
-    max_processes = num_cpus
-    if multiprocessing.cpu_count() > max_processes:
-        processes = max_processes
-    else:
-        processes = multiprocessing.cpu_count()
+    processes = min(multiprocessing.cpu_count(), num_cpus)
 
     data = get_data(dataset)
 
