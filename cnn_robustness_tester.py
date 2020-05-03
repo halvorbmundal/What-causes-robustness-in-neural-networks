@@ -69,7 +69,10 @@ def delete_file_and_rows_with_file_name(file_name):
     except:
         print("Could not delete file")
     for file in files:
-        delete_duplicated_lines_in_file(file_name, file)
+        try:
+            delete_duplicated_lines_in_file(file_name, file)
+        except:
+            None
 
 
 def delete_duplicated_lines_in_file(file_name, file):
