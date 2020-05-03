@@ -38,7 +38,7 @@ def upper_bound_calculations(parameters):
         parameters.activation_function_string, tf)
 
     debugprint(parameters.isDebugging, "checking if model file exists")
-    if not file_exists(parameters.file_name, use_cache=False):
+    if not file_exists(parameters.file_name):
         print("File does not exist {}".format(parameters.file_name), flush=True)
         print_parameters(parameters)
         logging.exception("\n =================\n\n"
@@ -63,13 +63,16 @@ def upper_bound_calculations(parameters):
     config.log_device_placement = False
     sess = tf.Session(config=config)
 
-    with sess.as_default():
-        upper_bound, time_spent = hsja_attack(parameters.file_name,
-                                              parameters.l_norm,
-                                              sess,
-                                              parameters.num_image,
-                                              dataset_data)
-    if time_spent == 0:
+    try:
+        with sess.as_default():
+            upper_bound, time_spent = hsja_attack(parameters.file_name,
+                                                  parameters.l_norm,
+                                                  sess,
+                                                  parameters.num_image,
+                                                  dataset_data)
+        if time_spent == 0:
+            return
+    except:
         return
 
     debugprint(parameters.isDebugging, "writing upper bound to file")

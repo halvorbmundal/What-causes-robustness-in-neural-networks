@@ -58,7 +58,7 @@ def empirical_robustness_calculations(parameters):
         parameters.activation_function_string, tf)
 
     debugprint(parameters.isDebugging, "checking if model file exists")
-    if not file_exists(parameters.file_name, use_cache=False):
+    if not file_exists(parameters.file_name):
         print("File does not exist {}".format(parameters.file_name), flush=True)
         print_parameters(parameters)
         logging.exception("\n =================\n\n"
