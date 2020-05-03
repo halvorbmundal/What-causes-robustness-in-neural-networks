@@ -612,8 +612,8 @@ def main():
                                        debugging=debugging,
                                        gpu=gpu,
                                        cpu=cpu):
-        if is_file_duplicated(parameters.file_name):
-            delete_file_and_rows_with_file_name(parameters.file_name)
+        #if is_file_duplicated(parameters.file_name):
+            #delete_file_and_rows_with_file_name(parameters.file_name)
 
         if debugging:
             if parameters.use_gpu:
