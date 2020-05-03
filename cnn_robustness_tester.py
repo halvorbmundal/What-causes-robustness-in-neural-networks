@@ -49,6 +49,38 @@ def get_name(parameter_class):
                 parameter_class.temperature, parameter_class.batch_size)
 
 
+def is_file_duplicated(file_name):
+    models_meta_file = "output/models_meta.csv"
+    models_meta = pd.read_csv(models_meta_file)
+    file_name_column = "file_name"
+    return len(models_meta[(models_meta[file_name_column] == file_name)]) > 1
+
+
+def delete_file_and_rows_with_file_name(file_name):
+    models_meta_file = "output/models_meta.csv"
+    lower_bound_file = "output/results/results.csv"
+    upper_bound_file = "upper_bound.csv"
+    success_rate_file = "success_rate.csv"
+    HSJA_upper_bound_file = "HSJA_upper_bound.csv"
+    emprirical_robustness_file = "emprirical_robustness.csv"
+    files = [models_meta_file, lower_bound_file, upper_bound_file, success_rate_file, HSJA_upper_bound_file, emprirical_robustness_file]
+    try:
+        os.remove(file_name)
+    except:
+        print("Could not delete file")
+    for file in files:
+        delete_duplicated_lines_in_file(file_name, file)
+
+
+def delete_duplicated_lines_in_file(file_name, file):
+    file_name_column = "file_name"
+    df = pd.read_csv(file)
+    print(file, len(df))
+    df = df[(df[file_name_column] != file_name)]
+    df.to_csv(file, index=False)
+    print(file, len(df))
+
+
 def make_result_file(directory, file):
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -194,15 +226,8 @@ def upper_bounds_csv_contains_file(csv_file, file_name, parameters):
     return False
 
 
-def file_exists(file, model_files=[], use_cache=True):
-    if use_cache:
-        start = time.time()
-        if file[14:] in model_files:
-            print("used {} sec to find file".format(time.time() - start))
-            return True
-        return False
-    else:
-        return os.path.exists(file)
+def file_exists(file):
+    return os.path.exists(file)
 
 
 def get_tf_activation_function_from_string(activation_function_string, tf):
@@ -283,7 +308,7 @@ def gpu_calculations(parameters):
         parameters.tf_activation = get_tf_activation_function_from_string(
             parameters.activation_function_string, tf)
 
-        if not file_exists(parameters.file_name, parameters.model_files):
+        if not file_exists(parameters.file_name):
             train_nn(parameters,
                      parameters.file_name,
                      parameters.filters,
@@ -583,12 +608,13 @@ def main():
 
     logging.basicConfig(filename='log.log', level="ERROR")
 
-
     for parameters in hyper_parameters(dataset=dataset,
-                     model_files=model_files,
-                     debugging=debugging,
-                     gpu=gpu,
-                     cpu=cpu):
+                                       model_files=model_files,
+                                       debugging=debugging,
+                                       gpu=gpu,
+                                       cpu=cpu):
+        if is_file_duplicated(parameters.file_name):
+            delete_file_and_rows_with_file_name(parameters.file_name)
 
         if debugging:
             if parameters.use_gpu:
@@ -596,9 +622,6 @@ def main():
                 gpu_calculations(parameters)
             if parameters.use_cpu:
                 multithreadded_calculations(parameters)
-            if upper_bound:
-                None
-                #upper_bound_calculations(parameters)
 
         else:
             if parameters.use_gpu:
@@ -613,9 +636,6 @@ def main():
                 gc.collect()
             if parameters.use_cpu:
                 cpu_pool.apply_async(multithreadded_calculations, (parameters,))
-            if upper_bound:
-                None
-                #gpu_pool.apply_async(upper_bound_calculations, (parameters,))
 
     print("Waiting for processes to finish")
     gpu_pool.close()
