@@ -4,8 +4,8 @@
 #SBATCH --gres=gpu:1
 #SBATCH --time=7-00:00:00
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=6
-#SBATCH --mem=80000
+#SBATCH --ntasks-per-node=8
+#SBATCH --mem=160000
 # Memory per node specification is in MB. It is optional.
 # The default limit is 3000MB per core.
 #SBATCH --job-name="gpu-g-CNN-Cert"
