@@ -64,7 +64,7 @@ class CarliniL2:
 
         self.repeat = binary_search_steps >= 10
 
-        self.I_KNOW_WHAT_I_AM_DOING_AND_WANT_TO_OVERRIDE_THE_PRESOFTMAX_CHECK = False
+        self.I_KNOW_WHAT_I_AM_DOING_AND_WANT_TO_OVERRIDE_THE_PRESOFTMAX_CHECK = True
 
         shape = (batch_size,image_size,image_size,num_channels)
         
