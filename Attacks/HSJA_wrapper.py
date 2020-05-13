@@ -49,7 +49,7 @@ def hsja_attack(file_name, norm, sess, num_image=10, data_set_class=MNIST(), tar
         raise ValueError("norm must be 2 or inf")
 
     start_time = timer.time()
-    perturbed_input = attack_multiple(inputs, targets, target_examples, constraint, model)
+    perturbed_input = attack_multiple(inputs, targets, target_examples, constraint, model, data)
     UB = np.average(norm_fn(perturbed_input - inputs))
     time_spent = (timer.time() - start_time) / len(inputs)
     return UB, time_spent
@@ -71,13 +71,11 @@ def get_target_examples(data, model, targets):
     return target_examples
 
 
-def attack_multiple(imgs, targets, target_examples, constraint, model):
-    """
-    Perform the L_0 attack on the given images for the given targets.
-
-    If self.targeted is true, then the targets represents the target labels.
-    If self.targeted is false, then targets are the original class labels.
-    """
+def attack_multiple(imgs, targets, target_examples, constraint, model, data):
+    if data.dataset == "rockpaperscissors":
+        num_iterations = 40
+    else:
+        num_iterations = 150
 
     r = []
     print(f"{len(imgs)} images and {len(targets)} targets")
@@ -88,7 +86,7 @@ def attack_multiple(imgs, targets, target_examples, constraint, model):
                       clip_max=0.5,
                       clip_min=-0.5,
                       constraint=constraint,
-                      num_iterations=150,
+                      num_iterations=num_iterations,
                       gamma=1.0,
                       target_label=target,
                       target_image=target_example,
