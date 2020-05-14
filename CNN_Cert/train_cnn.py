@@ -223,7 +223,7 @@ class AdversarialImagesSequence(Sequence):
 def get_training_parameters(data):
     patience = 30
     optimizer = Adam()
-    min_delta = 0
+    min_delta = 0.0001
     if data.dataset == "cifar100":
         patience = 50
     elif data.dataset == "GTSRB":
