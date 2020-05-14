@@ -7,7 +7,6 @@ from datasets.setup_cifar100 import CIFAR100
 from datasets.setup_dogs_and_cats import DogsAndCats
 from datasets.setup_sign_language import SignLanguage
 from datasets.setup_rockpaperscissors import RockPaperScissors
-from hyper_parameters import hyper_parameters, CnnTestParameters
 
 _b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode('latin1'))
 
@@ -377,7 +376,7 @@ def multithreadded_calculations(parameters):
 
         start_time = timer.time()
 
-        make_result_file(CnnTestParameters.result_folder, CnnTestParameters.result_file)
+        make_result_file(parameters.result_folder, parameters.result_file)
 
         debugprint(parameters.isDebugging, "reading results csv")
         if csv_contains_file(parameters.result_folder + parameters.result_file, parameters.file_name, parameters):

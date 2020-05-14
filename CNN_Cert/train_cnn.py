@@ -221,7 +221,7 @@ class AdversarialImagesSequence(Sequence):
         return self.attack.perturb(batch_x, batch_y, self.sess, verbose=False), np.array(batch_y)
 
 def get_training_parameters(data):
-    patience = 3
+    patience = 30
     optimizer = Adam()
     min_delta = 0
     if data.dataset == "cifar100":
