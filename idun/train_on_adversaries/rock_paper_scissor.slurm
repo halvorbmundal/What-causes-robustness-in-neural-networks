@@ -8,8 +8,8 @@
 #SBATCH --mem=20000
 # Memory per node specification is in MB. It is optional.
 # The default limit is 3000MB per core.
-#SBATCH --job-name="gpu-r-CNN-Cert"
-#SBATCH --output=out/rock_output.out
+#SBATCH --job-name="adv-r"
+#SBATCH --output=adv_out/rock_output.out
 #SBATCH --mail-type=ALL
 
 WORKDIR=${SLURM_SUBMIT_DIR}
@@ -57,7 +57,7 @@ pip install -r cnn-cert-master/idun/requirements.txt
 nvidia-smi
 
 # Start training
-python cnn-cert-master/cnn_robustness_tester.py no_cpu no_gpu no_debugging v10 rockpaperscissors upper 1
+python cnn-cert-master/cnn_robustness_tester.py cpu gpu no_debugging v10 rockpaperscissors upper 1 adv
 
 # Print information about the system
 uname -a

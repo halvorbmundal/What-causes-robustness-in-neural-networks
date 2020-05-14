@@ -1,21 +1,21 @@
 #!/bin/sh
-#SBATCH --partition=GPUQ,V100-IDI,EPICALL
+#SBATCH --partition=GPUQ,V100-IDI
 #SBATCH --account=share-ie-idi
-#SBATCH --gres=gpu:1
 #SBATCH --time=7-00:00:00
+#SBATCH --gres=gpu:1
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem=20000
-# Memory per node specification is in MB. It is optional. 
+# Memory per node specification is in MB. It is optional.
 # The default limit is 3000MB per core.
-#SBATCH --job-name="gpu-m-CNN-Cert"
-#SBATCH --output=out/mnist_output.out
+#SBATCH --job-name="adv-cs"
+#SBATCH --output=adv_out/caltechSilhouettes_output.out
 #SBATCH --mail-type=ALL
 
 WORKDIR=${SLURM_SUBMIT_DIR}
 cd ${WORKDIR}
 echo "we are running from this directory: $SLURM_SUBMIT_DIR"
-echo " the name of the job is: $SLURM_JOB_NAME" 
+echo " the name of the job is: $SLURM_JOB_NAME"
 echo "Th job ID is $SLURM_JOB_ID"
 echo "The job was run on these nodes: $SLURM_JOB_NODELIST"
 echo "Number of nodes: $SLURM_JOB_NUM_NODES"
@@ -57,7 +57,7 @@ pip install -r cnn-cert-master/idun/requirements.txt
 nvidia-smi
 
 # Start training
-python cnn-cert-master/cnn_robustness_tester.py no_cpu no_gpu no_debugging v10 mnist upper 1
+python cnn-cert-master/cnn_robustness_tester.py cpu gpu no_debugging v10 caltechSilhouettes upper 1 adv
 
 # Print information about the system
 uname -a

@@ -144,7 +144,7 @@ def setDynamicGPUAllocation(tf):
 
 
 def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
-                           use_early_stopping, batch_size, _dataset_data):
+                           use_early_stopping, batch_size, _dataset_data, train_on_adversaries):
     train_cnn(_dataset_data,
               file_name=file_name,
               filters=filters,
@@ -154,7 +154,8 @@ def train_and_save_network(file_name, filters, kernels, epochs, tf_activation, b
               bn=batch_normalization,
               batch_size=batch_size,
               use_padding_same=use_padding_same,
-              use_early_stopping=use_early_stopping)
+              use_early_stopping=use_early_stopping,
+              train_on_adversaries=train_on_adversaries)
 
 
 def get_lower_bound(file_name, num_image, l_norm, use_cnnc_core, activation_function_string, _dataset_data):
@@ -269,7 +270,7 @@ def get_dynamic_keras_config(tf):
 
 
 def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, batch_normalization, use_padding_same,
-             use_early_stopping, batch_size, _dataset_data, tf):
+             use_early_stopping, batch_size, _dataset_data, tf, train_on_adversaries):
     try:
         # reset_cuda()
         print(datetime.now())
@@ -283,7 +284,8 @@ def train_nn(parameters, file_name, filters, kernels, epochs, tf_activation, bat
                                use_padding_same,
                                use_early_stopping,
                                batch_size,
-                               _dataset_data=_dataset_data)
+                               _dataset_data=_dataset_data,
+                               train_on_adversaries=train_on_adversaries)
         # reset_cuda()
         gc.collect()
     except Exception as e:
@@ -323,7 +325,8 @@ def gpu_calculations(parameters):
                      parameters.use_early_stopping,
                      parameters.batch_size,
                      dataset_data,
-                     tf)
+                     tf,
+                     parameters.train_on_adversaries)
             print(f"\ndone training with {parameter_string(parameters)}\n", flush=True)
             return
         else:
@@ -555,7 +558,7 @@ def get_data(dataset):
 
 def main():
     print("args: ", sys.argv)
-    _, arg1, arg2, arg3, arg4, arg5, arg6, arg7 = sys.argv
+    _, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8 = sys.argv
     cpu = arg1 == "cpu" or arg2 == "cpu"
     gpu = arg1 == "gpu" or arg2 == "gpu"
     debugging = arg3 == "debugging"
@@ -563,6 +566,8 @@ def main():
     dataset = arg5
     upper_bound = arg6 == "upper"
     num_cpus = int(arg7)
+    train_on_adversaries = arg8 == "adv"
+
     print("cpu:", cpu)
     print("gpu:", gpu)
     print("debugging:", debugging)
@@ -607,23 +612,22 @@ def main():
 
     logging.basicConfig(filename='log.log', level="ERROR")
 
-    for parameters in hyper_parameters(dataset=dataset,
-                                       model_files=model_files,
-                                       debugging=debugging,
-                                       gpu=gpu,
-                                       cpu=cpu):
+    for parameters in hyper_parameters(dataset,
+                                       model_files,
+                                       debugging,
+                                       train_on_adversaries):
         #if is_file_duplicated(parameters.file_name):
             #delete_file_and_rows_with_file_name(parameters.file_name)
 
         if debugging:
-            if parameters.use_gpu:
+            if gpu:
                 keras_lock.acquire()
                 gpu_calculations(parameters)
-            if parameters.use_cpu:
+            if cpu:
                 multithreadded_calculations(parameters)
 
         else:
-            if parameters.use_gpu:
+            if gpu:
                 keras_lock.acquire()
                 gpu_process = multiprocessing.Process(target=gpu_calculations, args=(parameters,))
                 gpu_process.start()
@@ -633,7 +637,7 @@ def main():
                 keras_lock.release()
 
                 gc.collect()
-            if parameters.use_cpu:
+            if cpu:
                 cpu_pool.apply_async(multithreadded_calculations, (parameters,))
 
     print("Waiting for processes to finish")

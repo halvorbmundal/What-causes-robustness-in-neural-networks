@@ -21,10 +21,16 @@ from tensorflow.contrib.keras.api.keras.layers import Dense, Activation, Flatten
 from tensorflow.contrib.keras.api.keras.models import load_model
 from tensorflow.contrib.keras.api.keras import backend as K
 from tensorflow.contrib.keras.api.keras.optimizers import Adam, SGD
+from tensorflow.contrib.keras.api.keras.utils import Sequence
+from tensorflow.contrib.keras.api.keras.backend import set_session
+from tensorflow.contrib.keras.api.keras.backend import get_session
+import numpy as np
 
 import os
 
 from tensorflow.python.client import device_lib
+
+from Attacks.PGD_attack import LinfPGDAttack
 
 
 def get_available_gpus():
@@ -40,91 +46,182 @@ def get_dynamic_keras_config(tf):
 
 
 def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, train_temp=1, init=None, activation=tf.nn.relu, bn=False, use_padding_same=False,
-          use_early_stopping=True):
+          use_early_stopping=True, train_on_adversaries=False):
     """
     Train a n-layer CNN for MNIST and CIFAR
     """
     # create a Keras sequential model
     sess = tf.Session(config=get_dynamic_keras_config(tf))
     with sess.as_default():
-        model = create_model(activation, bn, data, filters, init, kernels, use_padding_same)
+        with tf.get_default_graph().as_default():
+            set_session(sess)
+            model = create_model(activation, bn, data, filters, init, kernels, use_padding_same)
 
-        # define the loss function which is the cross entropy between prediction and true label
-        def fn(correct, predicted):
-            return tf.nn.softmax_cross_entropy_with_logits(labels=correct,
-                                                           logits=predicted / train_temp)
+            # define the loss function which is the cross entropy between prediction and true label
+            def fn(correct, predicted):
+                return tf.nn.softmax_cross_entropy_with_logits(labels=correct,
+                                                               logits=predicted / train_temp)
 
-        min_delta, optimizer, patience = get_training_parameters(data)
+            min_delta, optimizer, patience = get_training_parameters(data)
 
-        model.compile(loss=fn,
-                      optimizer=optimizer,
-                      metrics=['accuracy'])
+            model.compile(loss=fn,
+                          optimizer=optimizer,
+                          metrics=['accuracy'])
 
-        model.summary()
 
-        datagen = get_data_augmenter(data)
-        datagen.fit(data.train_data)
+            model.summary()
 
-        print("Traing a {} layer model, saving to {}".format(len(filters) + 1, file_name), flush=True)
+            print("Traing a {} layer model, saving to {}".format(len(filters) + 1, file_name), flush=True)
 
-        start_time = time.time()
-        if use_early_stopping:
-            early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True,
-                                                              verbose=1, min_delta=min_delta)
-            flow = datagen.flow(data.train_data, data.train_labels, batch_size=batch_size)
-            history = model.fit_generator(flow,
-                                          validation_data=(data.validation_data, data.validation_labels),
-                                          epochs=400,
-                                          shuffle=True,
-                                          callbacks=[early_stopping],
-                                          verbose=1,
-                                          max_queue_size=batch_size,
-                                          workers=12,
-                                          use_multiprocessing=True)
-            best_epoc = len(history.history['loss']) - early_stopping.wait
+            if train_on_adversaries:
+                best_epoc, history, time_taken = train_adversarially(batch_size, data, min_delta, model, patience, use_early_stopping, sess)
+                metafile = "output/adversarial_models_meta.csv"
+            else:
+                best_epoc, history, time_taken = train_normally(batch_size, data, min_delta, model, num_epochs, patience, use_early_stopping)
+                metafile = "output/models_meta.csv"
 
-        else:
-            history = model.fit(data.train_data, data.train_labels,
-                                batch_size=batch_size,
-                                validation_data=(data.validation_data, data.validation_labels),
-                                epochs=num_epochs,
-                                shuffle=True,
-                                verbose=1)
-            best_epoc = len(history.history['loss'])
-        time_taken = (time.time() - start_time)
+            # run training with given dataset, and print progress
 
-        # run training with given dataset, and print progress
+            num_ephocs_trained = len(history.history['loss'])
 
-        num_ephocs_trained = len(history.history['loss'])
-        metafile = "output/models_meta.csv"
-        if not os.path.exists(metafile):
+            if not os.path.exists(metafile):
+                with open(metafile, 'a', newline='') as csvfile:
+                    writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+                    writer.writerow(["num_epochs", "best_epoch", "time_taken", "time_per_epoch", "accuracy", "file_name"])
             with open(metafile, 'a', newline='') as csvfile:
                 writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-                writer.writerow(["num_epochs", "best_epoch", "time_taken", "time_per_epoch", "accuracy", "file_name"])
-        with open(metafile, 'a', newline='') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(
-                [num_ephocs_trained, best_epoc, round(time_taken, 1), round(float(time_taken) / float(num_ephocs_trained), 1),
-                 history.history["val_acc"][best_epoc - 1], file_name])
+                writer.writerow(
+                    [num_ephocs_trained, best_epoc, round(time_taken, 1), round(float(time_taken) / float(num_ephocs_trained), 1),
+                     history.history["val_acc"][best_epoc - 1], file_name])
 
-        print("saving - ", file_name)
-        # save model to a file
-        if file_name != None:
-            is_saved = False
-            while not is_saved:
-                try:
-                    model.save(file_name)
-                    is_saved = True
-                except Exception as e:
-                    print("could not save model: ", e)
-                    time.sleep(5)
+            print("saving - ", file_name)
+            # save model to a file
+            if file_name != None:
+                is_saved = False
+                while not is_saved:
+                    try:
+                        model.save(file_name)
+                        is_saved = True
+                    except Exception as e:
+                        print("could not save model: ", e)
+                        time.sleep(5)
     sess.close()
     gc.collect()
     return history
 
 
+def train_normally(batch_size, data, min_delta, model, num_epochs, patience, use_early_stopping):
+    datagen = get_data_augmenter(data)
+    datagen.fit(data.train_data)
+    start_time = time.time()
+    if use_early_stopping:
+        early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True,
+                                                          verbose=1, min_delta=min_delta)
+        flow = datagen.flow(data.train_data, data.train_labels, batch_size=batch_size)
+        history = model.fit_generator(flow,
+                                      validation_data=(data.validation_data, data.validation_labels),
+                                      epochs=400,
+                                      shuffle=True,
+                                      callbacks=[early_stopping],
+                                      verbose=1,
+                                      max_queue_size=batch_size,
+                                      workers=12,
+                                      use_multiprocessing=True)
+        best_epoc = len(history.history['loss']) - early_stopping.wait
+
+    else:
+        history = model.fit(data.train_data, data.train_labels,
+                            batch_size=batch_size,
+                            validation_data=(data.validation_data, data.validation_labels),
+                            epochs=num_epochs,
+                            shuffle=True,
+                            verbose=1)
+        best_epoc = len(history.history['loss'])
+    time_taken = (time.time() - start_time)
+    return best_epoc, history, time_taken
+
+def train_adversarially(batch_size, data, min_delta, model, patience, use_early_stopping, sess):
+    train_datagen = AdversarialImagesSequence(data.train_data, data.train_labels, batch_size, model, data.dataset, sess)
+    val_datagen = AdversarialImagesSequence(data.validation_data, data.validation_labels, batch_size, model, data.dataset, sess)
+    start_time = time.time()
+    if use_early_stopping:
+        early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True,
+                                                          verbose=1, min_delta=min_delta)
+        history = model.fit_generator(generator=train_datagen,
+                                      validation_data=val_datagen,
+                                      epochs=500,
+                                      shuffle=True,
+                                      callbacks=[early_stopping],
+                                      verbose=1,
+                                      max_queue_size=batch_size)
+        best_epoc = len(history.history['loss']) - early_stopping.wait
+
+    else:
+        raise ValueError("not implemented")
+    time_taken = (time.time() - start_time)
+    return best_epoc, history, time_taken
+
+class PDGModel():
+    def __init__(self, model, x_set, y_set):
+        image_size = x_set.shape[1]
+        num_channels = x_set.shape[3]
+        num_labels = y_set.shape[1]
+
+        shape = (None, image_size, image_size, num_channels)
+        x_input = tf.placeholder(tf.float32, shape)
+        y_input = tf.placeholder(tf.float32, [None, num_labels])
+        pre_softmax = model(x_input)
+
+        y_loss = tf.nn.softmax_cross_entropy_with_logits(labels=y_input, logits=pre_softmax)
+        xent = tf.reduce_sum(y_loss)
+
+        self.xent = xent
+        self.x_input = x_input
+        self.y_input = y_input
+
+
+class AdversarialImagesSequence(Sequence):
+    def __init__(self, x_set, y_set, batch_size, model, dataset_name, sess):
+
+        pdg_model = PDGModel(model, x_set, y_set)
+        epsilon = self.get_epsilon(dataset_name)
+
+        self.x, self.y = x_set, y_set
+        self.batch_size = batch_size
+        self.model = model
+        adv_steps = 20
+        self.attack = LinfPGDAttack(pdg_model, epsilon, adv_steps, epsilon * 1.33 / adv_steps, random_start=True)
+        self.sess = sess
+        tf.keras.backend.get_session()
+
+    def get_epsilon(self, dataset):
+        if dataset == "mnist":
+            epsilon = 0.1
+        elif dataset == "sign-language":
+            epsilon = 0.03
+        elif dataset == "caltechSilhouettes":
+            epsilon = 0.1
+        elif dataset == "rockpaperscissors":
+            epsilon = 0.04
+        elif dataset == "cifar":
+            epsilon = 0.02
+        elif dataset == "GTSRB":
+            epsilon = 0.05
+        else:
+            raise ValueError("Unkown dataset")
+        return epsilon
+
+    def __len__(self):
+        return int(np.ceil(len(self.x) / float(self.batch_size)))
+
+    def __getitem__(self, idx):
+        batch_x = self.x[idx * self.batch_size:(idx + 1) * self.batch_size]
+        batch_y = self.y[idx * self.batch_size:(idx + 1) * self.batch_size]
+
+        return self.attack.perturb(batch_x, batch_y, self.sess, verbose=False), np.array(batch_y)
+
 def get_training_parameters(data):
-    patience = 30
+    patience = 3
     optimizer = Adam()
     min_delta = 0
     if data.dataset == "cifar100":
