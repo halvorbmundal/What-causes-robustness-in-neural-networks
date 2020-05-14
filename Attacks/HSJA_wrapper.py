@@ -49,9 +49,10 @@ def hsja_attack(file_name, norm, sess, num_image=10, data_set_class=MNIST(), tar
         raise ValueError("norm must be 2 or inf")
 
     start_time = timer.time()
-    perturbed_input = attack_multiple(inputs, targets, target_examples, constraint, model, data)
-    UB = np.average(norm_fn(perturbed_input - inputs))
-    time_spent = (timer.time() - start_time) / len(inputs)
+    perturbed_input, original_input = attack_multiple(inputs, targets, target_examples, constraint, model, data)
+    UB = np.average(norm_fn(perturbed_input - original_input))
+    print("Done calculating robustness. The average robustness was:", UB)
+    time_spent = (timer.time() - start_time) / len(original_input)
     return UB, time_spent
 
 
@@ -71,30 +72,42 @@ def get_target_examples(data, model, targets):
     return target_examples
 
 
+
 def attack_multiple(imgs, targets, target_examples, constraint, model, data):
     if data.dataset == "rockpaperscissors":
         num_iterations = 40
     else:
         num_iterations = 150
 
-    r = []
+    originals = []
+    advs = []
     print(f"{len(imgs)} images and {len(targets)} targets")
     for img, target, target_example in zip(imgs, targets, target_examples):
-        print(f"calclulating robustness for image {len(r) + 1}", flush=True)
-        r.append(hsja(model,
-                      img,
-                      clip_max=0.5,
-                      clip_min=-0.5,
-                      constraint=constraint,
-                      num_iterations=num_iterations,
-                      gamma=1.0,
-                      target_label=target,
-                      target_image=target_example,
-                      stepsize_search='geometric_progression',
-                      max_num_evals=1e4,
-                      init_num_evals=100,
-                      verbose=False))
-    return np.array(r)
+        print(f"calclulating robustness for image {len(advs) + 1}", flush=True)
+        # Sometimes the HJSA does not find an adversary
+        try:
+            advs.append(attack_single(constraint, img, model, num_iterations, target, target_example))
+            originals.append(img)
+        except:
+            None
+
+    return np.array(advs), np.array(originals)
+
+
+def attack_single(constraint, img, model, num_iterations, target, target_example):
+    return hsja(model,
+                img,
+                clip_max=0.5,
+                clip_min=-0.5,
+                constraint=constraint,
+                num_iterations=num_iterations,
+                gamma=1.0,
+                target_label=target,
+                target_image=target_example,
+                stepsize_search='geometric_progression',
+                max_num_evals=1e4,
+                init_num_evals=100,
+                verbose=False)
 
 
 def find_first(arr, label):
