@@ -7,6 +7,7 @@ from datasets.setup_cifar100 import CIFAR100
 from datasets.setup_dogs_and_cats import DogsAndCats
 from datasets.setup_sign_language import SignLanguage
 from datasets.setup_rockpaperscissors import RockPaperScissors
+from hyper_parameters import hyper_parameters
 
 _b = sys.version_info[0] < 3 and (lambda x: x) or (lambda x: x.encode('latin1'))
 
@@ -332,7 +333,7 @@ def gpu_calculations(parameters):
             print("Neural network already created - {} - {}".format(datetime.now(), parameters.file_name), flush=True)
     finally:
         keras_lock.release()
-        if not parameters.isDebugging:
+        if not parameters.is_debugging:
             sys.exit(0)
 
 
@@ -378,13 +379,13 @@ def multithreadded_calculations(parameters):
 
         make_result_file(parameters.result_folder, parameters.result_file)
 
-        debugprint(parameters.isDebugging, "reading results csv")
+        debugprint(parameters.is_debugging, "reading results csv")
         if csv_contains_file(parameters.result_folder + parameters.result_file, parameters.file_name, parameters):
             print("Bounds already calculated for {}".format(parameters.file_name), flush=True)
             print_parameters(parameters)
             return
 
-        debugprint(parameters.isDebugging, "reading models_meta.csv")
+        debugprint(parameters.is_debugging, "reading models_meta.csv")
         accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
 
         """
@@ -394,7 +395,7 @@ def multithreadded_calculations(parameters):
             return
         """
 
-        debugprint(parameters.isDebugging, "calculating lower bound")
+        debugprint(parameters.is_debugging, "calculating lower bound")
         gpu_options = tf.GPUOptions(visible_device_list=_b("").decode('utf-8'))
         session_config = tf.ConfigProto(device_count={'GPU': 0}, gpu_options=gpu_options)
         sess = tf.Session(config=session_config)
@@ -408,7 +409,7 @@ def multithreadded_calculations(parameters):
 
         time_elapsed = timer.time() - start_time
 
-        debugprint(parameters.isDebugging, "writing to file")
+        debugprint(parameters.is_debugging, "writing to file")
         write_to_file(parameters, lower_bound, accuracy, time_elapsed)
 
         print("wrote to file", flush=True)
@@ -438,7 +439,7 @@ def upper_bound_calculations(parameters):
         parameters.tf_activation = get_tf_activation_function_from_string(
             parameters.activation_function_string, tf)
 
-        debugprint(parameters.isDebugging, "checking if model file exists")
+        debugprint(parameters.is_debugging, "checking if model file exists")
         if not file_exists(parameters.file_name, use_cache=False):
             print("File does not exist {}".format(parameters.file_name), flush=True)
             print_parameters(parameters)
@@ -454,7 +455,7 @@ def upper_bound_calculations(parameters):
         make_upper_bound_file(csv_name)
 
         add_l_norm_to_upper_bound_file()
-        debugprint(parameters.isDebugging, "reading results csv")
+        debugprint(parameters.is_debugging, "reading results csv")
         if upper_bounds_csv_contains_file(csv_name, parameters.file_name, parameters):
             print("Upper bounds already calculated for {}".format(parameters.file_name), flush=True)
             print_parameters(parameters)
@@ -472,7 +473,7 @@ def upper_bound_calculations(parameters):
                                                                sess,
                                                                dataset_data)
 
-        debugprint(parameters.isDebugging, "writing upper bound to file")
+        debugprint(parameters.is_debugging, "writing upper bound to file")
         write_to_upper_bound_file(parameters, upper_bound, time_spent, csv_name)
 
         print("wrote upper bound to file", flush=True)
@@ -526,8 +527,8 @@ def print_parameters(parameters):
     print("", flush=True)
 
 
-def debugprint(isDebugging, text):
-    if isDebugging:
+def debugprint(is_debugging, text):
+    if is_debugging:
         print(text, flush=True)
 
 
@@ -617,7 +618,6 @@ def main():
                                        train_on_adversaries):
         #if is_file_duplicated(parameters.file_name):
             #delete_file_and_rows_with_file_name(parameters.file_name)
-
         if debugging:
             if gpu:
                 keras_lock.acquire()

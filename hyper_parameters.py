@@ -32,8 +32,8 @@ def boolToString(b):
         return "F"
 
 
-def get_name_new_convention(parameter_class):
-    directory = "output/models"
+def get_name_new_convention(parameter_class, dir):
+    directory = dir
     if not os.path.exists(directory):
         os.makedirs(directory)
     return directory + "/{}_type={}_pool={}_d={}_w={}_f{}_k={}_ep={}_ac={}_" \
@@ -61,6 +61,7 @@ def boundary_test_hyperparameters(dataset,
         for depth in depth_range:
             parameters = CnnTestParameters()
             parameters.result_file = 'adversarial_results.csv'
+            parameters.result_folder = 'adv_results/'
             parameters.activation_function_string = "ada"
             parameters.depth = depth
             parameters.kernel_size = 3
@@ -68,7 +69,7 @@ def boundary_test_hyperparameters(dataset,
             parameters.filters = [filter_size for i in range(depth)]
             parameters.kernels = [parameters.kernel_size for i in range(depth)]
             parameters.has_batch_normalization = False
-            parameters.isDebugging = debugging
+            parameters.is_debugging = debugging
             parameters.use_early_stopping = True
             parameters.use_padding_same = False
             parameters.use_cnnc_core = False
@@ -77,7 +78,7 @@ def boundary_test_hyperparameters(dataset,
             parameters.l_norm = "i"
             parameters.train_on_adversaries = True
 
-            parameters.file_name = get_name_new_convention(parameters)
+            parameters.file_name = get_name_new_convention(parameters, "adv_models")
             parameters.file_name = parameters.file_name + "_adv"
             parameter_list.append(parameters)
     return parameter_list
@@ -96,7 +97,7 @@ def hyper_parameters(dataset,
     if train_on_adversaries:
         return boundary_test_hyperparameters(dataset,
                                              model_files,
-                                             debugging=False)
+                                             debugging=debugging)
 
     parameter_list = []
     for kernel_size in kernel_size_range:
@@ -116,7 +117,7 @@ def hyper_parameters(dataset,
                                         parameters.filters = [filter_size for i in range(depth)]
                                         parameters.kernels = [kernel_size for i in range(depth)]
                                         parameters.has_batch_normalization = has_batch_normalization
-                                        parameters.isDebugging = debugging
+                                        parameters.is_debugging = debugging
                                         parameters.use_early_stopping = use_early_stopping
                                         parameters.use_padding_same = use_padding_same
                                         parameters.use_cnnc_core = use_cnnc_core
@@ -125,6 +126,6 @@ def hyper_parameters(dataset,
                                         parameters.l_norm = l_norm
                                         parameters.train_on_adversaries = False
 
-                                        parameters.file_name = get_name_new_convention(parameters)
+                                        parameters.file_name = get_name_new_convention(parameters, "output/models")
                                         parameter_list.append(parameters)
     return parameter_list
