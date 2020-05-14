@@ -17,7 +17,7 @@ class LinfPGDAttack:
 
         self.grad = tf.gradients(loss, model.x_input)[0]
 
-    def perturb(self, x_nat, y, sess):
+    def perturb(self, x_nat, y, sess, verbose=True):
         """Given a set of examples (x_nat, y), returns a set of adversarial
            examples within epsilon of x_nat in l_infinity norm."""
         if self.rand:
@@ -27,7 +27,7 @@ class LinfPGDAttack:
             x = x_nat.astype(np.float)
 
         for i in range(self.num_steps):
-            if i % 100 == 0:
+            if i % 100 == 0 and verbose:
                 print(f"Step {i} of {self.num_steps} steps", flush=True)
             grad = sess.run(self.grad, feed_dict={self.model.x_input: x,
                                                   self.model.y_input: y})
