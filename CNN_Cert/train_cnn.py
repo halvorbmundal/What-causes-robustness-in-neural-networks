@@ -199,7 +199,7 @@ class AdversarialImagesSequence(Sequence):
             epsilon = 0.1
         elif dataset == "sign-language":
             epsilon = 0.03
-        elif dataset == "caltechSilhouettes":
+        elif dataset == "caltech_siluettes":
             epsilon = 0.1
         elif dataset == "rockpaperscissors":
             epsilon = 0.04
