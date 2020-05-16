@@ -185,7 +185,7 @@ class AdversarialImagesSequence(Sequence):
 
         pdg_model = PDGModel(model, x_set, y_set)
         epsilon = self.get_epsilon(dataset_name)
-
+        self.dataset_name = dataset_name
         self.x, self.y = x_set, y_set
         self.batch_size = batch_size
         self.model = model
@@ -193,6 +193,14 @@ class AdversarialImagesSequence(Sequence):
         self.attack = LinfPGDAttack(pdg_model, epsilon, adv_steps, epsilon * 1.33 / adv_steps, random_start=True)
         self.sess = sess
         tf.keras.backend.get_session()
+        self.datagen = ImageDataGenerator(
+            rotation_range=1,
+            width_shift_range=0.1,
+            height_shift_range=0.1,
+            shear_range=0.1,
+            zoom_range=0.1,
+            horizontal_flip=True,
+            fill_mode="nearest").flow(x_set, y_set, batch_size=batch_size)
 
     def get_epsilon(self, dataset):
         if dataset == "mnist":
@@ -204,7 +212,7 @@ class AdversarialImagesSequence(Sequence):
         elif dataset == "rockpaperscissors":
             epsilon = 0.04
         elif dataset == "cifar":
-            epsilon = 0.02
+            epsilon = 0.01
         elif dataset == "GTSRB":
             epsilon = 0.05
         else:
@@ -215,8 +223,11 @@ class AdversarialImagesSequence(Sequence):
         return int(np.ceil(len(self.x) / float(self.batch_size)))
 
     def __getitem__(self, idx):
-        batch_x = self.x[idx * self.batch_size:(idx + 1) * self.batch_size]
-        batch_y = self.y[idx * self.batch_size:(idx + 1) * self.batch_size]
+        if self.dataset_name == "caltech_siluettes":
+            batch_x, batch_y = self.datagen.__getitem__(idx)
+        else:
+            batch_x = self.x[idx * self.batch_size:(idx + 1) * self.batch_size]
+            batch_y = self.y[idx * self.batch_size:(idx + 1) * self.batch_size]
 
         return self.attack.perturb(batch_x, batch_y, self.sess, verbose=False), np.array(batch_y)
 
