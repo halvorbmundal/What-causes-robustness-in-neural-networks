@@ -194,7 +194,7 @@ class AdversarialImagesSequence(Sequence):
         self.sess = sess
         tf.keras.backend.get_session()
         self.datagen = ImageDataGenerator(
-            rotation_range=1,
+            rotation_range=10,
             width_shift_range=0.1,
             height_shift_range=0.1,
             shear_range=0.1,
@@ -208,7 +208,7 @@ class AdversarialImagesSequence(Sequence):
         elif dataset == "sign-language":
             epsilon = 0.03
         elif dataset == "caltech_siluettes":
-            epsilon = 0.1
+            epsilon = 0.05
         elif dataset == "rockpaperscissors":
             epsilon = 0.04
         elif dataset == "cifar":
