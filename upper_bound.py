@@ -33,7 +33,7 @@ def upper_bound_calculations(parameters):
     parameters.tf_activation = get_tf_activation_function_from_string(
         parameters.activation_function_string, tf)
 
-    debugprint(parameters.isDebugging, "checking if model file exists")
+    debugprint(parameters.is_debugging, "checking if model file exists")
     if not file_exists(parameters.file_name):
         print("File does not exist {}".format(parameters.file_name), flush=True)
         print_parameters(parameters)
@@ -48,7 +48,7 @@ def upper_bound_calculations(parameters):
     csv_name = parameters.upper_bound_result_file
     make_upper_bound_file(csv_name)
 
-    debugprint(parameters.isDebugging, "reading results csv")
+    debugprint(parameters.is_debugging, "reading results csv")
     if upper_bounds_csv_contains_file(csv_name, parameters.file_name, parameters):
         print("Upper bounds already calculated for {}".format(parameters.file_name), flush=True)
         print_parameters(parameters)
@@ -68,7 +68,7 @@ def upper_bound_calculations(parameters):
     if time_spent == 0:
         return
 
-    debugprint(parameters.isDebugging, "writing upper bound to file")
+    debugprint(parameters.is_debugging, "writing upper bound to file")
     write_to_upper_bound_file(parameters, upper_bound, time_spent, csv_name)
 
     print("wrote upper bound to file", flush=True)

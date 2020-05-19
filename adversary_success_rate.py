@@ -57,7 +57,7 @@ def empirical_robustness_calculations(parameters):
     parameters.tf_activation = get_tf_activation_function_from_string(
         parameters.activation_function_string, tf)
 
-    debugprint(parameters.isDebugging, "checking if model file exists")
+    debugprint(parameters.is_debugging, "checking if model file exists")
     if not file_exists(parameters.file_name):
         print("File does not exist {}".format(parameters.file_name), flush=True)
         print_parameters(parameters)
@@ -77,7 +77,7 @@ def empirical_robustness_calculations(parameters):
         attack = get_PDG_accuracy
     make_result_file(csv_name)
 
-    debugprint(parameters.isDebugging, "reading results csv")
+    debugprint(parameters.is_debugging, "reading results csv")
     if csv_contains_file(csv_name, parameters.file_name, parameters):
         print(f"Empirical bounds already calculated for {parameters.file_name} and {parameters.epsilon}", flush=True)
         print_parameters(parameters)
@@ -96,7 +96,7 @@ def empirical_robustness_calculations(parameters):
                                                    parameters.step_size,
                                                    dataset_data)
 
-    debugprint(parameters.isDebugging, "writing to file")
+    debugprint(parameters.is_debugging, "writing to file")
     write_to_file(parameters, accuracy, time_spent, csv_name)
 
     print("wrote to file", flush=True)
