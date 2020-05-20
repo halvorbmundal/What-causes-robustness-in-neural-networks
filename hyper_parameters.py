@@ -88,7 +88,7 @@ def hyper_parameters(dataset,
                      model_files,
                      debugging=False,
                      train_on_adversaries=False):
-    filter_size_range = range(8, 73, 16)
+    filter_size_range = range(4, 80, 4)
     depth_range = range(1, 6, 1)
     kernel_size_range = range(3, 8, 1)
     cnnc_choices = [False]
@@ -100,15 +100,15 @@ def hyper_parameters(dataset,
                                              debugging=debugging)
 
     parameter_list = []
-    for kernel_size in kernel_size_range:
-        for l_norm in ["i", "2", "1"]:
-            for activation_function_string in ["ada", "sigmoid", "tanh", "arctan"]:
-                for use_cnnc_core in cnnc_choices:
-                    for use_padding_same in [False]:
-                        for use_early_stopping in [True]:
-                            for has_batch_normalization in bn_choices:
-                                for depth in depth_range:
-                                    for filter_size in filter_size_range:
+    for filter_size in filter_size_range:
+        for kernel_size in kernel_size_range:
+            for l_norm in ["i", "2", "1"]:
+                for activation_function_string in ["ada", "sigmoid", "tanh", "arctan"]:
+                    for use_cnnc_core in cnnc_choices:
+                        for use_padding_same in [False]:
+                            for use_early_stopping in [True]:
+                                for has_batch_normalization in bn_choices:
+                                    for depth in depth_range:
                                         parameters = CnnTestParameters()
                                         parameters.activation_function_string = activation_function_string
                                         parameters.depth = depth
