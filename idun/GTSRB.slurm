@@ -57,7 +57,7 @@ pip install -r cnn-cert-master/idun/requirements.txt
 nvidia-smi
 
 # Start training
-python cnn-cert-master/cnn_robustness_tester.py cpu gpu no_debugging v10 GTSRB upper 6
+python cnn-cert-master/cnn_robustness_tester.py cpu gpu no_debugging v10 GTSRB upper 6 no_adv
 
 # Print information about the system
 uname -a

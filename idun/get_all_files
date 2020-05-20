@@ -1,0 +1,35 @@
+#!/bin/bash
+
+idunuser='halvorbm@idun-login3.hpc.ntnu.no'
+epicidentity='~/.ssh/epic_rsa'
+
+echo Getting all files from Idun $1.
+
+getfromidun() {
+    local toPath=$1
+
+    echo "==================================="
+    echo $1
+    echo "==================================="
+
+    mkdir -p /Users/halvor/OneDrive\ -\ NTNU/CNN-Cert/remote/$1;
+    scp -r -i $epicidentity $idunuser:$1/output/models_meta.csv $toPath;
+    scp -r -i $epicidentity $idunuser:$1/output/results/results.csv $toPath;
+    scp -r -i $epicidentity $idunuser:$1/upper_bound.csv $toPath;
+    scp -r -i $epicidentity $idunuser:$1/HSJA_upper_bound.csv $toPath;
+    scp -r -i $epicidentity $idunuser:$1/emprirical_robustness.csv $toPath;
+    scp -r -i $epicidentity $idunuser:$1/success_rate.csv $toPath;
+}
+
+idunGetAll() {
+    mkdir -p /Users/halvor/OneDrive\ -\ NTNU/CNN-Cert/remote/
+    cd /Users/halvor/OneDrive\ -\ NTNU/CNN-Cert/remote/
+    getfromidun $1/mnist ;
+    getfromidun $1/sign-language ;
+    getfromidun $1/caltechSilhouettes ;
+    getfromidun $1/rockpaperscissors ;
+    getfromidun $1/cifar ;
+    getfromidun $1/GTSRB
+}
+
+idunGetAll $1
