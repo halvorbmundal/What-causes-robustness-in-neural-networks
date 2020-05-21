@@ -42,12 +42,16 @@ def main():
     _, path = sys.argv
     datasets = ["cifar", "caltechSilhouettes", "GTSRB", "mnist", "rockpaperscissors", "sign-language"]
     for dataset in datasets:
+        print("")
+        print("=====")
+        print(dataset)
         data_path = f"{path}/{dataset}"
         data = get_data(dataset)
         gc.collect()
         df_data = {"accuracy": [], "file_name": []}
         for file_name in os.listdir(f"{data_path}/adv_models"):
             model_path = f"{data_path}/adv_models/{file_name}"
+            print(model_path)
             model = load_model(model_path, custom_objects={'fn': loss, 'tf': tf, 'atan': tf.math.atan})
             _, accuracy = model.evaluate(data.test_data, data.test_labels, verbose=0)
             df_data["accuracy"].append(accuracy)
