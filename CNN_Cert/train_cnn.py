@@ -193,6 +193,7 @@ class AdversarialImagesSequence(Sequence):
         self.attack = LinfPGDAttack(pdg_model, epsilon, adv_steps, epsilon * 1.33 / adv_steps, random_start=True)
         self.sess = sess
         tf.keras.backend.get_session()
+
         self.datagen = ImageDataGenerator(
             rotation_range=10,
             width_shift_range=0.1,
@@ -223,7 +224,7 @@ class AdversarialImagesSequence(Sequence):
         return int(np.ceil(len(self.x) / float(self.batch_size)))
 
     def __getitem__(self, idx):
-        if self.dataset_name == "caltech_siluettes":
+        if self.dataset_name == "caltech_siluettes" or self.dataset_name == "cifar":
             batch_x, batch_y = self.datagen.__getitem__(idx)
         else:
             batch_x = self.x[idx * self.batch_size:(idx + 1) * self.batch_size]
