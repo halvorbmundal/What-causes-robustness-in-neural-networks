@@ -84,6 +84,9 @@ def train(data, file_name, filters, kernels, num_epochs=50, batch_size=128, trai
 
             num_ephocs_trained = len(history.history['loss'])
 
+            if not os.path.exists("output"):
+                os.mkdir("output")
+
             if not os.path.exists(metafile):
                 with open(metafile, 'a', newline='') as csvfile:
                     writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
