@@ -9,7 +9,7 @@
 # Memory per node specification is in MB. It is optional.
 # The default limit is 3000MB per core.
 #SBATCH --job-name="adv-g"
-#SBATCH --output=adv_out/GTSRB_output.out
+#SBATCH --output=adv_out/2GTSRB_output.out
 #SBATCH --mail-type=ALL
 
 WORKDIR=${SLURM_SUBMIT_DIR}
@@ -57,7 +57,7 @@ pip install -r cnn-cert-master/idun/requirements.txt
 nvidia-smi
 
 # Start training
-python cnn-cert-master/cnn_robustness_tester.py no_cpu gpu no_debugging v11 GTSRB upper 1 adv
+python cnn-cert-master/cnn_robustness_tester.py no_cpu gpu no_debugging v2 GTSRB upper 1 adv
 
 # Print information about the system
 uname -a

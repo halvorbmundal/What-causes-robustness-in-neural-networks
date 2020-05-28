@@ -208,17 +208,17 @@ class AdversarialImagesSequence(Sequence):
 
     def get_epsilon(self, dataset):
         if dataset == "mnist":
-            epsilon = 0.3
+            epsilon = 0.2
         elif dataset == "sign-language":
-            epsilon = 0.09
+            epsilon = 0.06
         elif dataset == "caltech_siluettes":
             epsilon = 0.05
         elif dataset == "rockpaperscissors":
-            epsilon = 0.12
+            epsilon = 0.09
         elif dataset == "cifar":
             epsilon = 0.01
         elif dataset == "GTSRB":
-            epsilon = 0.15
+            epsilon = 0.1
         else:
             raise ValueError("Unkown dataset")
         return epsilon
