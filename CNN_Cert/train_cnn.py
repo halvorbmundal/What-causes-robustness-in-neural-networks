@@ -192,7 +192,7 @@ class AdversarialImagesSequence(Sequence):
         self.x, self.y = x_set, y_set
         self.batch_size = batch_size
         self.model = model
-        adv_steps = 20
+        adv_steps = 1
         self.attack = LinfPGDAttack(pdg_model, epsilon, adv_steps, epsilon * 1.33 / adv_steps, random_start=True)
         self.sess = sess
         tf.keras.backend.get_session()
@@ -208,17 +208,17 @@ class AdversarialImagesSequence(Sequence):
 
     def get_epsilon(self, dataset):
         if dataset == "mnist":
-            epsilon = 0.1
+            epsilon = 0.3
         elif dataset == "sign-language":
-            epsilon = 0.03
+            epsilon = 0.09
         elif dataset == "caltech_siluettes":
             epsilon = 0.05
         elif dataset == "rockpaperscissors":
-            epsilon = 0.04
+            epsilon = 0.12
         elif dataset == "cifar":
             epsilon = 0.01
         elif dataset == "GTSRB":
-            epsilon = 0.05
+            epsilon = 0.15
         else:
             raise ValueError("Unkown dataset")
         return epsilon
@@ -236,7 +236,7 @@ class AdversarialImagesSequence(Sequence):
         return self.attack.perturb(batch_x, batch_y, self.sess, verbose=False), np.array(batch_y)
 
 def get_training_parameters(data):
-    patience = 30
+    patience = 0
     optimizer = Adam()
     min_delta = 0.0001
     if data.dataset == "cifar100":
