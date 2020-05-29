@@ -386,7 +386,7 @@ def multithreadded_calculations(parameters):
             return
 
         debugprint(parameters.is_debugging, "reading models_meta.csv")
-        accuracy = get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
+        accuracy = None#get_accuracy_of_nn_from_csv("output/models_meta.csv", parameters.file_name)
 
         """
         if float(accuracy) < 0.95:
@@ -599,6 +599,8 @@ def main():
     processes = min(multiprocessing.cpu_count(), num_cpus)
 
     data = get_data(dataset)
+    if dataset == "mnist":
+        time.sleep(1000000)
 
     l1 = multiprocessing.Lock()
     l2 = multiprocessing.Lock()
@@ -619,10 +621,12 @@ def main():
         #if is_file_duplicated(parameters.file_name):
             #delete_file_and_rows_with_file_name(parameters.file_name)
         if debugging:
+            print(parameters.is_debugging)
             if gpu:
                 keras_lock.acquire()
                 gpu_calculations(parameters)
             if cpu:
+                print("hhh")
                 multithreadded_calculations(parameters)
 
         else:
