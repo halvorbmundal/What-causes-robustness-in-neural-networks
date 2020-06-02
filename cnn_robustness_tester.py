@@ -599,8 +599,6 @@ def main():
     processes = min(multiprocessing.cpu_count(), num_cpus)
 
     data = get_data(dataset)
-    if dataset == "mnist":
-        time.sleep(1000000)
 
     l1 = multiprocessing.Lock()
     l2 = multiprocessing.Lock()
