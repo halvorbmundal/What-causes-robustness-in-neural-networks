@@ -40,7 +40,7 @@ def get_data(dataset):
 
 def main():
     _, path = sys.argv
-    datasets = ["cifar", "caltechSilhouettes", "GTSRB", "mnist", "rockpaperscissors", "sign-language"]
+    datasets = ["GTSRB", "mnist", "rockpaperscissors", "sign-language"]
     for dataset in datasets:
         print("")
         print("=====")
