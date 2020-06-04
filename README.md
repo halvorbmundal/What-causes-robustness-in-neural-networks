@@ -1,6 +1,6 @@
 # Calculating the robustness of neural networks
 
-The code for this repository mesures the robustness of several neural networks to adversarial examples. It the reaserch and code of several papers listed below: 
+The code for this repository measures several neural networks' robustness to adversarial examples. It uses research and code of several papers listed below: 
 
 * Akhilan Boopathy, Tsui-Wei Weng, Pin-Yu Chen, Sijia Liu and Luca Daniel, "CNN-Cert: An Efficient Framework for Certifying Robustness of Convolutional Neural Networks", AAAI 2019.
 Their code can be found at https://github.com/jinzh154/CNN-Cert
