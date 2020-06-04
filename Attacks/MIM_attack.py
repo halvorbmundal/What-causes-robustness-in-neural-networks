@@ -1,6 +1,17 @@
 import tensorflow as tf
 import numpy as np
 
+"""
+This is the code of the PDG attack from "Towards Deep Learning Models Resistant to Adversarial Attacks"
+written by Aleksander Madry et. al but with 
+added momentum as described by Yinpeng Dong et. al in "Boosting Adversarial Attacks with Momentum"
+
+"Towards Deep Learning Models Resistant to Adversarial Attacks" can be found on https://arxiv.org/abs/1706.06083
+and the code on https://github.com/MadryLab/cifar10_challenge.
+
+"Boosting Adversarial Attacks with Momentum" can be found on https://arxiv.org/abs/1710.06081.
+"""
+
 
 class MimAttack:
     def __init__(self, model, epsilon, num_steps, random_start=False, momentum=1):

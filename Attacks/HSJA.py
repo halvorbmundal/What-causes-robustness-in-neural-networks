@@ -1,6 +1,15 @@
 from __future__ import absolute_import, division, print_function
 import numpy as np
 
+"""
+This is the code of the "HopSkipJumpAttack: A Query-Efficient Decision-Based Adversarial Attack" 
+article by Jianbo Chen, Michael I. Jordan and Martin J. Wainwright.
+
+The article can be found on https://arxiv.org/abs/1904.02144 
+and the code on https://github.com/Jianbo-Lab/HSJA/.
+"""
+
+
 
 def hsja(model,
          sample,

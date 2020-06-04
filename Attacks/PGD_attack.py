@@ -1,3 +1,10 @@
+"""
+This is the code of the PDG attack from "Towards Deep Learning Models Resistant to Adversarial Attacks"
+written by Aleksander Madry, Aleksandar Makelov, Ludwig Schmidt, Dimitris Tsipra and Adrian Vladu.
+
+The article can be found on https://arxiv.org/abs/1706.06083
+and the code on https://github.com/MadryLab/cifar10_challenge.
+"""
 
 import tensorflow as tf
 import numpy as np
