@@ -1,13 +1,14 @@
 {
-  "path": "v9",
-  "dataset": "mnist",
+  "path": "v10",
+  "dataset": "cifar",
 
   "print_scatter": false,
   "use_old": false,
   "use_error_plot":true,
   "use_decicion_tree":true,
-  "all_columns": ["kernel", "depth", "filter", "activation_function"],
-  "small_columns": ["depth", "filter"],
-  "use_all_columns":true,
+  "all_columns": ["accuracy", "depth", "filter", "activation_function", "kernel"],
+  "_small_columns": ["depth", "filter"],
+  "small_columns": ["accuracy", "activation_function"],
+  "use_all_columns": true,
   "p":2
 }

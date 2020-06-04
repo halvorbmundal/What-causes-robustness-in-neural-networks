@@ -8,4 +8,4 @@ def del_1_and_2s(path):
 if __name__ == "__main__":
     datasets=["mnist", "cifar", "caltechSilhouettes", "GTSRB", "sign-language"]
     for i in datasets:
-        del_1_and_2s(f"v10/{i}]/upper_bound.csv")
+        del_1_and_2s(f"v10/{i}/upper_bound.csv")
